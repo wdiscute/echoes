@@ -1,0 +1,25 @@
+package com.wdiscute.echoes.datagen;
+
+import com.mojang.datafixers.util.Pair;
+import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.registry.ECDataEntries;
+import com.wdiscute.utils.Utils;
+import com.wdiscute.utils.datagen.DataEntryProvider;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+
+import java.util.List;
+
+public class ECDGDataEntriesProvider
+{
+    public static void start(DataGenerator gen, PackOutput output)
+    {
+        gen.addProvider(true,
+                new DataEntryProvider<>(output, ECDataEntries.STRUCTURE_ENTRIES,
+                        List.of(
+                                new Utils.Duo<>(Echoes.rl("sculk_1"), Echoes.rl("non_sculk_1"))
+                        )
+                )
+        );
+    }
+}

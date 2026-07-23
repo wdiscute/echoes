@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "has_shard=true,facing=north": {
+      "model": "echoes:block/portal_frame_filled"
+    },
+    "has_shard=true,facing=south": {
+      "model": "echoes:block/portal_frame_filled"
+    },
+    "has_shard=true,facing=east": {
+      "model": "echoes:block/portal_frame_filled"
+    },
+    "has_shard=true,facing=west": {
+      "model": "echoes:block/portal_frame_filled"
+    },
+
+
+    "has_shard=false,facing=north": {
+      "model": "echoes:block/portal_frame"
+    },
+    "has_shard=false,facing=south": {
+      "model": "echoes:block/portal_frame"
+    },
+    "has_shard=false,facing=east": {
+      "model": "echoes:block/portal_frame"
+    },
+    "has_shard=false,facing=west": {
+      "model": "echoes:block/portal_frame"
+    }
+  }
+}

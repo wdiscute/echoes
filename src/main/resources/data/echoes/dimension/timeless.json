@@ -1,0 +1,12 @@
+{
+  "type": "echoes:timeless_type",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "minecraft:the_void",
+      "features": false,
+      "lakes": false,
+      "layers": []
+    }
+  }
+}
