@@ -18,5 +18,6 @@ public class ECDataGenerators
 
         //data entries
         ECDGDataEntriesProvider.start(gen, output);
+        gen.addProvider(true, new ECDGModelProvider(output));
     }
 }

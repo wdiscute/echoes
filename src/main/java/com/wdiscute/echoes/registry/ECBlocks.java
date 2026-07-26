@@ -1,9 +1,11 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.registry.blocks.portal.PortalBlock;
-import com.wdiscute.echoes.registry.blocks.portal.PortalFrameBlock;
+import com.wdiscute.echoes.blocks.portal.PortalBlock;
+import com.wdiscute.echoes.blocks.portal.PortalFrameBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -17,6 +19,13 @@ public interface ECBlocks
 
     DeferredBlock<Block> PORTAL_FRAME = register("portal_frame", PortalFrameBlock::new);
     DeferredBlock<Block> PORTAL = register("portal", PortalBlock::new);
+
+    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", RotatedPillarBlock::new);
+    DeferredBlock<Block> GLEEMSLATE_TILES = register("gleemslate_tiles", Block::new);
+
+
+    DeferredBlock<Block> SCULK_PILLAR = register("sculk_pillar", RotatedPillarBlock::new);
+    DeferredBlock<Block> SCULK_SLAB = register("sculk_slab", SlabBlock::new);
 
     static DeferredBlock<Block> register(String name, Function<BlockBehaviour.Properties, ? extends Block> suplier)
     {

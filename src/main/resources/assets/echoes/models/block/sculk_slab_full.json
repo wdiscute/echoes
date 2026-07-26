@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "echoes:block/sculk_pillar_top",
+    "side": "echoes:block/sculk_slab_side"
+  }
+}

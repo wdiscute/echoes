@@ -1,7 +1,6 @@
 package com.wdiscute.echoes;
 
 import com.wdiscute.echoes.registry.ECDataAttachments;
-import com.wdiscute.echoes.registry.TimelessData;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

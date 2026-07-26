@@ -1,6 +1,6 @@
 [
   {
-    "non_sculk": "echoes:non_sculk_1",
-    "sculk": "echoes:sculk_1"
+    "non_sculk": "echoes:first/nonsculk",
+    "sculk": "echoes:first/sculk"
   }
 ]

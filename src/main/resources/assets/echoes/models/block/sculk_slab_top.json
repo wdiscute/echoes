@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "minecraft:block/sculk",
+    "side": "echoes:block/sculk_slab_side",
+    "top": "echoes:block/sculk_pillar_top"
+  }
+}

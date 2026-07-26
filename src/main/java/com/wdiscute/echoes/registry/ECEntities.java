@@ -1,7 +1,8 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.registry.entity.lantern.LanternEntity;
+import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
+import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -23,6 +24,9 @@ public interface ECEntities
             register("lantern", LanternEntity::new, MobCategory.MISC,
                     b -> b.sized(1f, 1f));
 
+    DeferredHolder<EntityType<?>, EntityType<SculkHeartEntity>> SCULK_HEART =
+            register("sculk_heart", SculkHeartEntity::new, MobCategory.MONSTER,
+                    b -> b.sized(3f, 3f));
 
     static void register(IEventBus eventBus)
     {

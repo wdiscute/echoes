@@ -1,6 +1,5 @@
 package com.wdiscute.echoes.datagen;
 
-import com.mojang.datafixers.util.Pair;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.utils.Utils;
@@ -17,9 +16,11 @@ public class ECDGDataEntriesProvider
         gen.addProvider(true,
                 new DataEntryProvider<>(output, ECDataEntries.STRUCTURE_ENTRIES,
                         List.of(
-                                new Utils.Duo<>(Echoes.rl("sculk_1"), Echoes.rl("non_sculk_1"))
+                                new Utils.Duo<>(Echoes.rl("first/sculk"), Echoes.rl("first/nonsculk"))
                         )
                 )
         );
     }
+
+
 }

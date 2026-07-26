@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "echoes:block/gleemslate_pillar_top",
+    "side": "echoes:block/gleemslate_pillar_side"
+  }
+}
