@@ -1,11 +1,14 @@
 package com.wdiscute.echoes.blocks.portal;
 
 import com.mojang.serialization.MapCodec;
+import com.wdiscute.echoes.TimelessInstance;
+import com.wdiscute.echoes.TimelessInstancesSD;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.utils.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -59,7 +63,11 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        if (!itemStack.is(Items.ECHO_SHARD.asItem()) || state.getValue(HAS_SHARD)) return InteractionResult.PASS;
+        if (itemStack.is(Items.ECHO_SHARD.asItem()) && !state.getValue(HAS_SHARD))
+        {
+            level.setBlockAndUpdate(pos, state.trySetValue(HAS_SHARD, true));
+            return InteractionResult.SUCCESS;
+        }
 
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
     }

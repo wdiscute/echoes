@@ -16,6 +16,8 @@ public class Echoes
 
     public static final ResourceKey<Level> TIMELESS = ResourceKey.create(Registries.DIMENSION, rl("timeless"));
 
+    public static final Identifier MISSINGNO = Echoes.rl("missingno");
+
     public static Identifier rl(String path)
     {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);

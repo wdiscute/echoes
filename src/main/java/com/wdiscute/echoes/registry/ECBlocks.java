@@ -18,8 +18,9 @@ public interface ECBlocks
 
     DeferredBlock<Block> PORTAL = register("portal", PortalBlock::new);
 
-    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", RotatedPillarBlock::new);
     DeferredBlock<Block> GLEEMSLATE_TILES = register("gleemslate_tiles", Block::new);
+    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", RotatedPillarBlock::new);
+    DeferredBlock<Block> CUT_GLEEMSLATE = register("cut_gleemslate", Block::new);
 
     DeferredBlock<Block> SCULK_PILLAR = register("sculk_pillar", RotatedPillarBlock::new);
     DeferredBlock<Block> SCULK_SLAB = register("sculk_slab", SlabBlock::new);

@@ -15,7 +15,7 @@ public interface ECDataAttachments
     DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(
             NeoForgeRegistries.ATTACHMENT_TYPES, Echoes.MOD_ID);
 
-    Supplier<AttachmentType<TimelessData>> TIMELESS_STATS = ATTACHMENT_TYPES.register(
+    Supplier<AttachmentType<TimelessData>> TIMELESS_DATA = ATTACHMENT_TYPES.register(
             "timeless_stats", () -> AttachmentType.builder(() -> TimelessData.EMPTY)
                     .sync(TimelessData.STREAM_CODEC)
                     .serialize(TimelessData.CODEC.fieldOf("stats"))

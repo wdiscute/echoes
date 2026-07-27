@@ -18,9 +18,9 @@ public class TimelessGUILayer implements GuiLayer
         LocalPlayer player = Minecraft.getInstance().player;
         if(player == null) return;
 
-        TimelessData data = player.getData(ECDataAttachments.TIMELESS_STATS.get());
+        TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA.get());
 
-        if(data.equals(TimelessData.EMPTY)) return;
+        if(data.timeToExit() == -1) return;
 
         //player has data
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();

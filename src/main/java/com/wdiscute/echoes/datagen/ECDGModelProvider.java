@@ -30,6 +30,7 @@ public class ECDGModelProvider extends ModelProvider
 
         list.add(ECBlocks.GLEEMSLATE_PILLAR);
         list.add(ECBlocks.GLEEMSLATE_TILES);
+        list.add(ECBlocks.CUT_GLEEMSLATE);
 
         list.add(ECBlocks.SCULK_PILLAR);
 
@@ -43,6 +44,7 @@ public class ECDGModelProvider extends ModelProvider
 
         list.add(ECBlocks.GLEEMSLATE_PILLAR);
         list.add(ECBlocks.GLEEMSLATE_TILES);
+        list.add(ECBlocks.CUT_GLEEMSLATE);
 
         list.add(ECBlocks.SCULK_PILLAR);
 
@@ -57,6 +59,7 @@ public class ECDGModelProvider extends ModelProvider
 
         /* BLOCKS */
         blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_TILES.get());
+        blockModels.createTrivialCube(ECBlocks.CUT_GLEEMSLATE.get());
 
         blockModels.createAxisAlignedPillarBlock(ECBlocks.GLEEMSLATE_PILLAR.get(), TexturedModel.COLUMN);
 
