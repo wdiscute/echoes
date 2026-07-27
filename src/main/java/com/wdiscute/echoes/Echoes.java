@@ -29,6 +29,7 @@ public class Echoes
         ECBlockEntities.register(modEventBus);
         ECEntities.register(modEventBus);
         ECDataEntries.register(modEventBus);
+        ECEntityDataSerializers.register(modEventBus);
 
         TimelessInstance.SphereCache.init(128);
     }

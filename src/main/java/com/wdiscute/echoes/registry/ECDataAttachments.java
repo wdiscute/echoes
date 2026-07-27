@@ -1,5 +1,6 @@
 package com.wdiscute.echoes.registry;
 
+import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessData;
 import net.neoforged.bus.api.IEventBus;
@@ -19,6 +20,12 @@ public interface ECDataAttachments
                     .sync(TimelessData.STREAM_CODEC)
                     .serialize(TimelessData.CODEC.fieldOf("stats"))
                     .copyOnDeath()
+                    .build()
+    );
+
+    Supplier<AttachmentType<Boolean>> HAS_LANTERN = ATTACHMENT_TYPES.register(
+            "has_lantern", () -> AttachmentType.builder(() -> false)
+                    .serialize(Codec.BOOL.fieldOf("has_lantern"))
                     .build()
     );
 

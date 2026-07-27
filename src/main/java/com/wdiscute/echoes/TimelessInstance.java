@@ -1,22 +1,29 @@
 package com.wdiscute.echoes;
 
 import com.mojang.datafixers.util.Pair;
-import com.wdiscute.echoes.entity.lantern.LanternEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -30,44 +37,123 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.*;
 
 public class TimelessInstance
 {
-    public static final List<TimelessInstance> INSTANCES = new ArrayList<>();
+    public static final Codec<TimelessInstance> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    UUIDUtil.CODEC.fieldOf("uuid").forGetter(o -> o.uuid),
+                    BlockPos.CODEC.fieldOf("origin").forGetter(o -> o.origin),
+                    BlockPos.CODEC.optionalFieldOf("spawn_point", BlockPos.ZERO).forGetter(o -> o.spawnPoint),
+                    Phase.CODEC.fieldOf("phase").forGetter(o -> o.phase),
+                    Utils.Duo.codec(BlockPos.CODEC, BlockState.CODEC).listOf().fieldOf("stored_states").forGetter(TimelessInstance::getSculkBlocks),
+                    BlockPos.CODEC.listOf().fieldOf("flipped_blocks").forGetter(TimelessInstance::getFlippedBlocks),
+                    Codec.LONG.optionalFieldOf("lasts_until", Long.MAX_VALUE).forGetter(o -> o.lastsUntil)
+            ).apply(instance, TimelessInstance::new));
+
+    public List<Utils.Duo<BlockPos, BlockState>> getSculkBlocks()
+    {
+        List<Utils.Duo<BlockPos, BlockState>> listToReturn = new ArrayList<>();
+
+        for (Map.Entry<BlockPos, BlockState> entry : STORED_STATES.entrySet())
+            listToReturn.add(new Utils.Duo<>(entry.getKey(), entry.getValue()));
+
+        return listToReturn;
+    }
+
+    public List<BlockPos> getFlippedBlocks()
+    {
+        return FLIPPED_BLOCKS.stream().toList();
+    }
+
+    public enum Phase implements StringRepresentable
+    {
+        NEW("new"),
+        ONGOING("ongoing"),
+        FINISHED("finished");
+
+        final String key;
+
+        Phase(String key)
+        {
+            this.key = key;
+        }
+
+        public static final Codec<Phase> CODEC = StringRepresentable.fromEnum(Phase::values);
+        public static final StreamCodec<FriendlyByteBuf, Phase> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(Phase.class);
+
+        @Override
+        public String getSerializedName()
+        {
+            return key;
+        }
+    }
+
+    public TimelessInstance(UUID uuid,
+                            BlockPos origin, BlockPos spawnPoint,
+                            Phase phase,
+                            List<Utils.Duo<BlockPos, BlockState>> storedStates,
+                            List<BlockPos> flippedStates,
+                            long lastsUntil
+    )
+    {
+        this.uuid = uuid;
+        this.origin = origin;
+        this.spawnPoint = spawnPoint;
+        this.phase = phase;
+        this.lastsUntil = lastsUntil;
+        storedStates.forEach(o -> STORED_STATES.put(o.first(), o.second()));
+        FLIPPED_BLOCKS.addAll(flippedStates);
+    }
+
+    public static TimelessInstance create()
+    {
+        BlockPos origin = new BlockPos(Utils.r.nextInt(50000000 / 2), 100, Utils.r.nextInt(50000000 / 2));
+        return new TimelessInstance(
+                UUID.randomUUID(),
+                origin,
+                origin,
+                Phase.NEW,
+                List.of(),
+                List.of(),
+                Long.MAX_VALUE
+                );
+    }
+
     private static final int MAX_GLOBAL_AURA = 30;
 
+    //saved data
+    public final UUID uuid;
+    public final BlockPos origin;
+    public BlockPos spawnPoint;
+    public Phase phase;
+    public long lastsUntil;
+
+    //converted to list for saving
+    public final Map<BlockPos, BlockState> STORED_STATES = new HashMap<>();
+    public final Set<BlockPos> FLIPPED_BLOCKS = new HashSet<>();
+
+    //non saved
+    public List<Player> playersInInstance = new ArrayList<>();
     public int closingSequence = -1;
     public float globalAuraBoost = 0;
     public float cachedGlobalAuraBoost = 0;
     public SculkHeartEntity heart;
-    public boolean removed;
-    public BlockPos origin;
-    public List<ServerPlayer> players = new ArrayList<>();
-    public final Map<BlockPos, BlockState> STORED_STATES = new HashMap<>();
-    public final Set<BlockPos> IS_FLIPPED = new HashSet<>();
+
 
     List<Pair<Vec3, Float>> auras = new ArrayList<>();
     List<Pair<Vec3, Float>> oldAuras = new ArrayList<>();
     List<Utils.Trio<Vec3, Float, Float>> rings = new ArrayList<>();
 
-    public int ticksRemaining;
-
-    public TimelessInstance(ServerPlayer player)
+    public void load(ServerLevel sl)
     {
-        //add created instance to list
-        INSTANCES.add(this);
+        if(phase != Phase.NEW) return;
 
-        //generate origin
-        Random r = new Random(System.currentTimeMillis());
-        origin = new BlockPos(r.nextInt(50000000 / 2), 100, r.nextInt(50000000 / 2));
-
-        ServerLevel sl = player.level().getServer().getLevel(Echoes.TIMELESS);
-
-        ticksRemaining = 30000;
-
-        addPlayer(player);
+        phase = Phase.ONGOING;
 
         //
         //                         ,--. ,--.
@@ -104,13 +190,23 @@ public class TimelessInstance
                         stateToSave = Blocks.AIR.defaultBlockState();
                     }
 
+                    if (stateToSave.is(Blocks.DIAMOND_BLOCK))
+                    {
+                        spawnPoint = bpToStore;
+                        stateToSave = Blocks.AIR.defaultBlockState();
+                    }
+
                     if (!stateToSave.isEmpty())
                         STORED_STATES.put(bpToStore, stateToSave);
+
+
                     sl.setBlock(bpToStore, Blocks.AIR.defaultBlockState(), 0);
                 }
             }
         }
 
+        if(spawnPoint.equals(BlockPos.ZERO))
+            throw new IllegalStateException("Spawn point (diamond block) not found when loading instance " + uuid);
 
         //
         //                    ,--.                               ,--. ,--.
@@ -131,7 +227,13 @@ public class TimelessInstance
         //spawn non sculk structure
         spawnStructure(sl, false);
 
-        sl.setBlockAndUpdate(origin, Blocks.DIAMOND_BLOCK.defaultBlockState());
+        //removed spawnpoint blocks
+        sl.setBlockAndUpdate(spawnPoint, Blocks.AIR.defaultBlockState());
+        STORED_STATES.put(spawnPoint, Blocks.AIR.defaultBlockState());
+        FLIPPED_BLOCKS.remove(spawnPoint);
+
+        //set origin block for debug
+        sl.setBlockAndUpdate(origin, Blocks.EMERALD_BLOCK.defaultBlockState());
     }
 
     public void onHeartHit(ServerLevel level)
@@ -166,7 +268,7 @@ public class TimelessInstance
         {
             submitAura(o.position(), ((SculkAura) o).getSculkAura(sl));
             if (o instanceof SculkHeartEntity she) she.setInstance(this);
-            if (o instanceof LanternEntity she) she.setInstance(this);
+            //if (o instanceof LanternEntity she) she.setInstance(this);
         });
 
         //process auras
@@ -182,25 +284,39 @@ public class TimelessInstance
             closingSequence++;
 
             if (closingSequence == 1)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("shriek", 1, 1));
 
             if (closingSequence == 20)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 1, 0.8f);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("shriek", 0.4f, 0.8f));
 
             if (closingSequence == 40)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 1, 1.3f);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("shriek", 1, 1.3f));
 
             if (closingSequence == 60)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 1, 1f);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("shriek", 0.3f, 1f));
 
             if (closingSequence == 80)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 1, 0.4f);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("shriek", 1, 0.4f));
 
             if (closingSequence == 100)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 1, 0.5f);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("shriek", 1, 0.5f));
 
             if (closingSequence == 70)
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.BEACON_DEACTIVATE, SoundSource.HOSTILE);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("beacon_deactivate", 1, 1f));
 
             if (closingSequence == 70)
                 submitRing(heart.position(), 30, -1);
@@ -210,26 +326,19 @@ public class TimelessInstance
 
             if (closingSequence == 90)
             {
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.BEACON_DEACTIVATE, SoundSource.HOSTILE);
-                sl.playSound(null, BlockPos.containing(heart.position()), SoundEvents.BEACON_ACTIVATE, SoundSource.HOSTILE);
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("beacon_deactivate", 1, 1f));
+
+                PacketDistributor.sendToPlayersNear(
+                        sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
+                        new ECDBPlaySoundPayload("beacon_activate", 1, 1f));
             }
 
             if (closingSequence > 100)
             {
                 globalAuraBoost--;
             }
-        }
-
-        for (ServerPlayer player : players)
-        {
-            //collapse instance
-            if (ticksRemaining <= 0)
-            {
-                removePlayer(player);
-                removed = true;
-            }
-            else
-                ticksRemaining--;
         }
     }
 
@@ -281,33 +390,51 @@ public class TimelessInstance
 
         player.teleport(trans);
 
+        playersInInstance.remove(player);
+
         player.removeData(ECDataAttachments.TIMELESS_STATS);
     }
 
     public void addPlayer(ServerPlayer player)
     {
+        //create teleport transition
         ServerLevel sl = player.level().getServer().getLevel(Echoes.TIMELESS);
 
         TeleportTransition trans = new TeleportTransition(sl,
-                new Vec3(origin.getX() + 7, origin.getY() + 23, origin.getZ() + 25),
+                new Vec3(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ()),
                 Vec3.ZERO,
                 -90,
                 0,
-                (p) ->
-                {
-
-                });
+                Utils::nothing
+        );
 
         player.setData(ECDataAttachments.TIMELESS_STATS,
                 new TimelessData(
-                        System.currentTimeMillis() + ticksRemaining * 50L,
+                        lastsUntil,
                         player.position(),
                         player.level().dimension().identifier()
                 )
         );
 
         player.teleport(trans);
-        players.add(player);
+
+        //remove has_lantern just in case
+        player.removeData(ECDataAttachments.HAS_LANTERN);
+
+        //add player to players
+        playersInInstance.add(player);
+
+        //load after player is teleported so the chunks are already loaded on server.
+        //this prevents insane lag spike when structures are places since the chunks keep loading and unloading for each structure bit
+        //client only receives packet later anyways so no "falling in void" happens
+
+        //load if instance has not been loaded yet
+        if(phase.equals(Phase.NEW))
+        {
+            load(player.level());
+            //teleport player to spawnPoint as spawnPoint is only calculated after loading structures, player will be at origin at this point
+            player.teleportTo(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
+        }
     }
 
     public void flipBlock(ServerLevel sl, BlockPos bp)
@@ -317,10 +444,10 @@ public class TimelessInstance
 
         if (currentState.isEmpty() && storedState.isEmpty()) return;
 
-        if (IS_FLIPPED.contains(bp))
-            IS_FLIPPED.remove(bp);
+        if (FLIPPED_BLOCKS.contains(bp))
+            FLIPPED_BLOCKS.remove(bp);
         else
-            IS_FLIPPED.add(bp);
+            FLIPPED_BLOCKS.add(bp);
 
         STORED_STATES.put(bp, currentState);
         int flags =
@@ -340,10 +467,10 @@ public class TimelessInstance
 
         if (currentState.isEmpty() && storedState.isEmpty()) return;
 
-        if (IS_FLIPPED.contains(bp))
+        if (FLIPPED_BLOCKS.contains(bp))
             return;
         else
-            IS_FLIPPED.add(bp);
+            FLIPPED_BLOCKS.add(bp);
 
         STORED_STATES.put(bp, currentState);
         int flags =
@@ -363,8 +490,8 @@ public class TimelessInstance
 
         if (currentState.isEmpty() && storedState.isEmpty()) return;
 
-        if (IS_FLIPPED.contains(bp))
-            IS_FLIPPED.remove(bp);
+        if (FLIPPED_BLOCKS.contains(bp))
+            FLIPPED_BLOCKS.remove(bp);
         else
             return;
 
@@ -402,7 +529,7 @@ public class TimelessInstance
         //un-flip blocks not on aura
         List<BlockPos> toFlip = new ArrayList<>();
 
-        for (BlockPos bp : IS_FLIPPED)
+        for (BlockPos bp : FLIPPED_BLOCKS)
             if (!currentInAura.contains(bp))
                 toFlip.add(bp);
 
@@ -411,7 +538,7 @@ public class TimelessInstance
 
         //flip unflipped blocks
         //filter blocks in aura to blocks which are currently not flipped, flip them and store
-        currentInAura.stream().filter(bp -> !IS_FLIPPED.contains(bp)).forEach(bp -> flipBlock(sl, bp));
+        currentInAura.stream().filter(bp -> !FLIPPED_BLOCKS.contains(bp)).forEach(bp -> flipBlock(sl, bp));
 
         oldAuras.clear();
         cachedGlobalAuraBoost = globalAuraBoost;

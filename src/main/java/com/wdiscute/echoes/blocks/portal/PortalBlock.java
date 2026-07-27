@@ -1,55 +1,78 @@
 package com.wdiscute.echoes.blocks.portal;
 
-import com.wdiscute.echoes.TimelessInstance;
+import com.mojang.serialization.MapCodec;
+import com.wdiscute.echoes.registry.ECBlockEntities;
+import com.wdiscute.echoes.registry.ECBlocks;
+import com.wdiscute.utils.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class PortalBlock extends Block
+public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlock
 {
+    public static final BooleanProperty HAS_SHARD = BooleanProperty.create("has_shard");
+
     public PortalBlock(Properties properties)
     {
-        super(properties.noCollision());
+        super(properties);
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
+    {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(HAS_SHARD, false);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
+        builder.add(HorizontalDirectionalBlock.FACING);
+        builder.add(HAS_SHARD);
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec()
     {
-        if(level.isClientSide()) return InteractionResult.SUCCESS;
-
-        new TimelessInstance((ServerPlayer) player);
-
-        return super.useWithoutItem(state, level, pos, player, hitResult);
+        return null;
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        super.entityInside(state, level, pos, entity, effectApplier, isPrecise);
+        if (!itemStack.is(Items.ECHO_SHARD.asItem()) || state.getValue(HAS_SHARD)) return InteractionResult.PASS;
 
-        if(entity.is(EntityType.PLAYER))
-        {
-            //teleport
-        }
-        else
-        {
-            //push away
-        }
+        return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type)
+    {
+        return TickableBlockEntity.getTicketHelper(level);
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
+    {
+        return ECBlockEntities.PORTAL.get().create(worldPosition, blockState);
     }
 }

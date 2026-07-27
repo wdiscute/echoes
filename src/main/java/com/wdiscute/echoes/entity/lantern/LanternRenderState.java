@@ -6,6 +6,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class LanternRenderState extends EntityRenderState
 {
-    public Vec3 positionToRenderAt;
-    public Entity entity;
+    public int timeOffset;
+    public Vec3 offset;
 }

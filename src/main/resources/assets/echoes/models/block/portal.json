@@ -1,9 +1,9 @@
 {   "parent": "block/block",
     "textures": {
-        "particle": "echoes:block/portal_frame_side",
-        "bottom": "echoes:block/portal_frame_bottom",
-        "top": "echoes:block/portal_frame_top",
-        "side": "echoes:block/portal_frame_side"
+        "particle": "echoes:block/portal_side",
+        "bottom": "echoes:block/portal_bottom",
+        "top": "echoes:block/portal_top",
+        "side": "echoes:block/portal_side"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],
