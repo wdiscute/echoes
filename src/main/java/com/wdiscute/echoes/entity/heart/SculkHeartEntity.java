@@ -1,7 +1,8 @@
 package com.wdiscute.echoes.entity.heart;
 
 import com.wdiscute.echoes.SculkAura;
-import com.wdiscute.echoes.TimelessInstance;
+import com.wdiscute.echoes.timeless.TimelessHandler;
+import com.wdiscute.echoes.timeless.TimelessInstance;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -14,17 +15,9 @@ import org.jspecify.annotations.Nullable;
 
 public class SculkHeartEntity extends Mob implements SculkAura
 {
-    TimelessInstance instance = null;
-
-
     public SculkHeartEntity(EntityType<? extends Mob> type, Level level)
     {
         super(type, level);
-    }
-
-    public void setInstance(TimelessInstance instance)
-    {
-        this.instance = instance;
     }
 
     @Override
@@ -65,8 +58,9 @@ public class SculkHeartEntity extends Mob implements SculkAura
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
     {
-        if (instance != null)
-            instance.onHeartHit(level);
+        TimelessInstance closest = TimelessHandler.getClosest(level.getServer(), blockPosition());
+        if (closest != null)
+            closest.onHeartHit(level);
         return true;
     }
 

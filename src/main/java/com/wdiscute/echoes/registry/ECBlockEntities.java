@@ -1,6 +1,8 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
+import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlockEntity;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,6 +18,9 @@ public interface ECBlockEntities
 
     Supplier<BlockEntityType<PortalBlockEntity>> PORTAL = BLOCK_ENTITIES.register("portal",
             () -> new BlockEntityType<>(PortalBlockEntity::new, ECBlocks.PORTAL.get()));
+
+    Supplier<BlockEntityType<TimelessMarkerBlockEntity>> TIMELESS_MARKER = BLOCK_ENTITIES.register("timeless_marker",
+            () -> new BlockEntityType<>(TimelessMarkerBlockEntity::new, ECBlocks.TIMELESS_MARKER.get()));
 
     static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

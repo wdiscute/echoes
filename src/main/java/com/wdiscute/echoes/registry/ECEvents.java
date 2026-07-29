@@ -1,8 +1,8 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.TimelessHandler;
-import com.wdiscute.echoes.TimelessInstance;
+import com.wdiscute.echoes.timeless.TimelessHandler;
+import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
 import net.minecraft.server.level.ServerLevel;

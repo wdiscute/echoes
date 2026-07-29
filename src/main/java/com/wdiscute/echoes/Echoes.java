@@ -1,6 +1,8 @@
 package com.wdiscute.echoes;
 
 import com.wdiscute.echoes.registry.*;
+import com.wdiscute.echoes.timeless.TimelessInstance;
+import com.wdiscute.echoes.timeless.TimelessProcessor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -34,5 +36,6 @@ public class Echoes
         ECEntityDataSerializers.register(modEventBus);
 
         TimelessInstance.SphereCache.init(128);
+        TimelessProcessor.addDefaultProcessors();
     }
 }

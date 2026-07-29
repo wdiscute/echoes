@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -17,6 +18,7 @@ public interface ECBlocks
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Echoes.MOD_ID);
 
     DeferredBlock<Block> PORTAL = register("portal", PortalBlock::new);
+    DeferredBlock<Block> TIMELESS_MARKER = register("timeless_marker", TimelessMarkerBlock::new);
 
     DeferredBlock<Block> GLEEMSLATE_TILES = register("gleemslate_tiles", Block::new);
     DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", RotatedPillarBlock::new);

@@ -2,7 +2,7 @@ package com.wdiscute.echoes.registry;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.TimelessData;
+import com.wdiscute.echoes.timeless.TimelessData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;

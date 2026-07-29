@@ -2,8 +2,8 @@ package com.wdiscute.echoes.blocks.portal;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.TimelessHandler;
-import com.wdiscute.echoes.TimelessInstance;
+import com.wdiscute.echoes.timeless.TimelessHandler;
+import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.TickableBlockEntity;
@@ -163,13 +163,13 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                             return;
                         }
 
-                        //load instance first so adding the player doesn't run the sculk & gleemslate logic
-                        instance.attemptLoad(player.level(), closest.portalPos, closest.portalDimension, TimelessInstance.StructureType.BLACKSMITH);
+                        //load instance as blacksmith
+                        instance.setType(TimelessInstance.StructureType.BLACKSMITH);
                         instance.addPlayer(player, closest.portalPos, closest.portalDimension, false);
                     }
                     //if not on timeless, teleport player
                     else
-                        instance.addPlayer(player, pos, level.dimension().identifier(), false);
+                        instance.addPlayer(player, pos, level.dimension().identifier(), true);
                     return;
                 }
             }
