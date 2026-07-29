@@ -2,7 +2,6 @@ package com.wdiscute.echoes;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.floats.FloatIndirectHeaps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -11,31 +10,31 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.*;
 
-public class TimelessInstancesSD extends SavedData
+public class TimelessHandler extends SavedData
 {
-    public static final Codec<TimelessInstancesSD> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<TimelessHandler> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             TimelessInstance.CODEC.listOf().fieldOf("instances").forGetter(sd -> sd.instances.stream().toList())
-    ).apply(instance, TimelessInstancesSD::new));
+    ).apply(instance, TimelessHandler::new));
 
-    public static final SavedDataType<TimelessInstancesSD> ID = new SavedDataType<>(
+    public static final SavedDataType<TimelessHandler> ID = new SavedDataType<>(
             Echoes.rl("timeless_instances"),
-            TimelessInstancesSD::new,
+            TimelessHandler::new,
             CODEC
     );
 
     public final Set<TimelessInstance> instances;
 
-    public TimelessInstancesSD()
+    public TimelessHandler()
     {
         instances = new HashSet<>();
     }
 
-    public TimelessInstancesSD(List<TimelessInstance> instances)
+    public TimelessHandler(List<TimelessInstance> instances)
     {
         this.instances = new HashSet<>(instances);
     }
 
-    public static TimelessInstancesSD getSavedData(MinecraftServer server)
+    public static TimelessHandler getSavedData(MinecraftServer server)
     {
         return server.getLevel(Echoes.TIMELESS).getDataStorage().computeIfAbsent(ID);
     }
@@ -63,7 +62,7 @@ public class TimelessInstancesSD extends SavedData
 
     public static TimelessInstance getOrCreate(MinecraftServer server, UUID instanceUUID)
     {
-        TimelessInstancesSD savedData = getSavedData(server);
+        TimelessHandler savedData = getSavedData(server);
         return savedData.getOrCreate(instanceUUID);
     }
 

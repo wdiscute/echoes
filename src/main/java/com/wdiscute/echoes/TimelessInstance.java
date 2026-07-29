@@ -3,6 +3,7 @@ package com.wdiscute.echoes;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
 import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataEntries;
@@ -19,12 +20,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -32,6 +35,8 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -159,87 +164,24 @@ public class TimelessInstance
     List<Pair<Vec3, Float>> oldAuras = new ArrayList<>();
     List<Utils.Trio<Vec3, Float, Float>> rings = new ArrayList<>();
 
-    public void load(ServerLevel sl, BlockPos portalPos, Identifier portalDimension)
+    public void attemptLoad(ServerLevel sl, BlockPos portalPos, Identifier portalDimension, StructureType structureType)
     {
         if (phase != Phase.NEW) return;
 
         phase = Phase.ONGOING;
+
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;
 
-        //
-        //                         ,--. ,--.
-        //  ,---.   ,---. ,--.,--. |  | |  |,-.
-        // (  .-'  | .--' |  ||  | |  | |     /
-        // .-'  `) \ `--. '  ''  ' |  | |  \  \
-        // `----'   `---'  `----'  `--' `--'`--'
-        //
-
-        //for (int x = -51; x < 51; x++)
-        //    for (int z = -51; z < 51; z++)
-        //        sl.setBlock(new BlockPos(origin.getX() + x, origin.getY(), origin.getZ() + z), Blocks.SCULK.defaultBlockState(), 0);
-
-        //spawn sculk structure
-        spawnStructure(sl, true);
-
-        //after sculk, store all blocks and clear zone
-        for (int x = -48; x < 48; x++)
+        if (structureType.isBase())
         {
-            for (int y = 0; y < 48; y++)
-            {
-                for (int z = -48; z < 48; z++)
-                {
-                    BlockPos bpToStore = new BlockPos(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
-                    BlockState stateToSave = sl.getBlockState(bpToStore);
-
-                    if (stateToSave.is(Blocks.GOLD_BLOCK))
-                    {
-                        SculkHeartEntity heart = ECEntities.SCULK_HEART.get().create(sl, EntitySpawnReason.TRIGGERED);
-                        heart.snapTo(bpToStore.getCenter().x, bpToStore.getCenter().y, bpToStore.getCenter().z);
-                        heart.setInstance(this);
-                        this.heart = heart;
-                        sl.addFreshEntityWithPassengers(heart);
-                        stateToSave = Blocks.AIR.defaultBlockState();
-                    }
-
-                    if (stateToSave.is(Blocks.DIAMOND_BLOCK))
-                    {
-                        spawnPoint = bpToStore;
-                        stateToSave = Blocks.AIR.defaultBlockState();
-                    }
-
-                    if (!stateToSave.isEmpty())
-                        STORED_STATES.put(bpToStore, stateToSave);
-
-
-                    sl.setBlock(bpToStore, Blocks.AIR.defaultBlockState(), 0);
-                }
-            }
+            spawnStructure(sl, StructureType.SCULK);
+            spawnStructure(sl, StructureType.GLEEMSLATE);
         }
+        else
+            spawnStructure(sl, structureType);
 
-        if (spawnPoint.equals(BlockPos.ZERO))
-            throw new IllegalStateException("Spawn point (diamond block) not found when loading instance " + uuid);
-
-        //
-        //                    ,--.                               ,--. ,--.
-        // ,--,--,   ,---.  ,-'  '-.      ,---.   ,---. ,--.,--. |  | |  |,-.
-        // |      \ | .-. | '-.  .-'     (  .-'  | .--' |  ||  | |  | |     /
-        // |  ||  | ' '-' '   |  |       .-'  `) \ `--. '  ''  ' |  | |  \  \
-        // `--''--'  `---'    `--'       `----'   `---'  `----'  `--' `--'`--'
-        //
-
-        //for (int x = origin.getX() - 50; x < origin.getX() + 50; x++)
-        //{
-        //    for (int z = origin.getZ() - 50; z < origin.getZ() + 50; z++)
-        //    {
-        //        sl.setBlock(new BlockPos(x, origin.getY(), z), Blocks.STONE.defaultBlockState(), 0);
-        //    }
-        //}
-
-        //spawn non sculk structure
-        spawnStructure(sl, false);
-
-        //removed spawnpoint blocks
+        //spawnpoint blocks
         sl.setBlockAndUpdate(spawnPoint, Blocks.AIR.defaultBlockState());
         STORED_STATES.put(spawnPoint, Blocks.AIR.defaultBlockState());
         FLIPPED_BLOCKS.remove(spawnPoint);
@@ -361,7 +303,7 @@ public class TimelessInstance
             if (closingSequence > 100)
                 globalAuraBoost--;
 
-            if (closingSequence > 200)
+            if (closingSequence > 150)
             {
                 //remove all players
                 sl.getEntities(
@@ -370,6 +312,13 @@ public class TimelessInstance
                         entity -> entity instanceof ServerPlayer
                 ).forEach(o -> removePlayer((ServerPlayer) o));
 
+                ServerLevel levelToReturn = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
+
+                levelToReturn.getChunkSource()
+                        .addTicketAndLoadWithRadius(TicketType.PLAYER_SPAWN, ChunkPos.containing(BlockPos.containing(portalPos.getCenter())), 2);
+
+                if (levelToReturn.getBlockEntity(portalPos) instanceof PortalBlockEntity)
+                    PortalBlockEntity.SCULK_SPREADER.addCursors(portalPos, 10);
 
                 phase = Phase.FINISHED;
             }
@@ -422,7 +371,7 @@ public class TimelessInstance
         //make transition or use respawn point if no pos/dim is set
         ServerLevel level = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
         TeleportTransition trans = new TeleportTransition(level,
-                portalPos.getCenter().add(0, 2,0),
+                portalPos.getCenter().add(0, 2, 0),
                 Vec3.ZERO,
                 0,
                 0,
@@ -436,26 +385,33 @@ public class TimelessInstance
         player.teleport(trans);
     }
 
-    public void addPlayer(ServerPlayer player, BlockPos portalPos, Identifier portalDimension)
+    public void addPlayer(ServerPlayer player, BlockPos portalPos, Identifier portalDimension, boolean swapInventory)
     {
-        //create teleport transition
+        //get timeless server level
         ServerLevel sl = player.level().getServer().getLevel(Echoes.TIMELESS);
 
-        //save overworld inventory and swap to timeless inventory
-        List<MaybeStack> inventory = player.getData(ECDataAttachments.TIMELESS_DATA).inventory();
-        List<MaybeStack> list = new ArrayList<>();
-        for (int i = 0; i < 100; i++)
+        //load dimension + structures
+        attemptLoad(sl, portalPos, portalDimension, StructureType.SCULK);
+
+        //if swap inventory (blacksmiths don't!)
+        if (swapInventory)
         {
-            list.add(new MaybeStack(player.getInventory().getItem(i)));
+            //save overworld inventory and swap to timeless inventory
+            List<MaybeStack> inventory = player.getData(ECDataAttachments.TIMELESS_DATA).inventory();
+            List<MaybeStack> list = new ArrayList<>();
+            for (int i = 0; i < 100; i++)
+            {
+                list.add(new MaybeStack(player.getInventory().getItem(i)));
 
-            if (inventory.size() > i)
-                player.getInventory().setItem(i, inventory.get(i).toStack());
-            else
-                player.getInventory().setItem(i, ItemStack.EMPTY);
+                if (inventory.size() > i)
+                    player.getInventory().setItem(i, inventory.get(i).toStack());
+                else
+                    player.getInventory().setItem(i, ItemStack.EMPTY);
+            }
+
+            //store overworld inventory
+            player.setData(ECDataAttachments.TIMELESS_DATA, new TimelessData(lastsUntil, list));
         }
-
-        //store overworld inventory
-        player.setData(ECDataAttachments.TIMELESS_DATA, new TimelessData(lastsUntil, list));
 
         //make transition
         TeleportTransition trans = new TeleportTransition(sl,
@@ -471,27 +427,22 @@ public class TimelessInstance
 
         //remove has_lantern just in case
         player.removeData(ECDataAttachments.HAS_LANTERN);
-
-        //add player to playersInInstance
-        //playersInInstance.add(player);
-
-        //load after player is teleported so the chunks are already loaded on server.
-        //this prevents insane lag spike when structures are places since the chunks keep loading and unloading for each structure bit
-        //client only receives packet later anyways so no "falling in void" happens
-
-        //load if instance has not been loaded yet
-        if (phase.equals(Phase.NEW))
-        {
-            load(player.level(), portalPos, portalDimension);
-            //teleport player to spawnPoint as spawnPoint is only calculated after loading structures, player will be at origin at this point
-            player.teleportTo(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
-        }
     }
 
     public void flipBlock(ServerLevel sl, BlockPos bp)
     {
         BlockState currentState = sl.getBlockState(bp);
         BlockState storedState = STORED_STATES.getOrDefault(bp, Blocks.AIR.defaultBlockState());
+
+        //if block is part of skips tag, set flipped (to prevent flip attempt every tick) but don't swap states
+        if (currentState.is(ECTags.SKIPS_SCULK_TRANSFORMATION))
+        {
+            if (FLIPPED_BLOCKS.contains(bp))
+                FLIPPED_BLOCKS.remove(bp);
+            else
+                FLIPPED_BLOCKS.add(bp);
+            return;
+        }
 
         if (currentState.isEmpty() && storedState.isEmpty()) return;
 
@@ -602,31 +553,120 @@ public class TimelessInstance
         auras.add(Pair.of(pos, radius));
     }
 
-    public void spawnStructure(ServerLevel sl, boolean sculk)
+    public enum StructureType
     {
-        Utils.Duo<Identifier, Identifier> duo = ECDataEntries.STRUCTURE_ENTRIES.get().stream().findAny()
-                .orElse(new Utils.Duo<>(BuiltinStructures.IGLOO.identifier(), BuiltinStructures.IGLOO.identifier()));
+        SCULK,
+        GLEEMSLATE,
+        BLACKSMITH;
 
-        Identifier template = sculk ? duo.first() : duo.second();
+        public boolean isBase()
+        {
+            return this.equals(SCULK) || this.equals(GLEEMSLATE);
+        }
+    }
 
-        //checkLoaded(sl, ChunkPos.containing(origin), ChunkPos.containing(origin.offset(structureTemplate.getSize())));
-        StructurePlaceSettings placeSettings =
-                new StructurePlaceSettings().setMirror(Mirror.NONE).setRotation(Rotation.NONE).setKnownShape(false);
+    private void spawnStructure(ServerLevel sl, StructureType structureType)
+    {
+        //get template structure path
+        Identifier template;
+        if (structureType.isBase())
+            template = ECDataEntries.STRUCTURE_ENTRIES.get().stream().findAny().orElse(Echoes.MISSINGNO);
+        else
+            template = ECDataEntries.BLACKSMITHS.get().get(sl.getRandom().nextInt(ECDataEntries.BLACKSMITHS.get().size()));
 
         StructureTemplateManager manager = sl.getStructureManager();
+        StructurePlaceSettings placeSettings = new StructurePlaceSettings().setKnownShape(false);
 
 
-        StructureTemplate structureTemplatese = manager.get(template.withSuffix("_se")).get();
-        structureTemplatese.placeInWorld(sl, origin.offset(0, 0, 0), origin, placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+        //todo check what radius in the ticket means
+        //todo test with the neoforge chunk load event which chunks get loaded when this is called?
 
-        StructureTemplate structureTemplatesw = manager.get(template.withSuffix("_sw")).get();
-        structureTemplatesw.placeInWorld(sl, origin.offset(-48, 0, 0), origin, placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+        if (structureType.equals(StructureType.BLACKSMITH))
+            template = template.withSuffix("/blacksmith_");
 
-        StructureTemplate structureTemplatenw = manager.get(template.withSuffix("_nw")).get();
-        structureTemplatenw.placeInWorld(sl, origin.offset(-48, 0, -48), origin, placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+        if (structureType.equals(StructureType.SCULK))
+            template = template.withSuffix("/sculk_");
 
-        StructureTemplate structureTemplatene = manager.get(template.withSuffix("_ne")).get();
-        structureTemplatene.placeInWorld(sl, origin.offset(0, 0, -48), origin, placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+        if (structureType.equals(StructureType.GLEEMSLATE))
+            template = template.withSuffix("/gleemslate_");
+
+        for (int i = 0; i < 24; i++)
+        {
+            String letter = String.valueOf((char) ('a' + i));
+
+            //if "structure_`letter``i`" doesn't exist, break
+            //Optional<StructureTemplate> stt = manager.get(template.withSuffix("_").withSuffix(letter + "1"));
+            //if (stt.isEmpty())
+            //    break;
+
+            for (int j = 0; j < 24; j++)
+            {
+                Identifier id = template.withSuffix(letter + (j + 1));
+                Optional<StructureTemplate> st = manager.get(id);
+
+                //if "structure_`letter``i`" doesn't exist, break
+                if (st.isEmpty())
+                    continue;
+                    //break;
+
+                BlockPos placementBP = origin.offset(j * 48, 0, i * 48);
+                st.get().placeInWorld(sl, placementBP, origin,
+                        placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+
+                //if sculk, store blocks and replace special blocks
+                if (structureType.equals(StructureType.SCULK) || structureType.equals(StructureType.BLACKSMITH))
+                {
+                    for (int x = placementBP.getX(); x < placementBP.getX() + 48; x++)
+                    {
+                        for (int y = placementBP.getY(); y < placementBP.getY() + 48; y++)
+                        {
+                            for (int z = placementBP.getZ(); z < placementBP.getZ() + 48; z++)
+                            {
+                                BlockPos bpToStore = new BlockPos(x, y, z);
+                                BlockState stateToSave = sl.getBlockState(bpToStore);
+
+                                if (stateToSave.is(Blocks.DIAMOND_BLOCK))
+                                {
+                                    spawnPoint = bpToStore;
+                                    stateToSave = Blocks.AIR.defaultBlockState();
+
+                                    //skip rest of looping if it's a blacksmith
+                                    if (structureType.equals(StructureType.BLACKSMITH))
+                                        return;
+                                }
+
+                                //skip to next block if it's a blacksmith
+                                if (structureType.equals(StructureType.BLACKSMITH))
+                                    break;
+
+                                //if sculk, check for sculk heart entity
+                                if (stateToSave.is(Blocks.GOLD_BLOCK))
+                                {
+                                    SculkHeartEntity heart = ECEntities.SCULK_HEART.get().create(sl, EntitySpawnReason.TRIGGERED);
+                                    heart.snapTo(bpToStore.getCenter().x, bpToStore.getCenter().y, bpToStore.getCenter().z);
+                                    heart.setInstance(this);
+                                    this.heart = heart;
+                                    sl.addFreshEntityWithPassengers(heart);
+                                    stateToSave = Blocks.AIR.defaultBlockState();
+                                }
+
+                                //if sculk save state
+                                if (!stateToSave.isEmpty())
+                                    STORED_STATES.put(bpToStore, stateToSave);
+
+                                //if sculk set to air if not part of skip tag
+                                if (!stateToSave.is(ECTags.SKIPS_SCULK_TRANSFORMATION))
+                                    sl.setBlock(bpToStore, Blocks.AIR.defaultBlockState(), 0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //if no diamond block found in BLACKSMITH or SCULK structure types
+        if (spawnPoint.equals(BlockPos.ZERO))
+            throw new IllegalStateException("Spawn point (diamond block) not found when loading instance " + uuid);
     }
 
     public static final class SphereCache

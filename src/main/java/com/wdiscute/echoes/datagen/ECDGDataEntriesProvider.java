@@ -15,8 +15,14 @@ public class ECDGDataEntriesProvider
     {
         gen.addProvider(true,
                 new DataEntryProvider<>(output, ECDataEntries.STRUCTURE_ENTRIES,
+                        List.of(Echoes.rl("arena/first"))
+                )
+        );
+
+        gen.addProvider(true,
+                new DataEntryProvider<>(output, ECDataEntries.BLACKSMITHS,
                         List.of(
-                                new Utils.Duo<>(Echoes.rl("first/sculk"), Echoes.rl("first/nonsculk"))
+                                Echoes.rl("blacksmith/first")
                         )
                 )
         );

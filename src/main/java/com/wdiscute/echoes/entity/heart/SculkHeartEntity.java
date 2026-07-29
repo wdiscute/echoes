@@ -34,6 +34,12 @@ public class SculkHeartEntity extends Mob implements SculkAura
     }
 
     @Override
+    public boolean isPushable()
+    {
+        return false;
+    }
+
+    @Override
     public boolean canCollideWith(Entity entity)
     {
         return false;
@@ -49,6 +55,11 @@ public class SculkHeartEntity extends Mob implements SculkAura
     public boolean canBeHitByProjectile()
     {
         return false;
+    }
+
+    @Override
+    public void knockback(double power, double xd, double zd)
+    {
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.TimelessHandler;
 import com.wdiscute.echoes.TimelessInstance;
-import com.wdiscute.echoes.TimelessInstancesSD;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +28,7 @@ public class ECEvents
         ServerLevel sl = (ServerLevel) event.getLevel();
 
         if (sl.dimension().equals(Echoes.TIMELESS))
-            TimelessInstancesSD.getSavedData(sl.getServer()).tick(sl);
+            TimelessHandler.getSavedData(sl.getServer()).tick(sl);
     }
 
     @SubscribeEvent
@@ -47,7 +47,7 @@ public class ECEvents
             if (entity instanceof ServerPlayer sp)
             {
                 //get closest timelessInstance
-                TimelessInstance closest = TimelessInstancesSD.getClosest(sp.level().getServer(), sp.blockPosition());
+                TimelessInstance closest = TimelessHandler.getClosest(sp.level().getServer(), sp.blockPosition());
 
                 //remove player
                 if (closest != null) closest.removePlayer(sp);

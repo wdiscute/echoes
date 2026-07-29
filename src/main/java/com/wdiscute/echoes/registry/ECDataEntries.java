@@ -10,9 +10,14 @@ import java.util.List;
 
 public interface ECDataEntries
 {
-    DataEntry<List<Utils.Duo<Identifier, Identifier>>> STRUCTURE_ENTRIES = DataEntry.register(Echoes.rl("timeless_structures"),
-            Utils.Duo.codec(Identifier.CODEC, "sculk", Identifier.CODEC, "non_sculk").listOf(),
+    DataEntry<List<Identifier>> STRUCTURE_ENTRIES = DataEntry.register(Echoes.rl("timeless_arenas"),
+            Identifier.CODEC.listOf(),
             List.of());
+
+    DataEntry<List<Identifier>> BLACKSMITHS = DataEntry.register(Echoes.rl("timeless_blacksmiths"),
+            Identifier.CODEC.listOf(),
+            List.of());
+
 
     static void register(IEventBus bus){}
 }
