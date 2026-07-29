@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -35,7 +37,7 @@ import org.jspecify.annotations.Nullable;
 
 public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlock, SculkBehaviour
 {
-    public static final BooleanProperty HAS_SHARD = BooleanProperty.create("has_shard");
+    public static final EnumProperty<State> STATE = EnumProperty.create("state", State.class);
     private static final VoxelShape SHAPE_EMPTY = Block.column(16.0, 0.0, 13.0);
     private static final VoxelShape SHAPE_FULL = Shapes.or(SHAPE_EMPTY, Block.column(8.0, 13.0, 16.0));
 
@@ -44,10 +46,30 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
         super(properties);
     }
 
+    public enum State implements StringRepresentable
+    {
+        CLOSED("closed"),
+        OPEN("open"),
+        LOOTING("looting");
+
+        final String key;
+
+        State(String key)
+        {
+            this.key = key;
+        }
+
+        @Override
+        public String getSerializedName()
+        {
+            return key;
+        }
+    }
+
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(HAS_SHARD, false);
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(STATE, State.CLOSED);
     }
 
     @Override
@@ -55,7 +77,7 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     {
         super.createBlockStateDefinition(builder);
         builder.add(HorizontalDirectionalBlock.FACING);
-        builder.add(HAS_SHARD);
+        builder.add(STATE);
     }
 
     @Override
@@ -67,18 +89,21 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
-        return state.getValue(HAS_SHARD) ? SHAPE_FULL : SHAPE_EMPTY;
+        return state.getValue(STATE).equals(State.OPEN) ? SHAPE_FULL : SHAPE_EMPTY;
     }
 
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        if (itemStack.is(Items.ECHO_SHARD.asItem()) && !state.getValue(HAS_SHARD))
+        if (itemStack.is(Items.ECHO_SHARD.asItem()) && state.getValue(STATE).equals(State.CLOSED))
         {
             itemStack.consume(1, player);
-            level.setBlockAndUpdate(pos, state.trySetValue(HAS_SHARD, true));
+
+            level.setBlockAndUpdate(pos, state.trySetValue(STATE, State.OPEN));
+
             if (!level.isClientSide())
                 level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE,  SoundSource.BLOCKS);
+
             return InteractionResult.SUCCESS;
         }
 

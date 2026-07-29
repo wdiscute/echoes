@@ -1,29 +1,43 @@
 {
   "variants": {
-    "has_shard=true,facing=north": {
+    "state=open,facing=north": {
       "model": "echoes:block/portal_filled"
     },
-    "has_shard=true,facing=south": {
+    "state=open,facing=south": {
       "model": "echoes:block/portal_filled"
     },
-    "has_shard=true,facing=east": {
+    "state=open,facing=east": {
       "model": "echoes:block/portal_filled"
     },
-    "has_shard=true,facing=west": {
+    "state=open,facing=west": {
       "model": "echoes:block/portal_filled"
     },
 
 
-    "has_shard=false,facing=north": {
+    "state=closed,facing=north": {
       "model": "echoes:block/portal"
     },
-    "has_shard=false,facing=south": {
+    "state=closed,facing=south": {
       "model": "echoes:block/portal"
     },
-    "has_shard=false,facing=east": {
+    "state=closed,facing=east": {
       "model": "echoes:block/portal"
     },
-    "has_shard=false,facing=west": {
+    "state=closed,facing=west": {
+      "model": "echoes:block/portal"
+    },
+
+
+    "state=looting,facing=north": {
+      "model": "echoes:block/portal"
+    },
+    "state=looting,facing=south": {
+      "model": "echoes:block/portal"
+    },
+    "state=looting,facing=east": {
+      "model": "echoes:block/portal"
+    },
+    "state=looting,facing=west": {
       "model": "echoes:block/portal"
     }
   }

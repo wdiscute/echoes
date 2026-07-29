@@ -3,6 +3,7 @@ package com.wdiscute.echoes;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
 import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
 import com.wdiscute.echoes.registry.ECDataAttachments;
@@ -27,15 +28,13 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -314,11 +313,26 @@ public class TimelessInstance
 
                 ServerLevel levelToReturn = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
 
-                levelToReturn.getChunkSource()
-                        .addTicketAndLoadWithRadius(TicketType.PLAYER_SPAWN, ChunkPos.containing(BlockPos.containing(portalPos.getCenter())), 2);
+                if (levelToReturn != null)
+                {
+                    levelToReturn.getChunkSource()
+                            .addTicketAndLoadWithRadius(TicketType.PLAYER_SPAWN, ChunkPos.containing(BlockPos.containing(portalPos.getCenter())), 2);
 
-                if (levelToReturn.getBlockEntity(portalPos) instanceof PortalBlockEntity)
-                    PortalBlockEntity.SCULK_SPREADER.addCursors(portalPos, 10);
+                    BlockEntity maybeBlockEntity = levelToReturn.getBlockEntity(portalPos);
+                    if (maybeBlockEntity instanceof PortalBlockEntity pbe)
+                    {
+                        PortalBlockEntity.SCULK_SPREADER.addCursors(portalPos, 10);
+
+                        //set loot
+                        //todo make this data-driven with Echoes modifiers
+                        List<MaybeStack> loot = new ArrayList<>();
+                        loot.add(new MaybeStack(Items.DIAMOND));
+                        loot.add(new MaybeStack(Items.GOLD_INGOT));
+                        loot.add(new MaybeStack(Items.EMERALD));
+                        loot.add(new MaybeStack(Items.IRON_INGOT));
+                        pbe.setLooting(loot);
+                    }
+                }
 
                 phase = Phase.FINISHED;
             }
@@ -372,7 +386,7 @@ public class TimelessInstance
         ServerLevel level = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
         TeleportTransition trans = new TeleportTransition(level,
                 portalPos.getCenter().add(0, 2, 0),
-                Vec3.ZERO,
+                new Vec3(sl.getRandom().nextFloat() / 2 - 0.5f, sl.getRandom().nextFloat() / 2, sl.getRandom().nextFloat() / 2 - 0.5f),
                 0,
                 0,
                 Utils::nothing
@@ -607,7 +621,7 @@ public class TimelessInstance
                 //if "structure_`letter``i`" doesn't exist, break
                 if (st.isEmpty())
                     continue;
-                    //break;
+                //break;
 
                 BlockPos placementBP = origin.offset(j * 48, 0, i * 48);
                 st.get().placeInWorld(sl, placementBP, origin,
