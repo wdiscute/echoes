@@ -5,6 +5,7 @@ import com.wdiscute.echoes.timeless.TimelessHandler;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,10 +17,19 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
 @EventBusSubscriber(modid = Echoes.MOD_ID)
 public class ECEvents
 {
+    @SubscribeEvent
+    public static void addDatapackRegistry(DataPackRegistryEvent.NewRegistry event)
+    {
+        event.dataPackRegistry(
+                Echoes.BLACKSMITH_TRADE_KEY, BlacksmithTrade.CODEC, BlacksmithTrade.CODEC,
+                builder -> builder.maxId(1024));
+    }
+
     @SubscribeEvent
     public static void timelessTick(LevelTickEvent.Post event)
     {

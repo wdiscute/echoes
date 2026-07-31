@@ -28,13 +28,34 @@ sourceSets.main.resources {
 
 repositories {
     mavenLocal()
+
+    //modrinth
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+
+    //jei
+    maven {
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+
+    //jei
+    maven {
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
     //wdUtils
     jarJar(implementation("com.wdiscute:wdUtils:1.2-NEOFORGE-26.1.2"))
-}
 
+    //libtooltips
+    jarJar(implementation("maven.modrinth:libtooltips:2.2-NEOFORGE-26.1.2"))
+
+    //JEI
+    compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
+    runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
+}
 
 base {
     archivesName = mod_id

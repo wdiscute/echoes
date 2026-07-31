@@ -20,6 +20,9 @@ public class ECDataGenerators
         PackOutput output = gen.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
+        //blacksmith entries
+        event.createProvider(DGECBlacksmithTradesProvider::new);
+
         //data entries
         ECDGDataEntriesProvider.start(gen, output);
 

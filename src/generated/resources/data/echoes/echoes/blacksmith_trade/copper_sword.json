@@ -1,0 +1,17 @@
+{
+  "cost": [
+    {
+      "count": 20,
+      "data_components_patch": {},
+      "identifier": "echoes:sculk_tissue"
+    }
+  ],
+  "power_level": 10,
+  "rarity": "common",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {},
+    "identifier": "minecraft:copper_sword"
+  },
+  "weight": 10
+}

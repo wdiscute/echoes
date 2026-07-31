@@ -35,6 +35,8 @@ public class TimelessMarkerBlock extends Block implements EntityBlock
         GROUND_MELEE_ENEMY,
         GROUND_RANGED_ENEMY,
         FLYING_ENEMY,
+        BLACKSMITH_NPC,
+        BLACKSMITH_STAND,
         ;
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);

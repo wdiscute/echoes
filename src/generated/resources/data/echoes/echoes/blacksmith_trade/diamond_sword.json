@@ -1,0 +1,17 @@
+{
+  "cost": [
+    {
+      "count": 20,
+      "data_components_patch": {},
+      "identifier": "echoes:sculk_tissue"
+    }
+  ],
+  "power_level": 10,
+  "rarity": "epic",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {},
+    "identifier": "minecraft:diamond_sword"
+  },
+  "weight": 10
+}

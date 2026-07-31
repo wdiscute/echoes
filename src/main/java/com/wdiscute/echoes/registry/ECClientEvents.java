@@ -2,10 +2,13 @@ package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
+import com.wdiscute.echoes.blocks.display.DisplayGuiLayer;
+import com.wdiscute.echoes.blocks.display.DisplayRenderer;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
 import com.wdiscute.echoes.entity.heart.SculkHeartRenderer;
 import com.wdiscute.echoes.entity.lantern.LanternModel;
 import com.wdiscute.echoes.entity.lantern.LanternRenderer;
+import com.wdiscute.utils.screen.ItemStackPictureInPictureRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -13,6 +16,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 
 @EventBusSubscriber(modid = Echoes.MOD_ID, value = Dist.CLIENT)
 public class ECClientEvents
@@ -21,6 +25,7 @@ public class ECClientEvents
     public static void registerHUD(RegisterGuiLayersEvent event)
     {
         event.registerAboveAll(Echoes.rl("echoes_gui"), new TimelessGUILayer());
+        event.registerAboveAll(Echoes.rl("display_gui"), new DisplayGuiLayer());
     }
 
     @SubscribeEvent
@@ -40,5 +45,6 @@ public class ECClientEvents
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
         event.registerBlockEntityRenderer(ECBlockEntities.TIMELESS_MARKER.get(), TimelessMarkerRenderer::new);
+        event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);
     }
 }

@@ -1,19 +1,27 @@
 package com.wdiscute.echoes.timeless;
 
 import com.wdiscute.echoes.ECTags;
+import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECEntities;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
+import com.wdiscute.utils.MaybeStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.zombie.Husk;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -71,6 +79,29 @@ public class TimelessProcessor
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(entity);
             }
+
+            //spawn blacksmith npc
+            if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_NPC))
+            {
+                Entity entity = EntityType.VILLAGER.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
+                sl.addFreshEntityWithPassengers(entity);
+            }
+
+            //spawn blacksmith stand
+            if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_STAND))
+            {
+                sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
+                sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState());
+                if (sl.getBlockEntity(bp) instanceof DisplayBlockEntity dbe)
+                {
+                    List<BlacksmithTrade> list = sl.registryAccess().lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
+
+                    if (!list.isEmpty())
+                        dbe.trade = list.get(sl.getRandom().nextInt(list.size()));
+                    dbe.setChanged();
+                }
+            }
         });
 
 
@@ -78,7 +109,7 @@ public class TimelessProcessor
         add((instance, sl, state, bp, structureType) ->
         {
             //only run for sculk
-            if(!structureType.equals(TimelessInstance.StructureType.SCULK)) return;
+            if (!structureType.equals(TimelessInstance.StructureType.SCULK)) return;
 
             if (!state.isEmpty())
                 instance.STORED_STATES.put(bp, state);
