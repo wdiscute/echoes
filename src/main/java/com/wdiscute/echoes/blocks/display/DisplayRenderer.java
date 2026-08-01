@@ -56,10 +56,7 @@ public class DisplayRenderer implements BlockEntityRenderer<DisplayBlockEntity, 
         poseStack.mulPose(Axis.ZP.rotationDegrees((float) (Math.toRadians(Util.getMillis() % 360f) / 600f)));
 
         if (!state.stack.isEmpty())
-        {
-            int lightVal = state.lightCoords;
-            state.item.submit(poseStack, submitNodeCollector, lightVal, OverlayTexture.NO_OVERLAY, 0);
-        }
+            state.item.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
         poseStack.popPose();
     }

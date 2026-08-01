@@ -52,6 +52,12 @@ dependencies {
     //libtooltips
     jarJar(implementation("maven.modrinth:libtooltips:2.2-NEOFORGE-26.1.2"))
 
+    //iris
+    runtimeOnly "maven.modrinth:YL57xq9U:BO8hxvMR"
+
+    //sodium
+    runtimeOnly "maven.modrinth:AANobbMI:UETw0GTI"
+
     //JEI
     compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
     runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
@@ -117,7 +123,7 @@ neoForge {
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            logLevel = org.slf4j.event.Level.DEBUG
+            logLevel = org.slf4j.event.Level.WARN
         }
     }
 

@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.timeless.TimelessHandler;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;

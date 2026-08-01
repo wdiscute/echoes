@@ -1,7 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
+import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,6 +28,10 @@ public interface ECEntities
     DeferredHolder<EntityType<?>, EntityType<SculkHeartEntity>> SCULK_HEART =
             register("sculk_heart", SculkHeartEntity::new, MobCategory.MONSTER,
                     b -> b.sized(3f, 3f));
+
+    DeferredHolder<EntityType<?>, EntityType<TimelessCorpse>> TIMELESS_CORPSE =
+            register("timeless_corpse", TimelessCorpse::new, MobCategory.MISC,
+                    b -> b.sized(2f, 2f));
 
     //DeferredHolder<EntityType<?>, EntityType<SculkedEntity>> SCULKED =
     //        register("sculked", SculkedEntity::new, MobCategory.MONSTER,
