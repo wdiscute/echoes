@@ -4,18 +4,23 @@ import com.wdiscute.echoes.ECTags;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
+import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -41,6 +46,24 @@ public class TimelessProcessor
             //set spawnpoint
             if (type.equals(TimelessMarkerBlock.Type.SPAWN_POINT))
                 instance.spawnPoint = bp;
+
+            //spawn timeless corpse
+            if (type.equals(TimelessMarkerBlock.Type.TIMELESS_CORPSE))
+            {
+                TimelessCorpse corpse = ECEntities.TIMELESS_CORPSE.get().create(sl, EntitySpawnReason.TRIGGERED);
+                corpse.snapTo(bp.getCenter().x, bp.getCenter().y - 0.7, bp.getCenter().z);
+                if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.NORTH))
+                    corpse.setYRot(0);
+                else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.WEST))
+                    corpse.setYRot(90);
+                else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.SOUTH))
+                    corpse.setYRot(180);
+                else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.EAST))
+                    corpse.setYRot(270);
+
+                corpse.setStack(Items.DIAMOND_SWORD.getDefaultInstance());
+                sl.addFreshEntityWithPassengers(corpse);
+            }
 
             //spawn heart entity
             if (type.equals(TimelessMarkerBlock.Type.HEART))

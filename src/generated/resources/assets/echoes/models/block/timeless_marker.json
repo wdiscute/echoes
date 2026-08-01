@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "echoes:block/timeless_marker_top",
+    "side": "echoes:block/timeless_marker_side"
+  }
+}

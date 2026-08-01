@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.blocks.marker;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
 
-public class TimelessMarkerBlock extends Block implements EntityBlock
+public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements EntityBlock
 {
     public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
 
@@ -27,9 +28,16 @@ public class TimelessMarkerBlock extends Block implements EntityBlock
         super(properties);
     }
 
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec()
+    {
+        return null;
+    }
+
     public enum Type implements StringRepresentableAutoForEnums
     {
         SPAWN_POINT,
+        TIMELESS_CORPSE,
         HEART,
         LANTERN,
         GROUND_MELEE_ENEMY,
@@ -50,7 +58,7 @@ public class TimelessMarkerBlock extends Block implements EntityBlock
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.defaultBlockState().setValue(TYPE, Type.SPAWN_POINT);
+        return this.defaultBlockState().setValue(TYPE, Type.SPAWN_POINT).setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
@@ -58,6 +66,7 @@ public class TimelessMarkerBlock extends Block implements EntityBlock
     {
         super.createBlockStateDefinition(builder);
         builder.add(TYPE);
+        builder.add(FACING);
     }
 
     @Override

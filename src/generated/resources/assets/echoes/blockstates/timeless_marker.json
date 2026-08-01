@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=south": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    }
+  }
+}

@@ -38,6 +38,8 @@ public class ECDGModelProvider extends ModelProvider
 
         list.add(ECBlocks.SCULK_PILLAR.asItem().builtInRegistryHolder());
 
+        list.add(ECBlocks.TIMELESS_MARKER.asItem().builtInRegistryHolder());
+
         //items
         list.add(ECItems.SCULK_TISSUE.getDelegate());
 
@@ -55,6 +57,8 @@ public class ECDGModelProvider extends ModelProvider
 
         list.add(ECBlocks.SCULK_PILLAR);
 
+        list.add(ECBlocks.TIMELESS_MARKER);
+
 
         return list.stream();
     }
@@ -68,6 +72,8 @@ public class ECDGModelProvider extends ModelProvider
         blockModels.createAxisAlignedPillarBlock(ECBlocks.GLEEMSLATE_PILLAR.get(), TexturedModel.COLUMN);
 
         blockModels.createAxisAlignedPillarBlock(ECBlocks.SCULK_PILLAR.get(), TexturedModel.COLUMN);
+
+        blockModels.createHorizontallyRotatedBlock(ECBlocks.TIMELESS_MARKER.get(), TexturedModel.COLUMN);
 
         itemModels.generateFlatItem(ECItems.SCULK_TISSUE.get(), ModelTemplates.FLAT_ITEM);
     }

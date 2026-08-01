@@ -50,7 +50,7 @@ public class ECEvents
         //if player and in timeless
         if (entity instanceof Player player && player.level().dimension().equals(Echoes.TIMELESS))
         {
-            entity.setHealth(1);
+            entity.setHealth(5);
             entity.fallDistance = 0;
             event.setCanceled(true);
 

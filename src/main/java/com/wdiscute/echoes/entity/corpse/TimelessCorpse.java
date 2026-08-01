@@ -1,5 +1,9 @@
 package com.wdiscute.echoes.entity.corpse;
 
+import com.wdiscute.echoes.entity.lantern.LanternEntity;
+import com.wdiscute.echoes.registry.ECEntityDataSerializers;
+import com.wdiscute.utils.MaybeStack;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -9,19 +13,30 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.UUID;
+
 public class TimelessCorpse extends Entity
 {
-    ItemStack stack = new ItemStack(Items.DIAMOND_SWORD);
+    public static final EntityDataAccessor<MaybeStack> STACK = SynchedEntityData.defineId(TimelessCorpse.class, ECEntityDataSerializers.STACK_HOLDER.get());
 
     public TimelessCorpse(EntityType<?> type, Level level)
     {
         super(type, level);
+    }
+
+    public void setStack(ItemStack stack)
+    {
+        entityData.set(STACK, new MaybeStack(stack));
+    }
+
+    public ItemStack getStack()
+    {
+        return entityData.get(STACK).toStack();
     }
 
     @Override
@@ -33,16 +48,21 @@ public class TimelessCorpse extends Entity
     @Override
     public InteractionResult interact(Player player, InteractionHand hand, Vec3 location)
     {
-        if (stack != null)
-            player.addItem(stack);
-        stack = null;
-        return super.interact(player, hand, location);
+        ItemStack stack = getStack();
+
+        if(player.level().isClientSide())
+            return stack.isEmpty() ? InteractionResult.FAIL : InteractionResult.SUCCESS;
+
+        player.addItem(stack);
+
+        entityData.set(STACK, MaybeStack.EMPTY);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder entityData)
     {
-
+        entityData.define(STACK, MaybeStack.EMPTY);
     }
 
     @Override
@@ -54,12 +74,12 @@ public class TimelessCorpse extends Entity
     @Override
     protected void readAdditionalSaveData(ValueInput input)
     {
-
+        entityData.set(STACK, input.read("item", MaybeStack.CODEC).orElse(MaybeStack.EMPTY));
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output)
     {
-
+        output.store("item", MaybeStack.CODEC, entityData.get(STACK));
     }
 }

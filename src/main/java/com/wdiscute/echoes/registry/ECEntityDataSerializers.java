@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.utils.MaybeStack;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.StreamCodec;
@@ -43,6 +44,12 @@ public interface ECEntityDataSerializers
 
     DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<UUID>> UUID_HOLDER =
             SERIALIZERS.register("uuid", () -> UUID);
+
+
+    EntityDataSerializer<MaybeStack> STACK = EntityDataSerializer.forValueType(MaybeStack.STREAM_CODEC);
+
+    DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<MaybeStack>> STACK_HOLDER =
+            SERIALIZERS.register("stack", () -> STACK);
 
     static void register(IEventBus eventBus)
     {

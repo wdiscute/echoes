@@ -4,13 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.wdiscute.echoes.Echoes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.ItemDisplayContext;
 
 public class TimelessCorpseRenderer extends EntityRenderer<TimelessCorpse, TimelessCorpseRenderState>
@@ -32,18 +35,22 @@ public class TimelessCorpseRenderer extends EntityRenderer<TimelessCorpse, Timel
     {
         super.submit(state, poseStack, submitNodeCollector, camera);
 
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.rot));
+
         poseStack.translate(0, 1.7, 0);
         poseStack.scale(-1.0F, -1.0F, 1.0F);
 
         //render player model with local skin
-        submitNodeCollector.submitModel(state.isSlim ? modelSlim : model,
-                state,
-                poseStack,
-                Minecraft.getInstance().player.getSkin().body().texturePath(),
-                state.lightCoords,
-                OverlayTexture.NO_OVERLAY,
-                state.outlineColor,
-                null);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null)
+            submitNodeCollector.submitModel(state.isSlim ? modelSlim : model,
+                    state,
+                    poseStack,
+                    player.getSkin().body().texturePath(),
+                    state.lightCoords,
+                    OverlayTexture.NO_OVERLAY,
+                    state.outlineColor,
+                    null);
 
         //sculk overlay
         poseStack.scale(1.0001f, 1f, 1.001f);
@@ -82,8 +89,8 @@ public class TimelessCorpseRenderer extends EntityRenderer<TimelessCorpse, Timel
         if (Minecraft.getInstance().player != null)
             state.isSlim = Minecraft.getInstance().player.getSkin().model().equals(PlayerModelType.SLIM);
 
-        if (entity.stack != null)
-            state.stack = entity.stack;
+        state.stack = entity.getStack();
+        state.rot = entity.getYRot();
 
         this.itemModelResolver.updateForNonLiving(state.item, state.stack, ItemDisplayContext.FIXED, Minecraft.getInstance().player);
 

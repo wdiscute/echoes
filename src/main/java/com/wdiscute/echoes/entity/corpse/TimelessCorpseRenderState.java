@@ -8,6 +8,8 @@ public class TimelessCorpseRenderState extends EntityRenderState
 {
     public final ItemStackRenderState item = new ItemStackRenderState();
 
+    float rot = 0;
+
     ItemStack stack = ItemStack.EMPTY;
 
     boolean isSlim = false;
