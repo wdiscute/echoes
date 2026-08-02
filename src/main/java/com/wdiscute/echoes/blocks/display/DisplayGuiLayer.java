@@ -43,15 +43,17 @@ public class DisplayGuiLayer implements GuiLayer
                 int x = width / 2 - 200;
                 int y = height / 2 - 120;
 
+                int costEntries = dbe.trade.cost().size();
+
                 ItemStack stack = dbe.trade.stack().toStack();
                 ScreenUtils.renderItem(guiGraphics, stack,
                         (float) 0,
                         (float) (20 + 25 * (Math.sin(time / 1000.0 * 0.2f) + 1) / 2),
                         (float) (min + (max - min) * (Math.sin(time / 1000.0 * speed) + 1) / 2),
-                        -255, y - 140, 5f);
+                        -260, -90, 5f);
 
-                guiGraphics.fill(x, y, x + 140, y + 220, 0x66000000);
-                guiGraphics.fill(x + 10, y + 170, x + 130, y + 210, 0x66000000);
+                guiGraphics.fill(x, y, x + 140, y + 188 + costEntries * 16, 0x66000000);
+                guiGraphics.fill(x + 10, y + 170, x + 130, y + 178 + costEntries * 16, 0x66000000);
 
                 Font font = Minecraft.getInstance().font;
 
@@ -77,9 +79,9 @@ public class DisplayGuiLayer implements GuiLayer
                     ItemStack costStack = dbe.trade.cost().get(i).toStack();
 
                     guiGraphics.text(font, MutableComponent.create(costStack.getHoverName().getContents()).append(" x" + costStack.count()),
-                            x + 30, y + 179, 0xffffffff);
+                            x + 30, y + 179 + i * 15, 0xffffffff);
 
-                    ScreenUtils.item(guiGraphics, costStack, x + 20, y + 182, guiGraphics.pose(), 1f);
+                    ScreenUtils.item(guiGraphics, costStack, x + 20, y + 182 + i * 16, guiGraphics.pose(), 1f);
                 }
             }
         }

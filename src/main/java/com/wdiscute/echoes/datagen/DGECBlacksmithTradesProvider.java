@@ -2,15 +2,19 @@ package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECBlocks;
+import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECItems;
+import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,10 +36,17 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     private static void bootstrap(BootstrapContext<BlacksmithTrade> context)
     {
+        DataComponentPatch patch =
+                DataComponentPatch.builder().set(ECDataComponents.PERKS.get(), List.of(new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f))).build();
+
+
+
         register(context, new BlacksmithTrade(
-                new MaybeStack(Items.COPPER_SWORD),
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.COPPER_SWORD), 1, patch),
                 BlacksmithTrade.Rarity.COMMON,
                 List.of(
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
                         new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20)
                 ),
                 10,
@@ -46,6 +57,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 new MaybeStack(Items.DIAMOND_SWORD),
                 BlacksmithTrade.Rarity.EPIC,
                 List.of(
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
                         new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20)
                 ),
                 10,

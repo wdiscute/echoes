@@ -35,11 +35,13 @@ public class Echoes
     {
         ECItems.register(modEventBus);
         ECBlocks.register(modEventBus);
-        ECDataAttachments.register(modEventBus);
         ECBlockEntities.register(modEventBus);
         ECEntities.register(modEventBus);
+        ECDataComponents.register(modEventBus);
+        ECDataAttachments.register(modEventBus);
         ECDataEntries.register(modEventBus);
         ECEntityDataSerializers.register(modEventBus);
+        ECPerks.register(modEventBus);
 
         TimelessInstance.SphereCache.init(128);
         TimelessProcessor.addDefaultProcessors();

@@ -4,13 +4,30 @@
       "count": 20,
       "data_components_patch": {},
       "identifier": "echoes:sculk_tissue"
+    },
+    {
+      "count": 20,
+      "data_components_patch": {},
+      "identifier": "echoes:sculk_tissue"
+    },
+    {
+      "count": 20,
+      "data_components_patch": {},
+      "identifier": "echoes:sculk_tissue"
     }
   ],
   "power_level": 10,
   "rarity": "common",
   "stack": {
     "count": 1,
-    "data_components_patch": {},
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "id": "echoes:extra_sculk_damage",
+          "value": 2.0
+        }
+      ]
+    },
     "identifier": "minecraft:copper_sword"
   },
   "weight": 10

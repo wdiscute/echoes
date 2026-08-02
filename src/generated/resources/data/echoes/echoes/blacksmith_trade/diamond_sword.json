@@ -4,6 +4,11 @@
       "count": 20,
       "data_components_patch": {},
       "identifier": "echoes:sculk_tissue"
+    },
+    {
+      "count": 20,
+      "data_components_patch": {},
+      "identifier": "echoes:sculk_tissue"
     }
   ],
   "power_level": 10,

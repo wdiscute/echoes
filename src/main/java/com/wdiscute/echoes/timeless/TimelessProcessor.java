@@ -11,11 +11,13 @@ import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
@@ -100,8 +102,10 @@ public class TimelessProcessor
             //spawn blacksmith npc
             if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_NPC))
             {
-                Entity entity = EntityType.VILLAGER.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                Villager entity = EntityType.VILLAGER.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
+                entity.setCustomName(Component.literal("sculk-themed blacksmith npc (not a villager)"));
+                entity.setCustomNameVisible(true);
                 sl.addFreshEntityWithPassengers(entity);
             }
 
