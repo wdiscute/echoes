@@ -1,7 +1,9 @@
 package com.wdiscute.echoes.blocks.display;
 
+import com.sun.jna.platform.win32.COM.COMBindingBaseObject;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,6 +32,8 @@ public class DisplayBlock extends Block implements EntityBlock
         if (level.getBlockEntity(pos) instanceof DisplayBlockEntity dbe)
             if (dbe.clickedOn(player))
                 return InteractionResult.SUCCESS;
+            else
+                player.sendOverlayMessage(Component.literal("Not enough materials..."));
 
         return super.useWithoutItem(state, level, pos, player, hitResult);
     }

@@ -4,14 +4,17 @@ import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessProcessor;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
+import com.wdiscute.libtooltips.Tooltips;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import org.apache.commons.lang3.tuple.Triple;
 
 @Mod(Echoes.MOD_ID)
 public class Echoes

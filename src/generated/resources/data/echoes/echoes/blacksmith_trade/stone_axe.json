@@ -1,0 +1,17 @@
+{
+  "cost": [
+    {
+      "count": 128,
+      "data_components_patch": {},
+      "identifier": "minecraft:stone_bricks"
+    }
+  ],
+  "power_level": 10,
+  "rarity": "uncommon",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {},
+    "identifier": "minecraft:stone_axe"
+  },
+  "weight": 10
+}

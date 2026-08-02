@@ -4,6 +4,7 @@
   "has_skylight": true,
   "has_ceiling": false,
   "ambient_light": 0,
+  "skybox": "end",
   "min_y": -64,
   "height": 384,
   "logical_height": 384,

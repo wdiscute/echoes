@@ -8,16 +8,16 @@
     {
       "count": 20,
       "data_components_patch": {},
-      "identifier": "echoes:sculk_tissue"
+      "identifier": "minecraft:diamond"
     },
     {
-      "count": 20,
+      "count": 3,
       "data_components_patch": {},
-      "identifier": "echoes:sculk_tissue"
+      "identifier": "minecraft:gold_ingot"
     }
   ],
-  "power_level": 10,
-  "rarity": "common",
+  "power_level": 15,
+  "rarity": "rare",
   "stack": {
     "count": 1,
     "data_components_patch": {

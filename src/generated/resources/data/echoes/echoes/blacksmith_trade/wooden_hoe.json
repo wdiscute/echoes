@@ -1,0 +1,17 @@
+{
+  "cost": [
+    {
+      "count": 3,
+      "data_components_patch": {},
+      "identifier": "minecraft:oak_log"
+    }
+  ],
+  "power_level": 0,
+  "rarity": "common",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {},
+    "identifier": "minecraft:wooden_hoe"
+  },
+  "weight": 10
+}

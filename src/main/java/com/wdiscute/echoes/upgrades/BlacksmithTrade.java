@@ -35,5 +35,10 @@ public record BlacksmithTrade(MaybeStack stack, Rarity rarity, List<MaybeStack> 
 
         public static final Codec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
         public static final StreamCodec<FriendlyByteBuf, Rarity> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(Rarity.class);
+
+        public String toTranslationKey()
+        {
+            return "echoes.rarity." + getSerializedName();
+        }
     }
 }

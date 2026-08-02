@@ -1,8 +1,10 @@
 package com.wdiscute.echoes.blocks.display;
 
 import com.wdiscute.echoes.registry.ECBlocks;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.utils.MaybeStack;
+import com.wdiscute.utils.Utils;
 import com.wdiscute.utils.screen.ScreenUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
@@ -18,6 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
+import java.util.List;
+
 public class DisplayGuiLayer implements GuiLayer
 {
     @Override
@@ -32,6 +36,8 @@ public class DisplayGuiLayer implements GuiLayer
 
             if (blockState.is(ECBlocks.DISPLAY) && player.level().getBlockEntity(hitResult.getBlockPos()) instanceof DisplayBlockEntity dbe)
             {
+                if(dbe.trade == null || dbe.trade.equals(BlacksmithTrade.EMPTY)) return;
+
                 int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
                 int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
@@ -62,7 +68,7 @@ public class DisplayGuiLayer implements GuiLayer
                         x + 70, y + 6, 0xffffffff, true);
 
                 ScreenUtils.centeredText(guiGraphics,
-                        font, Tooltips.resolveTagsToComponent("<ltrgb>LEGENDARY</ltrgb>").withStyle(ChatFormatting.BOLD),
+                        font, Tooltips.resolveTagsToComponentFromTranslationKey(dbe.trade.rarity().toTranslationKey()).withStyle(ChatFormatting.BOLD),
                         x + 70, y + 18, 0xffffffff, true);
 
                 guiGraphics.text(font, Component.literal("+2 Damage to Sculk"),
@@ -71,15 +77,17 @@ public class DisplayGuiLayer implements GuiLayer
                 guiGraphics.text(font, Component.literal("+1.5 kisses from nano"),
                         x + 18, y + 138, 0xffffffff);
 
-                guiGraphics.text(font, Component.literal("Material Cost").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_AQUA),
+                guiGraphics.text(font, Component.literal("Material Cost").withStyle(ChatFormatting.DARK_AQUA),
                         x + 29, y + 166, 0xffffffff);
 
                 for (int i = 0; i < dbe.trade.cost().size(); i++)
                 {
                     ItemStack costStack = dbe.trade.cost().get(i).toStack();
 
+                    boolean hasEnough = Utils.InventoryManagement.hasEnoughItems(List.of(new MaybeStack(costStack)), Minecraft.getInstance().player.getInventory());
+
                     guiGraphics.text(font, MutableComponent.create(costStack.getHoverName().getContents()).append(" x" + costStack.count()),
-                            x + 30, y + 179 + i * 15, 0xffffffff);
+                            x + 30, y + 179 + i * 15, hasEnough ? 0xff20a347 : 0xffb74646);
 
                     ScreenUtils.item(guiGraphics, costStack, x + 20, y + 182 + i * 16, guiGraphics.pose(), 1f);
                 }

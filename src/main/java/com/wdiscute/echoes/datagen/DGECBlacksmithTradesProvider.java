@@ -36,20 +36,38 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     private static void bootstrap(BootstrapContext<BlacksmithTrade> context)
     {
-        DataComponentPatch patch =
-                DataComponentPatch.builder().set(ECDataComponents.PERKS.get(), List.of(new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f))).build();
-
-
 
         register(context, new BlacksmithTrade(
-                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.COPPER_SWORD), 1, patch),
+                new MaybeStack(Items.WOODEN_HOE),
                 BlacksmithTrade.Rarity.COMMON,
                 List.of(
-                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
-                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
-                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20)
+                        new MaybeStack(Items.OAK_LOG, 3)
+                ),
+                0,
+                10
+        ));
+
+        register(context, new BlacksmithTrade(
+                new MaybeStack(Items.STONE_AXE),
+                BlacksmithTrade.Rarity.UNCOMMON,
+                List.of(
+                        new MaybeStack(Items.STONE_BRICKS, 128)
                 ),
                 10,
+                10
+        ));
+
+        DataComponentPatch patch =
+                DataComponentPatch.builder().set(ECDataComponents.PERKS.get(), List.of(new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f))).build();
+        register(context, new BlacksmithTrade(
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.COPPER_SWORD), 1, patch),
+                BlacksmithTrade.Rarity.RARE,
+                List.of(
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
+                        new MaybeStack(Items.DIAMOND, 20),
+                        new MaybeStack(Items.GOLD_INGOT, 3)
+                ),
+                15,
                 10
         ));
 
@@ -60,7 +78,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
                         new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20)
                 ),
-                10,
+                25,
                 10
         ));
 
@@ -70,7 +88,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 List.of(
                         new MaybeStack(Items.NETHER_STAR)
                 ),
-                10,
+                50,
                 10
         ));
 
