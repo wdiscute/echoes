@@ -1,6 +1,6 @@
 package com.wdiscute.echoes.upgrades;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,5 +17,5 @@ public interface Perk
         return 0;
     }
 
-    Component getTooltip(float value);
+    MutableComponent getTooltip(float value);
 }

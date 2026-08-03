@@ -58,7 +58,15 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         ));
 
         DataComponentPatch patch =
-                DataComponentPatch.builder().set(ECDataComponents.PERKS.get(), List.of(new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f))).build();
+                DataComponentPatch.builder().set(ECDataComponents.PERKS.get(),
+                        List.of(
+                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f),
+                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f),
+                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f),
+                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f)
+                        )
+                ).build();
+
         register(context, new BlacksmithTrade(
                 new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.COPPER_SWORD), 1, patch),
                 BlacksmithTrade.Rarity.RARE,

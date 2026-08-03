@@ -11,6 +11,7 @@ import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -42,6 +43,7 @@ public class ECDGModelProvider extends ModelProvider
 
         //items
         list.add(ECItems.SCULK_TISSUE.getDelegate());
+        list.add(ECItems.ECHO_BLADE.getDelegate());
 
         return list.stream();
     }
@@ -76,5 +78,8 @@ public class ECDGModelProvider extends ModelProvider
         blockModels.createHorizontallyRotatedBlock(ECBlocks.TIMELESS_MARKER.get(), TexturedModel.COLUMN);
 
         itemModels.generateFlatItem(ECItems.SCULK_TISSUE.get(), ModelTemplates.FLAT_ITEM);
+
+        //weapons
+        itemModels.generateFlatItem(ECItems.ECHO_BLADE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
     }
 }

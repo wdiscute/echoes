@@ -37,6 +37,7 @@ public class DisplayBlockEntity extends BlockEntity
     }
 
     public BlacksmithTrade trade = BlacksmithTrade.EMPTY;
+    public int timeOffset = Utils.r.nextInt();
 
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket()

@@ -17,6 +17,9 @@ public interface ECItems
 
     DeferredItem<Item> SCULK_TISSUE = ITEMS.registerItem("sculk_tissue", Item::new);
 
+    //weapons
+    DeferredItem<Item> ECHO_BLADE = ITEMS.registerItem("echo_blade", Item::new);
+
     static void register(IEventBus modEventBus)
     {
         ITEMS.register(modEventBus);
