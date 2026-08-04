@@ -11,20 +11,17 @@ import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
 import com.wdiscute.echoes.entity.heart.SculkHeartRenderer;
 import com.wdiscute.echoes.entity.lantern.LanternModel;
 import com.wdiscute.echoes.entity.lantern.LanternRenderer;
+import com.wdiscute.echoes.ECPostProcessing;
 import com.wdiscute.utils.Utils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.List;
@@ -37,6 +34,7 @@ public class ECClientEvents
     {
         event.registerAboveAll(Echoes.rl("echoes_gui"), new TimelessGUILayer());
         event.registerAboveAll(Echoes.rl("display_gui"), new DisplayGuiLayer());
+        event.registerAboveAll(Echoes.rl("post_processing"), new ECPostProcessing());
     }
 
     @SubscribeEvent

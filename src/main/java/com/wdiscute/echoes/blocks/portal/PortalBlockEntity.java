@@ -26,9 +26,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PortalBlockEntity extends BlockEntity implements TickableBlockEntity
 {
@@ -43,11 +41,37 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
     }
 
     UUID instanceUUID;
+    public static Set<BlockPos> portals = new HashSet<>();
+
+    public static BlockPos getClosestOpenPortal(BlockPos pos)
+    {
+        float closest = 100000;
+        BlockPos closestBP = BlockPos.ZERO;
+
+        for (BlockPos portal : portals)
+        {
+            int maybeNewDistance = pos.distManhattan(portal);
+
+            if(maybeNewDistance < closest)
+            {
+                closest = maybeNewDistance;
+                closestBP = portal;
+            }
+        }
+
+        return closestBP;
+    }
 
     @Override
     public void tickClient(Level level, BlockPos pos, BlockState state)
     {
         TickableBlockEntity.super.tickClient(level, pos, state);
+
+        if (state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
+            portals.add(pos);
+        else
+            portals.remove(pos);
+
 
         //if not closed, do portal particles and sound
         if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.CLOSED))
@@ -180,6 +204,8 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
     public void preRemoveSideEffects(BlockPos pos, BlockState state)
     {
         super.preRemoveSideEffects(pos, state);
+
+        portals.remove(pos);
 
         if (instanceUUID != null && !level.isClientSide())
             TimelessHandler.remove(level.getServer(), instanceUUID);

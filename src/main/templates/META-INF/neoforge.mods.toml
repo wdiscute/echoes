@@ -9,6 +9,9 @@ description='''
 Curseforge 2026 modjam entry
 '''
 
+[[mixins]]
+config="echoes.mixins.json"
+
 [[dependencies.${mod_id}]] #optional
     modId="neoforge" #mandatory
     type="required" #mandatory
