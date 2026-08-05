@@ -5,6 +5,7 @@ import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.blocks.display.DisplayGuiLayer;
 import com.wdiscute.echoes.blocks.display.DisplayRenderer;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
+import com.wdiscute.echoes.blocks.portal.PortalRenderer;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModel;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
@@ -22,6 +23,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.List;
@@ -35,6 +37,12 @@ public class ECClientEvents
         event.registerAboveAll(Echoes.rl("echoes_gui"), new TimelessGUILayer());
         event.registerAboveAll(Echoes.rl("display_gui"), new DisplayGuiLayer());
         event.registerAboveAll(Echoes.rl("post_processing"), new ECPostProcessing());
+    }
+
+    @SubscribeEvent
+    public static void registerHUD(RegisterRenderPipelinesEvent event)
+    {
+        event.registerPipeline(ECRenderPipelines.PORTAL);
     }
 
     @SubscribeEvent
@@ -68,5 +76,6 @@ public class ECClientEvents
     {
         event.registerBlockEntityRenderer(ECBlockEntities.TIMELESS_MARKER.get(), TimelessMarkerRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);
+        event.registerBlockEntityRenderer(ECBlockEntities.PORTAL.get(), PortalRenderer::new);
     }
 }

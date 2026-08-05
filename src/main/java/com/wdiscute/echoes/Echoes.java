@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Triple;
 
 @Mod(Echoes.MOD_ID)
@@ -48,5 +49,8 @@ public class Echoes
 
         TimelessInstance.SphereCache.init(128);
         TimelessProcessor.addDefaultProcessors();
+
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ECConfig.SPEC);
     }
+
 }

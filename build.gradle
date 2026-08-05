@@ -53,6 +53,7 @@ dependencies {
     jarJar(implementation("maven.modrinth:libtooltips:2.2-NEOFORGE-26.1.2"))
 
     //iris
+    compileOnly "maven.modrinth:YL57xq9U:BO8hxvMR"
     runtimeOnly "maven.modrinth:YL57xq9U:BO8hxvMR"
 
     //sodium

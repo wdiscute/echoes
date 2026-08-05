@@ -13,6 +13,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.apache.commons.lang3.tuple.Triple;
 
 @Mod(value = Echoes.MOD_ID, dist = Dist.CLIENT)
@@ -20,6 +22,8 @@ public class EchoesClient
 {
     public EchoesClient(ModContainer modContainer)
     {
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+
         Tooltips.registerProcessor("ecepic",
                 (t, s, e) -> ECTooltipGradient.process(t,
                         Triple.of(61, 0, 255),

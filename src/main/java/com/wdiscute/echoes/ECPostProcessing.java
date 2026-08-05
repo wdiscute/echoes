@@ -37,6 +37,13 @@ public class ECPostProcessing implements GuiLayer
         if(cachedPos == player.position()) return;
         cachedPos = player.position();
 
+        //pp disable config
+        if(!ECConfig.ENABLE_PORTAL_POST_PROCESSING.get())
+        {
+            reset();
+            return;
+        }
+
         if(PortalBlockEntity.portals.isEmpty())
         {
             reset();

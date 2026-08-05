@@ -85,12 +85,12 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
 
             if (random.nextFloat() > 0f)
                 level.addParticle(ParticleTypes.ASH, false, true,
-                        pos.getX() + random.nextFloat(), pos.getY() + 1.7d + random.nextFloat(), pos.getZ() + random.nextFloat(),
+                        (double) pos.getX() + random.nextFloat(), (double) pos.getY() + 1.7d + random.nextFloat(), (double) pos.getZ() + random.nextFloat(),
                         0f, 0f, 0f);
 
             if (random.nextFloat() > 0.9f)
                 level.addParticle(ParticleTypes.SCULK_SOUL, false, true,
-                        pos.getX() + random.nextFloat(), pos.getY() + 1.1d + random.nextFloat() / 10, pos.getZ() + random.nextFloat(),
+                        (double) pos.getX() + random.nextFloat(), (double) pos.getY() + 1.1d + random.nextFloat() / 10, (double) pos.getZ() + random.nextFloat(),
                         0f, 0f, 0f);
 
             Vec3 center = pos.getCenter();
