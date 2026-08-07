@@ -2,13 +2,12 @@ package com.wdiscute.echoes;
 
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.timeless.TimelessData;
+import com.wdiscute.utils.screen.ScreenUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
 public class TimelessGUILayer implements GuiLayer
@@ -21,24 +20,28 @@ public class TimelessGUILayer implements GuiLayer
 
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA.get());
 
-        if(data.timeToExit() == -1) return;
+        if(!player.level().dimension().equals(Echoes.TIMELESS))
+            return;
 
         //player has data
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-        long seconds = (data.timeToExit() - System.currentTimeMillis()) / 1000;
-        long minutes = seconds / 60;
-        long remainingSeconds = seconds % 60;
+        //display time remaining if not Long.MAX_VALUE (hub)
+        if(data.timeToExit() != Long.MAX_VALUE)
+        {
+            int ticksRemaining = Math.toIntExact(data.timeToExit() - player.level().getGameTime());
 
-        String time = String.format("%02d:%02d", minutes, remainingSeconds);
-        centeredText(guiGraphics, Minecraft.getInstance().font, Component.literal(time), width / 2, 10, 0xffffffff, true);
-    }
+            if(ticksRemaining < 0) return;
 
+            long seconds = ticksRemaining / 20;
+            long minutes = seconds / 60;
+            long remainingSeconds = seconds % 60;
 
-    public static void centeredText(GuiGraphicsExtractor guiGraphics, Font font, Component text, int x, int y, int color, boolean shadow)
-    {
-        FormattedCharSequence formattedcharsequence = text.getVisualOrderText();
-        guiGraphics.text(font, formattedcharsequence, x - font.width(formattedcharsequence) / 2, y, color, shadow);
+            String time = String.format("%02d:%02d", minutes, remainingSeconds);
+            ScreenUtils.centeredText(guiGraphics, Minecraft.getInstance().font, Component.literal(time), width / 2, 10, 0xffffffff, true);
+        }
+
+        ScreenUtils.centeredText(guiGraphics, Minecraft.getInstance().font, Component.literal("level: " + data.currentStage()), width / 2, 20, 0xffffffff, true);
     }
 }

@@ -2,14 +2,13 @@ package com.wdiscute.echoes.blocks.portal;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.timeless.TimelessHandler;
+import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -17,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -40,7 +40,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         super(ECBlockEntities.PORTAL.get(), worldPosition, blockState);
     }
 
-    UUID instanceUUID;
+    public UUID instanceUUID = UUID.randomUUID();
     public static Set<BlockPos> portals = new HashSet<>();
 
     public static BlockPos getClosestOpenPortal(BlockPos pos)
@@ -52,7 +52,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         {
             int maybeNewDistance = pos.distManhattan(portal);
 
-            if(maybeNewDistance < closest)
+            if (maybeNewDistance < closest)
             {
                 closest = maybeNewDistance;
                 closestBP = portal;
@@ -164,37 +164,76 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         //if portal is open
         if (state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
         {
-            for (Entity entity : level.getEntities(null, new AABB(pos.above().above())))
+            for (ServerPlayer player : level.getEntitiesOfClass(Player.class, new AABB(pos.above().above())).stream().map(o -> ((ServerPlayer) o)).toList())
             {
-                if (entity instanceof ServerPlayer player)
+                //if player on timeless
+                if (player.level().dimension().equals(Echoes.TIMELESS))
                 {
-                    //I don't think this line is needed
-                    if (instanceUUID == null) instanceUUID = UUID.randomUUID();
+                    TimelessInstance currentInstance = TimelessManager.getClosest(level.getServer(), player.blockPosition());
+                    if (currentInstance == null)
+                        throw new IllegalStateException("player in timeless tried to use a portal but there's no instances active at all. player should not be in timeless.");
 
-                    TimelessInstance instance = TimelessHandler.getOrCreate(level.getServer(), instanceUUID);
-
-                    level.setBlockAndUpdate(pos, state.trySetValue(PortalBlock.STATE, PortalBlock.State.CLOSED));
-
-                    //if already on timeless
-                    if (level.dimension().equals(Echoes.TIMELESS))
+                    //if currently in a hub
+                    if (currentInstance.isHub())
                     {
-                        TimelessInstance closest = TimelessHandler.getClosest(level.getServer(), pos);
+                        //get new dungeon
+                        TimelessInstance newDungeon = TimelessManager.getOrCreate(level.getServer(), currentInstance.linkedInstance);
 
-                        if (closest == null)
+                        //set linked in new dungeon to the hub
+                        newDungeon.linkedInstance = currentInstance.uuid;
+
+                        //set new dungeon stage to hub + 1
+                        newDungeon.setStage(Math.max(currentInstance.stage + 1, newDungeon.stage));
+
+                        //add player + generate dungeon
+                        newDungeon.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
+                    }
+                    //if not in a hub
+                    else
+                    {
+                        //get hub
+                        TimelessInstance hub = TimelessManager.getOrNull(level.getServer(), currentInstance.linkedInstance);
+                        TimelessInstance newDungeon;
+
+                        //if hub linked instance is the one youre already in, make new one and increase stage
+
+                        //if hub is not linked, make new dungeon from random uuid
+                        if (hub == null)
+                            newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
+                        //if hub is linked, teleport to linked instance
+                        else
                         {
-                            level.getServer().sendSystemMessage(
-                                    Component.literal("[Echoes] Something went wrong when a player used a portal inside The Timeless!"));
-                            return;
+                            //if player is already on the hub linked instance, make new one
+                            if (hub.linkedInstance.equals(currentInstance.uuid))
+                            {
+                                newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
+                                hub.linkedInstance = newDungeon.uuid;
+                            }
+                            else
+                                newDungeon = TimelessManager.getOrCreate(level.getServer(), hub.linkedInstance);
                         }
 
-                        //load instance as blacksmith
-                        instance.setType(TimelessInstance.StructureType.BLACKSMITH);
-                        instance.addPlayer(player, closest.portalPos, closest.portalDimension, false);
+                        //set stage
+                        newDungeon.setStage(Math.max(currentInstance.stage + 1, newDungeon.stage));
+
+                        //if new dungeon is not hub
+                        if (!newDungeon.isHub())
+                            //set linked to the hub (currentInstance.linkedInstance holds the hub)
+                            newDungeon.linkedInstance = currentInstance.linkedInstance;
+
+
+                        //add player
+                        newDungeon.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
                     }
-                    //if not on timeless, teleport player
-                    else
-                        instance.addPlayer(player, pos, level.dimension().identifier(), true);
-                    return;
+
+                    //set current instance to finished
+                    currentInstance.phase = TimelessInstance.Phase.FINISHED;
+                }
+                //if player not on timeless
+                else
+                {
+                    //add player to either current ongoing instance or make a new one
+                    TimelessManager.getOrCreate(level.getServer(), instanceUUID).addPlayer(player, pos, level.dimension().identifier());
                 }
             }
         }
@@ -208,7 +247,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         portals.remove(pos);
 
         if (instanceUUID != null && !level.isClientSide())
-            TimelessHandler.remove(level.getServer(), instanceUUID);
+            TimelessManager.remove(level.getServer(), instanceUUID);
     }
 
     @Override

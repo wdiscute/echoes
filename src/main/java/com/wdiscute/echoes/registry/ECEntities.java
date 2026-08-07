@@ -4,6 +4,7 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
+import com.wdiscute.echoes.entity.soul.SoulEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -32,6 +33,11 @@ public interface ECEntities
     DeferredHolder<EntityType<?>, EntityType<TimelessCorpse>> TIMELESS_CORPSE =
             register("timeless_corpse", TimelessCorpse::new, MobCategory.MISC,
                     b -> b.sized(2f, 2f));
+
+    DeferredHolder<EntityType<?>, EntityType<SoulEntity>> SOUL =
+            register("soul", SoulEntity::new, MobCategory.MISC,
+                    b -> b.sized(0.1f, 0.1f).noSave().noSummon());
+
 
     //DeferredHolder<EntityType<?>, EntityType<SculkedEntity>> SCULKED =
     //        register("sculked", SculkedEntity::new, MobCategory.MONSTER,

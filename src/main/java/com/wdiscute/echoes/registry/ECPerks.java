@@ -2,48 +2,33 @@ package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.perks.EmptyPerk;
-import com.wdiscute.echoes.upgrades.perks.ExtraSculkDamagePerk;
-import com.wdiscute.utils.Utils;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerPlayer;
+import com.wdiscute.echoes.upgrades.perks.*;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.function.Supplier;
 
 public interface ECPerks
 {
-    Map<Identifier, Perk> MAP = new HashMap<>();
-
-    Perk EMPTY = new EmptyPerk();
-
-    Utils.Duo<Identifier, Perk> EXTRA_SCULK_DAMAGE = registerPerk(Echoes.rl("extra_sculk_damage"), new ExtraSculkDamagePerk());
-    Utils.Duo<Identifier, Perk> EXTRA_TICKS_PER_KILL = registerPerk(Echoes.rl("extra_tickks_per_kill"), new ExtraSculkDamagePerk());
+    DeferredRegister<Perk> PERKS =
+            DeferredRegister.create(Echoes.PERK, Echoes.MOD_ID);
 
 
-    static Perk get(Identifier identifier)
+    DeferredHolder<Perk, ? extends Perk> EMPTY_PERK = register("empty", EmptyPerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_DAMAGE = register("extra_damage", ExtraDamagePerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_SCULK_DAMAGE = register("extra_sculk_damage", ExtraSculkDamagePerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_TICKS_PER_KILL = register("extra_ticks_per_kill", ExtraTicksPerKillPerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_FLAT_SOULS = register("extra_flat_souls", ExtraFlatSoulsPerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_PERCENTAGE_SOULS = register("extra_percentage_souls", ExtraPercentageSoulsPerk::new);
+
+    static DeferredHolder<Perk, ? extends Perk> register(String name,  Supplier<Perk> perk)
     {
-        return MAP.getOrDefault(identifier, EMPTY);
+        return PERKS.register(name, perk);
     }
 
-    static void add(ServerPlayer player, Identifier identifier, float value)
+    static void register(IEventBus eventBus)
     {
-        List<Utils.Duo<Identifier, Float>> data = new ArrayList<>(player.getData(ECDataAttachments.PERKS));
-        data.add(new Utils.Duo<>(identifier, value));
-        player.setData(ECDataAttachments.PERKS, data);
-    }
-
-    static Utils.Duo<Identifier, Perk> registerPerk(Identifier identifier, Perk perkInstance)
-    {
-        MAP.put(identifier, perkInstance);
-        return new Utils.Duo<>(identifier, perkInstance);
-    }
-
-    static void register(IEventBus modEventBus)
-    {
+        PERKS.register(eventBus);
     }
 }

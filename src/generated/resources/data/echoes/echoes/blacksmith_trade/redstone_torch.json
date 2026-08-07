@@ -23,16 +23,20 @@
     "data_components_patch": {
       "echoes:perks": [
         {
-          "amplifier": 1.0,
+          "amplifier": 2.0,
           "perk": "echoes:extra_damage"
         },
         {
-          "amplifier": 0.3,
-          "perk": "echoes:extra_percentage_souls"
+          "amplifier": 4.0,
+          "perk": "echoes:extra_sculk_damage"
+        },
+        {
+          "amplifier": 20.0,
+          "perk": "echoes:extra_ticks_per_kill"
         }
       ]
     },
-    "identifier": "minecraft:wooden_hoe"
+    "identifier": "minecraft:redstone_torch"
   },
   "weight": 10
 }

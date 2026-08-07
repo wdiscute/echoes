@@ -6,12 +6,15 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.Identifier;
 
 public class LanternModel extends EntityModel<LanternRenderState>
 {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION =
             new ModelLayerLocation(Echoes.rl("lantern"), "main");
+
+    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/lantern.png");
 
     private final ModelPart bb_main;
 

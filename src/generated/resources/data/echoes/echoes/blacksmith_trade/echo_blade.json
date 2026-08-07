@@ -20,19 +20,8 @@
   "rarity": "rare",
   "stack": {
     "count": 1,
-    "data_components_patch": {
-      "echoes:perks": [
-        {
-          "amplifier": 1.0,
-          "perk": "echoes:extra_damage"
-        },
-        {
-          "amplifier": 0.3,
-          "perk": "echoes:extra_percentage_souls"
-        }
-      ]
-    },
-    "identifier": "minecraft:wooden_hoe"
+    "data_components_patch": {},
+    "identifier": "echoes:echo_blade"
   },
   "weight": 10
 }

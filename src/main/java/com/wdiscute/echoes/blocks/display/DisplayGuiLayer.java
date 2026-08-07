@@ -2,8 +2,8 @@ package com.wdiscute.echoes.blocks.display;
 
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataComponents;
-import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
@@ -16,13 +16,13 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DisplayGuiLayer implements GuiLayer
 {
@@ -51,7 +51,10 @@ public class DisplayGuiLayer implements GuiLayer
                 ItemStack stack = dbe.trade.stack().toStack();
 
                 //get perks for offsets
-                var perkComps = stack.getOrDefault(ECDataComponents.PERKS, List.<Utils.Duo<Identifier, Float>>of()).stream().map(o -> ECPerks.get(o.first()).getTooltip(o.second())).toList();
+
+                List<MutableComponent> perkComps = stack.getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of())
+                        .stream().map(o -> o.perk().value().getTooltip(o.amplifier())).filter(Objects::nonNull).toList();
+
                 int yPerkOffset = perkComps.size() * 11;
                 int yCostOffset = dbe.trade.cost().size() * 16;
 

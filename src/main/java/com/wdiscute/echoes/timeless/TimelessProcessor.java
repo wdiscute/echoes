@@ -4,19 +4,27 @@ import com.wdiscute.echoes.ECTags;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
+import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECEntities;
+import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,14 +32,19 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
+import org.spongepowered.asm.mixin.injection.selectors.ElementNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class TimelessProcessor
 {
     public static final List<Processor> PROCESSORS = new ArrayList<>();
+    public static final ResourceKey<LootTable> EMPTY_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, Identifier.withDefaultNamespace("empty"));
 
     public static void addDefaultProcessors()
     {
@@ -63,7 +76,7 @@ public class TimelessProcessor
                 else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.EAST))
                     corpse.setYRot(270);
 
-                corpse.setStack(Items.DIAMOND_SWORD.getDefaultInstance());
+                corpse.setStack(ECItems.ECHO_BLADE.toStack());
                 sl.addFreshEntityWithPassengers(corpse);
             }
 
@@ -86,7 +99,8 @@ public class TimelessProcessor
             //spawn ground melee enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_MELEE_ENEMY))
             {
-                Entity entity = EntityType.HUSK.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                Mob entity = EntityType.HUSK.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(entity);
             }
@@ -94,7 +108,8 @@ public class TimelessProcessor
             //spawn random enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_RANGED_ENEMY))
             {
-                Entity entity = EntityType.SKELETON.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                Mob entity = EntityType.SKELETON.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(entity);
             }
@@ -104,7 +119,7 @@ public class TimelessProcessor
             {
                 Villager entity = EntityType.VILLAGER.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
-                entity.setCustomName(Component.literal("sculk-themed blacksmith npc (not a villager)"));
+                entity.setCustomName(Component.literal("souls-themed blacksmith npc (not a villager)"));
                 entity.setCustomNameVisible(true);
                 sl.addFreshEntityWithPassengers(entity);
             }
@@ -123,6 +138,45 @@ public class TimelessProcessor
                     dbe.setChanged();
                 }
             }
+
+            //spawn portal
+            if (type.equals(TimelessMarkerBlock.Type.PORTAL))
+            {
+                sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
+                BlockState blockState = ECBlocks.PORTAL.get().defaultBlockState();
+                blockState = blockState.trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN);
+                sl.setBlockAndUpdate(bp, blockState);
+            }
+
+            //spawn fountain
+            if (type.equals(TimelessMarkerBlock.Type.FOUNTAIN))
+            {
+                sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
+
+                //center pillar
+                sl.setBlockAndUpdate(bp, Blocks.QUARTZ_PILLAR.defaultBlockState());
+                sl.setBlockAndUpdate(bp.above(), Blocks.QUARTZ_PILLAR.defaultBlockState());
+                sl.setBlockAndUpdate(bp.above().above(), Blocks.QUARTZ_PILLAR.defaultBlockState());
+                sl.setBlockAndUpdate(bp.above().above().above(), Blocks.LANTERN.defaultBlockState());
+
+                //water around it
+                sl.setBlockAndUpdate(bp.east(), Blocks.WATER.defaultBlockState());
+                sl.setBlockAndUpdate(bp.west(), Blocks.WATER.defaultBlockState());
+                sl.setBlockAndUpdate(bp.north(), Blocks.WATER.defaultBlockState());
+                sl.setBlockAndUpdate(bp.south(), Blocks.WATER.defaultBlockState());
+
+                //water border
+                sl.setBlockAndUpdate(bp.south().south(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                sl.setBlockAndUpdate(bp.east().east(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                sl.setBlockAndUpdate(bp.west().west(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                sl.setBlockAndUpdate(bp.north().north(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+
+                sl.setBlockAndUpdate(bp.north().east(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                sl.setBlockAndUpdate(bp.north().west(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                sl.setBlockAndUpdate(bp.south().east(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                sl.setBlockAndUpdate(bp.south().west(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+            }
+
         });
 
 

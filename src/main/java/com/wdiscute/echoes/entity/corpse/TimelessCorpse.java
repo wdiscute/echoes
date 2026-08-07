@@ -1,5 +1,6 @@
 package com.wdiscute.echoes.entity.corpse;
 
+import com.wdiscute.echoes.SculkAura;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import com.wdiscute.echoes.registry.ECEntityDataSerializers;
 import com.wdiscute.utils.MaybeStack;
@@ -17,10 +18,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-public class TimelessCorpse extends Entity
+public class TimelessCorpse extends Entity implements SculkAura
 {
     public static final EntityDataAccessor<MaybeStack> STACK = SynchedEntityData.defineId(TimelessCorpse.class, ECEntityDataSerializers.STACK_HOLDER.get());
 
@@ -81,5 +83,11 @@ public class TimelessCorpse extends Entity
     protected void addAdditionalSaveData(ValueOutput output)
     {
         output.store("item", MaybeStack.CODEC, entityData.get(STACK));
+    }
+
+    @Override
+    public float getSculkAura(@Nullable ServerLevel sl)
+    {
+        return entityData.get(STACK).isEmpty() ? 0 : 5;
     }
 }

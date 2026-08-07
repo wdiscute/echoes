@@ -9,33 +9,34 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
-public class TimelessHandler extends SavedData
+public class TimelessManager extends SavedData
 {
-    public static final Codec<TimelessHandler> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<TimelessManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             TimelessInstance.CODEC.listOf().fieldOf("instances").forGetter(sd -> sd.instances.stream().toList())
-    ).apply(instance, TimelessHandler::new));
+    ).apply(instance, TimelessManager::new));
 
-    public static final SavedDataType<TimelessHandler> ID = new SavedDataType<>(
+    public static final SavedDataType<TimelessManager> ID = new SavedDataType<>(
             Echoes.rl("timeless_instances"),
-            TimelessHandler::new,
+            TimelessManager::new,
             CODEC
     );
 
     public final Set<TimelessInstance> instances;
 
-    public TimelessHandler()
+    public TimelessManager()
     {
         instances = new HashSet<>();
     }
 
-    public TimelessHandler(List<TimelessInstance> instances)
+    public TimelessManager(List<TimelessInstance> instances)
     {
         this.instances = new HashSet<>(instances);
     }
 
-    public static TimelessHandler getSavedData(MinecraftServer server)
+    public static TimelessManager getSavedData(MinecraftServer server)
     {
         return server.getLevel(Echoes.TIMELESS).getDataStorage().computeIfAbsent(ID);
     }
@@ -48,8 +49,8 @@ public class TimelessHandler extends SavedData
         for (TimelessInstance instance : getSavedData(server).instances)
         {
             int currentDist = Math.abs(instance.origin.getX() - pos.getX()) +
-                   Math.abs(instance.origin.getY() - pos.getY()) +
-                   Math.abs(instance.origin.getZ() - pos.getZ());
+                              Math.abs(instance.origin.getY() - pos.getY()) +
+                              Math.abs(instance.origin.getZ() - pos.getZ());
 
             if (dist > currentDist)
             {
@@ -63,13 +64,30 @@ public class TimelessHandler extends SavedData
 
     public static TimelessInstance getOrCreate(MinecraftServer server, UUID instanceUUID)
     {
-        TimelessHandler savedData = getSavedData(server);
+        TimelessManager savedData = getSavedData(server);
         return savedData.getOrCreate(instanceUUID);
     }
 
     public static void remove(MinecraftServer server, UUID instanceToRemove)
     {
         getSavedData(server).instances.removeIf(o -> o.uuid.equals(instanceToRemove));
+    }
+
+    public static @Nullable TimelessInstance getOrNull(MinecraftServer server, UUID instanceUUID)
+    {
+        TimelessManager savedData = getSavedData(server);
+        return savedData.getOrNull(instanceUUID);
+    }
+
+    public @Nullable TimelessInstance getOrNull(UUID instanceUUID)
+    {
+        for (TimelessInstance instance : instances)
+        {
+            if (instance.uuid.equals(instanceUUID))
+                return instance;
+        }
+
+        return null;
     }
 
     public TimelessInstance getOrCreate(UUID instanceUUID)
@@ -87,8 +105,18 @@ public class TimelessHandler extends SavedData
 
     public void tick(ServerLevel sl)
     {
-        instances.stream().filter(o -> o.phase != TimelessInstance.Phase.NEW).forEach(o -> o.tick(sl));
-        instances.removeIf(o -> o.phase.equals(TimelessInstance.Phase.FINISHED));
+        //set instances finished to closed if it should not stay open (aka the children instances can also close)
+        instances.forEach(o ->
+        {
+            if (o.shouldClose(sl))
+            {
+                o.phase = TimelessInstance.Phase.CLOSED;
+                o.kickPlayers(sl);
+            }
+        });
+
+        instances.stream().filter(o -> o.shouldTick(sl)).forEach(o -> o.tick(sl));
+        instances.removeIf(o -> o.phase.equals(TimelessInstance.Phase.CLOSED));
         this.setDirty();
     }
 }
