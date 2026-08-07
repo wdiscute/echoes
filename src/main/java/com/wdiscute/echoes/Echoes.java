@@ -56,6 +56,7 @@ public class Echoes
         ECDataEntries.register(modEventBus);
         ECEntityDataSerializers.register(modEventBus);
         ECPerks.register(modEventBus);
+        ECCreativeModeTabs.register(modEventBus);
 
         TimelessInstance.SphereCache.init(128);
         TimelessProcessor.addDefaultProcessors();

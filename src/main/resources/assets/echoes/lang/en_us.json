@@ -5,7 +5,11 @@
   "echoes.rarity.epic" : "<ecepic>§lEPIC</ecepic>",
   "echoes.rarity.legendary" : "<ltrgb>LEGENDARY</ltrgb>",
 
-  "item.echoes.sculk_tissue" : "Sculk Tissue"
+  "item.echoes.sculk_tissue" : "Sculk Tissue",
+
+
+
+  "item.echoes.echo_blade" : "Echo Blade"
 
 
 

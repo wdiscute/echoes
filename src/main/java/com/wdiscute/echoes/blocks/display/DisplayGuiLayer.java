@@ -7,7 +7,7 @@ import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
-import com.wdiscute.utils.screen.ScreenUtils;
+import com.wdiscute.utils.ScreenUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
