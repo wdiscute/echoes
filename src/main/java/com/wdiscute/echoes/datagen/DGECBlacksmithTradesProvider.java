@@ -6,6 +6,7 @@ import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.HolderLookup;
@@ -38,37 +39,13 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
     {
 
         register(context, new BlacksmithTrade(
-                new MaybeStack(Items.WOODEN_HOE),
-                BlacksmithTrade.Rarity.COMMON,
-                List.of(
-                        new MaybeStack(Items.OAK_LOG, 3)
-                ),
-                0,
-                10
-        ));
-
-        register(context, new BlacksmithTrade(
-                new MaybeStack(Items.STONE_AXE),
-                BlacksmithTrade.Rarity.UNCOMMON,
-                List.of(
-                        new MaybeStack(Items.STONE_BRICKS, 128)
-                ),
-                10,
-                10
-        ));
-
-        DataComponentPatch patch =
-                DataComponentPatch.builder().set(ECDataComponents.PERKS.get(),
-                        List.of(
-                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f),
-                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f),
-                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f),
-                                new Utils.Duo<>(ECPerks.EXTRA_SCULK_DAMAGE.first(), 2f)
-                        )
-                ).build();
-
-        register(context, new BlacksmithTrade(
-                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.COPPER_SWORD), 1, patch),
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.WOODEN_HOE), 1,
+                        DataComponentPatch.builder().set(ECDataComponents.PERKS.get(),
+                                List.of(
+                                        new PerkInstance(ECPerks.EXTRA_DAMAGE.getDelegate(), 1f),
+                                        new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS.getDelegate(), 0.3f)
+                                )
+                        ).build()),
                 BlacksmithTrade.Rarity.RARE,
                 List.of(
                         new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
@@ -80,7 +57,32 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         ));
 
         register(context, new BlacksmithTrade(
-                new MaybeStack(Items.DIAMOND_SWORD),
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.REDSTONE_TORCH), 1,
+                        DataComponentPatch.builder().set(ECDataComponents.PERKS.get(),
+                                List.of(
+                                        new PerkInstance(ECPerks.EXTRA_DAMAGE.getDelegate(), 2),
+                                        new PerkInstance(ECPerks.EXTRA_SCULK_DAMAGE.getDelegate(), 4),
+                                        new PerkInstance(ECPerks.EXTRA_TICKS_PER_KILL.getDelegate(), 20)
+                                )
+                        ).build()),
+                BlacksmithTrade.Rarity.RARE,
+                List.of(
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
+                        new MaybeStack(Items.DIAMOND, 20),
+                        new MaybeStack(Items.GOLD_INGOT, 3)
+                ),
+                15,
+                10
+        ));
+
+        //diamond sword
+        register(context, new BlacksmithTrade(
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.LEVER), 1,
+                        DataComponentPatch.builder().set(ECDataComponents.PERKS.get(),
+                                List.of(
+                                        new PerkInstance(ECPerks.EXTRA_DAMAGE.getDelegate(), 5f)
+                                )
+                        ).build()),
                 BlacksmithTrade.Rarity.EPIC,
                 List.of(
                         new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
@@ -90,13 +92,35 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 10
         ));
 
+        //netherite axe
         register(context, new BlacksmithTrade(
-                new MaybeStack(Items.NETHERITE_SWORD),
-                BlacksmithTrade.Rarity.LEGENDARY,
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.STICK), 1,
+                        DataComponentPatch.builder().set(ECDataComponents.PERKS.get(),
+                                List.of(
+                                        new PerkInstance(ECPerks.EXTRA_DAMAGE.getDelegate(), 3f),
+                                        new PerkInstance(ECPerks.EXTRA_FLAT_SOULS.getDelegate(), 0.3f)
+                                )
+                        ).build()),
+                BlacksmithTrade.Rarity.RARE,
                 List.of(
-                        new MaybeStack(Items.NETHER_STAR)
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
+                        new MaybeStack(Items.DIAMOND, 20),
+                        new MaybeStack(Items.GOLD_INGOT, 3)
                 ),
-                50,
+                15,
+                10
+        ));
+
+        //echo blade
+        register(context, new BlacksmithTrade(
+                new MaybeStack(BuiltInRegistries.ITEM.getKey(ECItems.ECHO_BLADE.get())),
+                BlacksmithTrade.Rarity.RARE,
+                List.of(
+                        new MaybeStack(ECItems.SCULK_TISSUE.getId(), 20),
+                        new MaybeStack(Items.DIAMOND, 20),
+                        new MaybeStack(Items.GOLD_INGOT, 3)
+                ),
+                15,
                 10
         ));
 

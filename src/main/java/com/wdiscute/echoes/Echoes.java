@@ -4,10 +4,9 @@ import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessProcessor;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.libtooltips.Tooltips;
+import com.wdiscute.echoes.upgrades.Perk;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -15,20 +14,31 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import org.apache.commons.lang3.tuple.Triple;
+import net.neoforged.neoforge.registries.RegistryBuilder;
+
+import java.text.DecimalFormat;
 
 @Mod(Echoes.MOD_ID)
 public class Echoes
 {
     public static final String MOD_ID = "echoes";
+    public static final DecimalFormat FORMAT = new DecimalFormat("#.##");
+    public static final Identifier MISSINGNO = Echoes.rl("missingno");
 
     public static final ResourceKey<Level> TIMELESS = ResourceKey.create(Registries.DIMENSION, rl("timeless"));
+
+    public static final ResourceKey<Registry<Perk>> PERK =
+            ResourceKey.createRegistryKey(Echoes.rl("perk"));
+
+    //registry
+    public static final Registry<Perk> PERK_REGISTRY = new RegistryBuilder<>(PERK)
+            .sync(true)
+            .defaultKey(Echoes.rl("empty"))
+            .create();
 
     //resource keys
     public static final ResourceKey<Registry<BlacksmithTrade>> BLACKSMITH_TRADE_KEY =
             ResourceKey.createRegistryKey(Echoes.rl("blacksmith_trade"));
-
-    public static final Identifier MISSINGNO = Echoes.rl("missingno");
 
     public static Identifier rl(String path)
     {

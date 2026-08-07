@@ -3,9 +3,8 @@ package com.wdiscute.echoes.registry;
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.timeless.TimelessData;
-import com.wdiscute.utils.Utils;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -27,16 +26,16 @@ public interface ECDataAttachments
                     .build()
     );
 
+    //used for checking if an entity can pick up a lantern of if it already has one
     Supplier<AttachmentType<Boolean>> HAS_LANTERN = ATTACHMENT_TYPES.register(
             "has_lantern", () -> AttachmentType.builder(() -> false)
-                    .serialize(Codec.BOOL.fieldOf("has_lantern"))
                     .build()
     );
 
-    Supplier<AttachmentType<List<Utils.Duo<Identifier, Float>>>> PERKS = ATTACHMENT_TYPES.register(
-            "perks", () -> AttachmentType.builder(() -> List.<Utils.Duo<Identifier, Float>>of())
-                    .serialize(Utils.Duo.codec(Identifier.CODEC, Codec.FLOAT).listOf().fieldOf("perks"))
-                    .sync(Utils.Duo.streamCodec(Identifier.STREAM_CODEC, ByteBufCodecs.FLOAT).apply(ByteBufCodecs.list()))
+    Supplier<AttachmentType<List<PerkInstance>>> PERKS = ATTACHMENT_TYPES.register(
+            "perks", () -> AttachmentType.builder(() -> List.<PerkInstance>of())
+                    .serialize(PerkInstance.CODEC.listOf().fieldOf("perks"))
+                    .sync(PerkInstance.STREAM_CODEC.apply(ByteBufCodecs.list()))
                     .build()
     );
 

@@ -50,10 +50,8 @@ public class LanternRenderer extends EntityRenderer<LanternEntity, LanternRender
         ps.mulPose(Axis.ZP.rotationDegrees((float)(Math.cos(t * 0.75 + p2) * 1.10 + Math.sin(t * 1.20 + p3) * 0.30 + Math.sin(t * 2.48 + p1) * 0.10)));
         ps.mulPose(Axis.YP.rotationDegrees((float)(Math.sin(t * 0.40 + p3) * 1.75 + Math.sin(t * 1.82 + p1) * 0.20)));
 
-        Identifier rl = Echoes.rl("textures/entity/lantern.png");
-
         node.submitModel(
-                lanternModel, state, ps, RenderTypes.entityCutout(rl),
+                lanternModel, state, ps, RenderTypes.entityCutout(LanternModel.TEXTURE_LOCATION),
                 state.lightCoords, OverlayTexture.NO_OVERLAY,
                 -1, null, state.outlineColor, null
         );

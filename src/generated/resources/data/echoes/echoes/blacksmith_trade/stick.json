@@ -23,24 +23,16 @@
     "data_components_patch": {
       "echoes:perks": [
         {
-          "id": "echoes:extra_sculk_damage",
-          "value": 2.0
+          "amplifier": 3.0,
+          "perk": "echoes:extra_damage"
         },
         {
-          "id": "echoes:extra_sculk_damage",
-          "value": 2.0
-        },
-        {
-          "id": "echoes:extra_sculk_damage",
-          "value": 2.0
-        },
-        {
-          "id": "echoes:extra_sculk_damage",
-          "value": 2.0
+          "amplifier": 0.3,
+          "perk": "echoes:extra_flat_souls"
         }
       ]
     },
-    "identifier": "minecraft:copper_sword"
+    "identifier": "minecraft:stick"
   },
   "weight": 10
 }

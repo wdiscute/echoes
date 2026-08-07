@@ -3,6 +3,8 @@ package com.wdiscute.echoes.entity.lantern;
 import com.wdiscute.echoes.SculkAura;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECEntityDataSerializers;
+import com.wdiscute.echoes.timeless.TimelessInstance;
+import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.utils.Utils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -70,6 +72,10 @@ public class LanternEntity extends Entity implements SculkAura
             else
                 renderOffset = position.add(0, attachedEntity == null ? 0 : attachedEntity.getEyeHeight() - 1, 0);
 
+            if (attachedEntity instanceof Player player)
+                if (player.isCrouching())
+                    setPosRaw(position().x + player.getHeadLookAngle().x, position().y, position().z + player.getHeadLookAngle().z);
+
             return;
         }
 
@@ -113,6 +119,7 @@ public class LanternEntity extends Entity implements SculkAura
             {
                 if (player.isCrouching())
                 {
+                    setPosRaw(position().x + player.getHeadLookAngle().x, position().y, position().z + player.getHeadLookAngle().z);
                     player.removeData(ECDataAttachments.HAS_LANTERN);
                     entityData.set(UUID, null);
                     pickupCooldown = 40;

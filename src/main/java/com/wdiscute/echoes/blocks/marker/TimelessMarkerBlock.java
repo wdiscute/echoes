@@ -45,6 +45,8 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
         FLYING_ENEMY,
         BLACKSMITH_NPC,
         BLACKSMITH_STAND,
+        FOUNTAIN,
+        PORTAL,
         ;
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
