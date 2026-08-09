@@ -1,11 +1,16 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.SectionColored;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.IEventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ECCreativeModeTabs
 {
@@ -24,15 +29,21 @@ public class ECCreativeModeTabs
                         .add(Items.ECHO_SHARD)
                         .add(ECBlocks.TIMELESS_MARKER)
                         .add(ECBlocks.DISPLAY)
+                        .add(ECItems.SOUL_HEART_CONTAINER)
 
         );
 
         FancyTabSections.addSection(echoes,
-                new SectionColored(Echoes.rl("weapons"))
+                new SectionColored(Echoes.rl("blacksmith_trades"))
                         .setBannerColor(0xff344545)
 
-                        .add(ECItems.ECHO_BLADE)
-
+                        .add((dwa) ->
+                        {
+                            List<ItemStack> trades = new ArrayList<>();
+                            for (BlacksmithTrade blacksmithTrade : dwa.lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList())
+                                trades.add(blacksmithTrade.stack().toStack());
+                            return trades;
+                        })
         );
 
         FancyTabSections.addSection(echoes,

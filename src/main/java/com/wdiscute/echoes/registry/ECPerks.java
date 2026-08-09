@@ -21,6 +21,10 @@ public interface ECPerks
     DeferredHolder<Perk, ? extends Perk> EXTRA_TICKS_PER_KILL = register("extra_ticks_per_kill", ExtraTicksPerKillPerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_FLAT_SOULS = register("extra_flat_souls", ExtraFlatSoulsPerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_PERCENTAGE_SOULS = register("extra_percentage_souls", ExtraPercentageSoulsPerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_DAMAGE_CONSUMES_SOULS = register("extra_damage_consumes_souls", ExtraDamageConsumesSoulsPerk::new);
+
+    //fake perks
+    DeferredHolder<Perk, ? extends Perk> RAMATTRA = register("ramattra", RamattraPerk::new);
 
     static DeferredHolder<Perk, ? extends Perk> register(String name,  Supplier<Perk> perk)
     {

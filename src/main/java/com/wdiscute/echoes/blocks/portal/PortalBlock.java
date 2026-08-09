@@ -69,7 +69,7 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(STATE, State.CLOSED);
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(STATE, State.OPEN);
     }
 
     @Override

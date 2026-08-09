@@ -67,6 +67,7 @@ public class TimelessProcessor
             {
                 TimelessCorpse corpse = ECEntities.TIMELESS_CORPSE.get().create(sl, EntitySpawnReason.TRIGGERED);
                 corpse.snapTo(bp.getCenter().x, bp.getCenter().y - 0.7, bp.getCenter().z);
+
                 if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.NORTH))
                     corpse.setYRot(0);
                 else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.WEST))

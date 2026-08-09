@@ -2,7 +2,6 @@ package com.wdiscute.echoes.entity.soul;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.wdiscute.echoes.Echoes;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -10,20 +9,17 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class SoulRenderer extends EntityRenderer<SoulEntity, SoulRenderState>
 {
-    public SoulModel lanternModel;
+    public SoulModel soul;
 
     public SoulRenderer(EntityRendererProvider.Context context)
     {
         super(context);
-        lanternModel = new SoulModel(context.getModelSet().bakeLayer(SoulModel.LAYER_LOCATION));
+        soul = new SoulModel(context.getModelSet().bakeLayer(SoulModel.LAYER_LOCATION));
     }
 
     @Override
@@ -48,7 +44,7 @@ public class SoulRenderer extends EntityRenderer<SoulEntity, SoulRenderState>
 
         ps.translate(0f, -1f, -0.22f);
         node.submitModel(
-                lanternModel, state, ps, RenderTypes.entityTranslucent(SoulModel.TEXTURE_LOCATION),
+                soul, state, ps, RenderTypes.entityTranslucent(SoulModel.TEXTURE_LOCATION),
                 state.lightCoords, OverlayTexture.NO_OVERLAY,
                 -1, null, state.outlineColor, null
         );

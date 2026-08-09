@@ -4,11 +4,14 @@
   "package": "com.wdiscute.echoes.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "GameRendererMixin"
+    "FoodDataMixin",
+    "GameRendererMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
+    "GuiMixin"
   ]
 }

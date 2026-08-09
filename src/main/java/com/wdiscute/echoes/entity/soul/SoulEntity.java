@@ -2,6 +2,8 @@ package com.wdiscute.echoes.entity.soul;
 
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.registry.ECEntityDataSerializers;
+import com.wdiscute.echoes.timeless.TimelessData;
+import com.wdiscute.echoes.timeless.TimelessHearts;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,7 +24,7 @@ import java.util.UUID;
 public class SoulEntity extends Entity
 {
     public static final EntityDataAccessor<UUID> UUID = SynchedEntityData.defineId(SoulEntity.class, ECEntityDataSerializers.UUID_HOLDER.get());
-    int timeRemaining = 1000;
+    int timeAlive = 0;
     public int extraSoulsToSpawn = 0;
 
     public Vec3 positionToRender;
@@ -142,8 +144,17 @@ public class SoulEntity extends Entity
         //if (level().getPlayerByUUID(entityData.get(UUID)) == null)
         //    remove(RemovalReason.DISCARDED);
 
-        timeRemaining--;
-        if (timeRemaining < 0)
+        timeAlive++;
+        if(timeAlive == 20)
+        {
+            Player playerByUUID = level().getPlayerByUUID(entityData.get(UUID));
+            if(playerByUUID != null)
+            {
+                TimelessData.awardSoul(playerByUUID, 1);
+                TimelessHearts.absorbSoul(playerByUUID);
+            }
+        }
+        if (timeAlive > 1000)
             remove(RemovalReason.DISCARDED);
     }
 

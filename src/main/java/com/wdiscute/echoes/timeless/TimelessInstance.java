@@ -3,6 +3,7 @@ package com.wdiscute.echoes.timeless;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.ECConfig;
 import com.wdiscute.echoes.ECTags;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.SculkAura;
@@ -199,12 +200,12 @@ public class TimelessInstance
         if (stage == -1)
             stage = timelessData.maxStage();
 
-        //if player was already in an instance, add 1 minute to the timer
+        //if player was already in an instance, add config duration to the timer
         if (timelessData.timeToExit() != Long.MAX_VALUE)
-            this.timeToExit = timelessData.timeToExit() + 1200;
-            //otherwise set to 1 minute
+            this.timeToExit = timelessData.timeToExit() + ECConfig.TIMELESS_DURATION_ADDED.get();
+            //otherwise set to base duration
         else
-            this.timeToExit = sl.getGameTime() + 12000;
+            this.timeToExit = sl.getGameTime() + ECConfig.BASE_TIMELESS_DURATION.get();
 
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;

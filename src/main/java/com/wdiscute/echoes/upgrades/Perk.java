@@ -37,20 +37,29 @@ public abstract class Perk
         return perks;
     }
 
-    public void onEntityKilled(@NotNull Player killer, @NotNull ItemStack weapon, @NotNull Entity entityKilled, float value)
+    public void onEntityKilled(@NotNull Player killer, @NotNull ItemStack weapon, @NotNull Entity entityKilled, List<Float> value)
     {
 
     }
 
-    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, float value)
+    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, List<Float> value)
+    {
+        return 0;
+    }
+
+    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
     {
         return 0;
     }
 
-    public abstract @Nullable MutableComponent getTooltip(float value);
 
-    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, float amplifier, float currentSouls)
+    public abstract List<MutableComponent> getItemTooltip(List<Float> value);
+
+    public abstract List<MutableComponent> getShopTooltip(List<Float> value);
+
+    public List<MutableComponent> getShopExtendedTooltip(List<Float> value)
     {
-        return 0;
+        return List.of();
     }
+
 }

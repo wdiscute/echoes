@@ -23,16 +23,20 @@
     "data_components_patch": {
       "echoes:perks": [
         {
-          "amplifier": 3.0,
-          "perk": "echoes:extra_damage"
+          "amplifiers": [
+            2.0
+          ],
+          "perk": "echoes:ramattra"
         },
         {
-          "amplifier": 0.3,
-          "perk": "echoes:extra_flat_souls"
+          "amplifiers": [
+            3.0
+          ],
+          "perk": "echoes:ramattra"
         }
       ]
     },
-    "identifier": "minecraft:stick"
+    "identifier": "echoes:ramattra"
   },
   "weight": 10
 }

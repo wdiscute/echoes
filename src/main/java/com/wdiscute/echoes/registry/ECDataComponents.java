@@ -1,5 +1,6 @@
 package com.wdiscute.echoes.registry;
 
+import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.core.component.DataComponentType;
@@ -18,6 +19,9 @@ public interface ECDataComponents
 
     DeferredHolder<DataComponentType<?>, DataComponentType<List<PerkInstance>>> PERKS = register(
             "perks", builder -> builder.persistent(PerkInstance.CODEC.listOf()));
+
+    DeferredHolder<DataComponentType<?>, DataComponentType<Float>> STORED_SOULS = register(
+            "stored_souls", builder -> builder.persistent(Codec.FLOAT));
 
 
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,

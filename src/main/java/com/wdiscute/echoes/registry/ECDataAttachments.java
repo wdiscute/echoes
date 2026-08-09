@@ -3,6 +3,7 @@ package com.wdiscute.echoes.registry;
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.timeless.TimelessData;
+import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
@@ -19,9 +20,17 @@ public interface ECDataAttachments
             NeoForgeRegistries.ATTACHMENT_TYPES, Echoes.MOD_ID);
 
     Supplier<AttachmentType<TimelessData>> TIMELESS_DATA = ATTACHMENT_TYPES.register(
-            "timeless_stats", () -> AttachmentType.builder(() -> TimelessData.EMPTY)
+            "timeless_data", () -> AttachmentType.builder(() -> TimelessData.EMPTY)
                     .sync(TimelessData.STREAM_CODEC)
-                    .serialize(TimelessData.CODEC.fieldOf("stats"))
+                    .serialize(TimelessData.CODEC.fieldOf("data"))
+                    .copyOnDeath()
+                    .build()
+    );
+
+    Supplier<AttachmentType<TimelessHearts>> TIMELESS_HEARTS = ATTACHMENT_TYPES.register(
+            "timeless_hearts", () -> AttachmentType.builder(() -> TimelessHearts.EMPTY)
+                    .sync(TimelessHearts.STREAM_CODEC)
+                    .serialize(TimelessHearts.CODEC.fieldOf("hearts"))
                     .copyOnDeath()
                     .build()
     );

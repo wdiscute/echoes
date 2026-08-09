@@ -15,6 +15,9 @@ import com.wdiscute.echoes.entity.lantern.LanternRenderer;
 import com.wdiscute.echoes.ECPostProcessing;
 import com.wdiscute.echoes.entity.soul.SoulModel;
 import com.wdiscute.echoes.entity.soul.SoulRenderer;
+import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
+import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
+import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -28,6 +31,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,8 +55,9 @@ public class ECClientEvents
     @SubscribeEvent
     public static void renderTooltip(ItemTooltipEvent event)
     {
-        List<MutableComponent> perkComps = event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of())
-                .stream().map(o -> o.perk().value().getTooltip(o.amplifier())).filter(Objects::nonNull).toList().reversed();
+        List<MutableComponent> perkComps = new ArrayList<>();
+        for (var perk : event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()))
+            perkComps.addAll(Objects.requireNonNull(perk.perk().value().getItemTooltip(perk.amplifiers())));
 
         for (var perkComp : perkComps)
             if (!event.getToolTip().isEmpty())
@@ -66,6 +71,7 @@ public class ECClientEvents
         EntityRenderers.register(ECEntities.SCULK_HEART.get(), SculkHeartRenderer::new);
         EntityRenderers.register(ECEntities.TIMELESS_CORPSE.get(), TimelessCorpseRenderer::new);
         EntityRenderers.register(ECEntities.SOUL.get(), SoulRenderer::new);
+        EntityRenderers.register(ECEntities.UNLEASHED_SOUL.get(), UnleashedSoulRenderer::new);
     }
 
     @SubscribeEvent
@@ -73,6 +79,7 @@ public class ECClientEvents
     {
         event.registerLayerDefinition(LanternModel.LAYER_LOCATION, LanternModel::createBodyLayer);
         event.registerLayerDefinition(SoulModel.LAYER_LOCATION, SoulModel::createBodyLayer);
+        event.registerLayerDefinition(UnleashedSoulModel.LAYER_LOCATION, UnleashedSoulModel::createBodyLayer);
         event.registerLayerDefinition(TimelessCorpseModel.LAYER_LOCATION, TimelessCorpseModel::createBodyLayer);
         event.registerLayerDefinition(TimelessCorpseModelSlim.LAYER_LOCATION, TimelessCorpseModelSlim::createBodyLayer);
     }

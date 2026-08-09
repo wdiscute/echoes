@@ -43,9 +43,9 @@ public class GameRendererMixin
         //todo so the jsons can be hardcoded instead of bitmask up to 64
 
         //yeah i love bit masking (sike)
-        for (int bit = 1; bit <= 64; bit <<= 1)
-            if ((intensityFishEye & bit) != 0)
-                apply("fisheye_" + bit);
+        //for (int bit = 1; bit <= 64; bit <<= 1)
+        //    if ((intensityFishEye & bit) != 0)
+        //        apply("fisheye_" + bit);
 
         for (int bit = 1; bit <= 64; bit <<= 1)
             if ((intensityCA & bit) != 0)
@@ -58,7 +58,6 @@ public class GameRendererMixin
 
     private void apply(String name)
     {
-        System.out.println("applied " + name);
         minecraft.getShaderManager().getPostChain(Echoes.rl(name), LevelTargetBundle.MAIN_TARGETS).process(minecraft.getMainRenderTarget(), resourcePool);
     }
 }

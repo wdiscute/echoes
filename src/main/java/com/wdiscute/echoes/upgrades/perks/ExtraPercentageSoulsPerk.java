@@ -9,26 +9,28 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class ExtraPercentageSoulsPerk extends Perk
+public class ExtraPercentageSoulsPerk extends SimplePerk
 {
     @Override
-    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, float amplifier, float currentSouls)
+    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
     {
-        return currentSouls * amplifier;
+        return currentSouls * amplifier.getFirst();
     }
 
     @Override
-    public @Nullable MutableComponent getTooltip(float value)
+    public List<MutableComponent> getTooltip(List<Float> value)
     {
         //if value is 1.5 => +50% souls gathered
         //if value is 0.7 => -30% souls gathered
-        if (value == 1)
+        Float value1 = value.getFirst();
+        if (value1 == 1)
             return null;
 
-        if (value > 1)
-            return Component.literal("+" + Echoes.FORMAT.format((value - 1) * 100) + "% souls gathered");
+        if (value1 > 1)
+            return List.of(Component.literal("+" + Echoes.FORMAT.format((value1 - 1) * 100) + "% souls gathered"));
         else
-            return Component.literal("-" + Echoes.FORMAT.format((1 - value) * 100) + "% souls gathered");
+            return List.of(Component.literal("-" + Echoes.FORMAT.format((1 - value1) * 100) + "% souls gathered"));
     }
 }

@@ -1,14 +1,14 @@
 package com.wdiscute.echoes.upgrades.perks;
 
-import com.wdiscute.echoes.upgrades.Perk;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class EmptyPerk extends Perk
+import java.util.List;
+
+public class EmptyPerk extends SimplePerk
 {
     @Override
-    public MutableComponent getTooltip(float value)
+    public List<MutableComponent> getTooltip(List<Float> value)
     {
-        return null;
+        return List.of();
     }
 }
