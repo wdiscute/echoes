@@ -7,7 +7,11 @@ import net.mcexpanded.fancytabsections.Section.SectionColored;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +71,18 @@ public class ECCreativeModeTabs
                 new SectionColored(Echoes.rl("prisma"))
                         .setBannerColor(0xff344545)
 
-                        .add(ECBlocks.GLEEMSLATE_PILLAR)
-                        .add(ECBlocks.GLEEMSLATE_TILES)
+                        //6 sided
+                        .add(ECBlocks.GLEEMSLATE)
+                        .add(ECBlocks.CHISELED_GLEEMSLATE)
                         .add(ECBlocks.CUT_GLEEMSLATE)
+                        .add(ECBlocks.GLEEMSLATE_BRICKS)
+
+                        //rotatable
+                        .add(ECBlocks.GLEEMSLATE_PILLAR)
+                        .add(ECBlocks.TRIMMED_GLEEMSLATE)
+
+                        .add(ECBlocks.PRISMA_PANE)
+
         );
 
 

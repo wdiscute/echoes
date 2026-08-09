@@ -20,8 +20,8 @@ public interface ECDataComponents
     DeferredHolder<DataComponentType<?>, DataComponentType<List<PerkInstance>>> PERKS = register(
             "perks", builder -> builder.persistent(PerkInstance.CODEC.listOf()));
 
-    DeferredHolder<DataComponentType<?>, DataComponentType<Float>> STORED_SOULS = register(
-            "stored_souls", builder -> builder.persistent(Codec.FLOAT));
+    DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RAMATTRA_CAN_USE = register(
+            "ramattra_can_use", builder -> builder.persistent(Codec.BOOL));
 
 
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,

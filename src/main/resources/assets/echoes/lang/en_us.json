@@ -1,7 +1,7 @@
 {
 
   "section.echoes.general" : "Must Have",
-  "section.echoes.weapons" : "Weapon",
+  "section.echoes.blacksmith_trades" : "Blacksmith Trades",
   "section.echoes.materials" : "Materials",
   "section.echoes.sculk" : "Sculk",
   "section.echoes.prisma" : "Prisma",
@@ -18,9 +18,13 @@
   "block.echoes.sculk_pillar" : "Sculk Pillar",
   "block.echoes.sculk_slab" : "Sculk Slab",
 
-  "block.echoes.gleemstate_pillar" : "Gleemslate Pillar",
-  "block.echoes.gleemslate_tiles" : "Gleemslate Tiles",
+  "block.echoes.gleemslate" : "Gleemslate",
+  "block.echoes.chiseled_gleemslate" : "Chiseled Gleemslate",
   "block.echoes.cut_gleemslate" : "Cut Gleemslate",
+  "block.echoes.gleemslate_bricks" : "Gleemslate Bricks",
+
+  "block.echoes.gleemslate_pillar" : "Gleemslate Pillar",
+  "block.echoes.trimmed_gleemslate" : "Trimmed Gleemslate",
 
   "item.echoes.sculk_tissue" : "Sculk Tissue",
 

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "echoes:block/gleemslate_tiles"
+    "model": "echoes:block/gleemslate"
   }
 }

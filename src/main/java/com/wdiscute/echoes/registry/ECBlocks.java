@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.blocks.PrismaPaneBlock;
 import com.wdiscute.echoes.blocks.display.DisplayBlock;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
@@ -23,9 +24,19 @@ public interface ECBlocks
     DeferredBlock<Block> TIMELESS_MARKER = register("timeless_marker", TimelessMarkerBlock::new);
     DeferredBlock<Block> DISPLAY = register("display", DisplayBlock::new);
 
-    DeferredBlock<Block> GLEEMSLATE_TILES = register("gleemslate_tiles", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", (d) -> new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
+    //6 sided
+    DeferredBlock<Block> GLEEMSLATE = register("gleemslate", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> CHISELED_GLEEMSLATE = register("chiseled_gleemslate", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
     DeferredBlock<Block> CUT_GLEEMSLATE = register("cut_gleemslate", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> GLEEMSLATE_BRICKS = register("gleemslate_bricks", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
+
+    //rotatable
+    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", (d) -> new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> TRIMMED_GLEEMSLATE = register("trimmed_gleemslate", (d) ->  new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
+
+
+
+    DeferredBlock<Block> PRISMA_PANE = register("prisma_pane", PrismaPaneBlock::new);
 
     DeferredBlock<Block> SCULK_PILLAR = register("sculk_pillar", (d) -> new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
     DeferredBlock<Block> SCULK_SLAB = register("sculk_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));

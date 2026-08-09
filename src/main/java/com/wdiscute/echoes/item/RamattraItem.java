@@ -4,7 +4,6 @@ import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.timeless.TimelessData;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -16,9 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-
-import javax.print.DocFlavor;
-import java.util.Optional;
 
 public class RamattraItem extends Item
 {
@@ -68,7 +64,7 @@ public class RamattraItem extends Item
     public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot)
     {
         if (owner instanceof Player player)
-            itemStack.set(ECDataComponents.STORED_SOULS.get(), TimelessData.get(player).souls());
+            itemStack.set(ECDataComponents.RAMATTRA_CAN_USE.get(), TimelessData.get(player).souls() >= 1);
 
         super.inventoryTick(itemStack, level, owner, slot);
     }
@@ -76,6 +72,6 @@ public class RamattraItem extends Item
     @Override
     public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack)
     {
-        return super.canContinueUsing(oldStack, newStack) && newStack.getOrDefault(ECDataComponents.STORED_SOULS.get(), 0f) >= 1;
+        return super.canContinueUsing(oldStack, newStack) && newStack.getOrDefault(ECDataComponents.RAMATTRA_CAN_USE.get(), false);
     }
 }

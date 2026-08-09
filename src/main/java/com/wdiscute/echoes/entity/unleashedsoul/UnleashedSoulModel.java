@@ -14,7 +14,7 @@ public class UnleashedSoulModel extends EntityModel<UnleashedSoulRenderState>
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION =
             new ModelLayerLocation(Echoes.rl("soul"), "main");
-    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/soul.png");
+    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/unleased_soul.png");
 
     private final ModelPart bb_main;
 

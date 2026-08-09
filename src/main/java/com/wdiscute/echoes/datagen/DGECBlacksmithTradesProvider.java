@@ -51,8 +51,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         //ramatra
         register(context, new BlacksmithTrade(new MaybeStack(BuiltInRegistries.ITEM.getKey(ECItems.RAMATTRA.get()), 1,
                 PerkInstance.toPatch(
-                        new PerkInstance(ECPerks.RAMATTRA, 2f),
-                        new PerkInstance(ECPerks.RAMATTRA, 3f)
+                        new PerkInstance(ECPerks.RAMATTRA, 2f)
                 )),
                 BlacksmithTrade.Rarity.RARE,
                 List.of(

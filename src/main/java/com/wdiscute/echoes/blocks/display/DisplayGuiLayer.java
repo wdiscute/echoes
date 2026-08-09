@@ -44,8 +44,8 @@ public class DisplayGuiLayer implements GuiLayer
                 Font font = Minecraft.getInstance().font;
 
                 long time = System.currentTimeMillis() + dbe.timeOffset;
-                int max = 280;
-                int min = 260;
+                int max = 10;
+                int min = 20;
                 float speed = 0.3f;
                 ItemStack stack = dbe.trade.stack().toStack();
 
@@ -95,7 +95,7 @@ public class DisplayGuiLayer implements GuiLayer
                 float value = phase < duration ? (float) (360.0 * t) : 0f;
 
                 ScreenUtils.renderItem(guiGraphics, stack,
-                        value,
+                        value + 130,
                         (float) (20 + 25 * (Math.sin(time / 1000.0 * 0.2f) + 1) / 2),
                         (float) (min + (max - min) * (Math.sin(time / 1000.0 * speed) + 1) / 2),
                         -260, -90, 5f);
