@@ -89,7 +89,7 @@ public class TimelessProcessor
                 sl.addFreshEntityWithPassengers(heart);
             }
 
-            //spawn random enemy
+            //spawn lanterns
             if (type.equals(TimelessMarkerBlock.Type.LANTERN))
             {
                 Entity entity = ECEntities.LANTERN.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
@@ -100,17 +100,17 @@ public class TimelessProcessor
             //spawn ground melee enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_MELEE_ENEMY))
             {
-                Mob entity = EntityType.HUSK.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
-                entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
+                Mob entity = ECEntities.SCULKED.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                //entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(entity);
             }
 
-            //spawn random enemy
+            //spawn random ranged enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_RANGED_ENEMY))
             {
-                Mob entity = EntityType.SKELETON.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
-                entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
+                Mob entity = ECEntities.HOLLOWED.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                //entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(entity);
             }

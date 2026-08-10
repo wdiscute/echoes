@@ -9,6 +9,9 @@ import com.wdiscute.echoes.blocks.portal.PortalRenderer;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModel;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
+import com.wdiscute.echoes.entity.enemy.hollowed.HollowedEntity;
+import com.wdiscute.echoes.entity.enemy.hollowed.HollowedRenderer;
+import com.wdiscute.echoes.entity.enemy.sculked.SculkedRenderer;
 import com.wdiscute.echoes.entity.heart.SculkHeartRenderer;
 import com.wdiscute.echoes.entity.lantern.LanternModel;
 import com.wdiscute.echoes.entity.lantern.LanternRenderer;
@@ -72,6 +75,8 @@ public class ECClientEvents
         EntityRenderers.register(ECEntities.TIMELESS_CORPSE.get(), TimelessCorpseRenderer::new);
         EntityRenderers.register(ECEntities.SOUL.get(), SoulRenderer::new);
         EntityRenderers.register(ECEntities.UNLEASHED_SOUL.get(), UnleashedSoulRenderer::new);
+        EntityRenderers.register(ECEntities.SCULKED.get(), SculkedRenderer::new);
+        EntityRenderers.register(ECEntities.HOLLOWED.get(), HollowedRenderer::new);
     }
 
     @SubscribeEvent

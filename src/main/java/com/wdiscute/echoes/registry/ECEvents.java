@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
 import com.wdiscute.echoes.timeless.TimelessHearts;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -181,6 +183,8 @@ public class ECEvents
     public static void registerAttributed(EntityAttributeCreationEvent event)
     {
         event.put(ECEntities.SCULK_HEART.get(), SculkHeartEntity.createAttributes().build());
+        event.put(ECEntities.SCULKED.get(), SculkedEntity.createAttributes().build());
+        event.put(ECEntities.HOLLOWED.get(), AbstractSkeleton.createAttributes().build());
     }
 
     @SubscribeEvent

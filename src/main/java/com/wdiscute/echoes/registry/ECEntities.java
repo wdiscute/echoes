@@ -2,6 +2,8 @@ package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
+import com.wdiscute.echoes.entity.enemy.hollowed.HollowedEntity;
+import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
@@ -12,6 +14,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.monster.skeleton.Stray;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -44,16 +48,36 @@ public interface ECEntities
                     b -> b.sized(0.5f, 0.5f).noSave().noSummon());
 
 
-    //DeferredHolder<EntityType<?>, EntityType<SculkedEntity>> SCULKED =
-    //        register("sculked", SculkedEntity::new, MobCategory.MONSTER,
-    //                b -> b
-    //                        .sized(0.6F, 1.95F)
-    //                        .eyeHeight(1.74F)
-    //                        .passengerAttachments(2.0125F)
-    //                        .ridingOffset(-0.7F)
-    //                        .clientTrackingRange(8)
-    //                        .notInPeaceful()
-    //        );
+    //
+    //                                    ,--.
+    // ,---.  ,--,--,   ,---.  ,--,--,--. `--'  ,---.   ,---.
+    //| .-. : |      \ | .-. : |        | ,--. | .-. : (  .-'
+    //\   --. |  ||  | \   --. |  |  |  | |  | \   --. .-'  `)
+    // `----' `--''--'  `----' `--`--`--' `--'  `----' `----'
+    //
+
+
+    DeferredHolder<EntityType<?>, EntityType<SculkedEntity>> SCULKED =
+            register("sculked", SculkedEntity::new, MobCategory.MONSTER,
+                    b -> b
+                            .sized(0.6F, 1.95F)
+                            .eyeHeight(1.74F)
+                            .passengerAttachments(2.0125F)
+                            .ridingOffset(-0.7F)
+                            .clientTrackingRange(8)
+                            .notInPeaceful()
+            );
+
+    DeferredHolder<EntityType<?>, EntityType<HollowedEntity>> HOLLOWED =
+            register("hollowed", HollowedEntity::new, MobCategory.MONSTER,
+                    b -> b
+                            .sized(0.6F, 1.99F)
+                            .eyeHeight(1.74F)
+                            .ridingOffset(-0.7F)
+                            .clientTrackingRange(8)
+                            .notInPeaceful()
+            );
+
 
     static void register(IEventBus eventBus)
     {
