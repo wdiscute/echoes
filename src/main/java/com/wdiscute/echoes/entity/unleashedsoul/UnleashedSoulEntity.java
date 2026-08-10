@@ -1,5 +1,8 @@
 package com.wdiscute.echoes.entity.unleashedsoul;
 
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,23 +21,32 @@ public class UnleashedSoulEntity extends Projectile
         super(type, level);
     }
 
+    public static final EntityDataAccessor<Integer> MAX_TICKS = SynchedEntityData.defineId(UnleashedSoulEntity.class, EntityDataSerializers.INT);
+
+    public float damage = 2;
+
     public UnleashedSoulEntity(
             EntityType<? extends UnleashedSoulEntity> type,
             LivingEntity owner,
             Vec3 direction,
-            Level level
+            Level level,
+            int lastingTicks,
+            float damage
     )
     {
         this(type, level);
 
+        entityData.set(MAX_TICKS,lastingTicks);
+        this.damage = damage;
         this.setOwner(owner);
 
         Vec3 velocity = direction.normalize();
 
-        Vec3 look = owner.getViewVector(1.0F);
+        Vec3 look = owner.getViewVector(1.0F).normalize();
         Vec3 right = look.cross(new Vec3(0, 1, 0)).normalize();
 
-        Vec3 spawnOffset = right.scale(0.4);
+        Vec3 spawnOffset = right.scale(0.5)
+                .add(look.scale(0.9));
 
         Vec3 randomOffset = new Vec3(
                 (random.nextDouble() - 0.5) * 0.5,
@@ -57,6 +69,7 @@ public class UnleashedSoulEntity extends Projectile
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder entityData)
     {
+        entityData.define(MAX_TICKS, 0);
     }
 
     @Override
@@ -77,8 +90,9 @@ public class UnleashedSoulEntity extends Projectile
 
         updateRotation();
 
-        if (this.tickCount > 200)
+        if (this.tickCount > entityData.get(MAX_TICKS))
         {
+            level().addParticle(ParticleTypes.SOUL, getX(), getY(), getZ(), 0, 0, 0);
             this.discard();
         }
     }
@@ -121,10 +135,7 @@ public class UnleashedSoulEntity extends Projectile
         {
             if (result.getEntity() instanceof LivingEntity entity)
             {
-                entity.hurt(
-                        this.damageSources().generic(),
-                        10.0F
-                );
+                entity.hurt(this.damageSources().generic(), damage);
             }
 
             this.discard();
@@ -135,8 +146,6 @@ public class UnleashedSoulEntity extends Projectile
     protected void onHitBlock(BlockHitResult result)
     {
         if (!this.level().isClientSide())
-        {
             this.discard();
-        }
     }
 }

@@ -3,7 +3,9 @@ package com.wdiscute.echoes.item;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECEntities;
+import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.timeless.TimelessData;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class RamattraItem extends Item
 {
@@ -34,12 +39,22 @@ public class RamattraItem extends Item
     {
         if (livingEntity instanceof ServerPlayer player && level.getGameTime() % 3 == 0 && TimelessData.consumeSouls(player, 1))
         {
+
+            //get damage to spawn soul with
+            List<PerkInstance> list = itemStack.getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()).stream().filter(o -> o.perk().equals(ECPerks.RAMATTRA)).toList();
+
+            float damage;
+            if (list.isEmpty()) damage = 1;
+            else damage = list.getFirst().amplifiers().getFirst();
+
             Vec3 direction = player.getLookAngle();
             UnleashedSoulEntity projectile = new UnleashedSoulEntity(
                     ECEntities.UNLEASHED_SOUL.get(),
                     player,
                     direction,
-                    level
+                    level,
+                    20,
+                    damage
             );
 
             level.addFreshEntity(projectile);

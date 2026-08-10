@@ -1,6 +1,14 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "echoes:item/ramattra"
+    "type": "minecraft:condition",
+    "property": "minecraft:using_item",
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "echoes:item/ramattra_using"
+    },
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "echoes:item/ramattra"
+    }
   }
 }
