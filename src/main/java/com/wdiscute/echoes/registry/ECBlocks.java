@@ -61,6 +61,12 @@ public interface ECBlocks
     DeferredBlock<Block> SCULK_PILLAR = register("sculk_pillar", (d) -> new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
     DeferredBlock<Block> SCULK_SLAB = register("sculk_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));
 
+    //sculked deepslate
+    DeferredBlock<Block> SCULKED_DEEPSLATE = register("sculked_deepslate", (d) ->  new Block(d.sound(SoundType.DEEPSLATE)));
+    DeferredBlock<Block> SCULKED_DEEPSLATE_SLAB = register("sculked_deepslate_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> SCULKED_DEEPSLATE_STAIRS = register("sculked_deepslate_stairs", (d) ->  new StairBlock(SCULKED_DEEPSLATE.get().defaultBlockState(), d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> SCULKED_DEEPSLATE_WALL = register("sculked_deepslate_wall", (d) ->  new WallBlock(d.sound(SoundType.BONE_BLOCK)));
+
     static DeferredBlock<Block> register(String name, Function<BlockBehaviour.Properties, ? extends Block> supplier)
     {
         DeferredBlock<Block> block = BLOCKS.registerBlock(name, supplier);

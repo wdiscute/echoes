@@ -49,10 +49,9 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.PRISMA_PANE.asItem().builtInRegistryHolder());
 
 
-
         list.add(ECBlocks.SCULK_PILLAR.asItem().builtInRegistryHolder());
-
         list.add(ECBlocks.TIMELESS_MARKER.asItem().builtInRegistryHolder());
+        list.add(ECBlocks.SCULKED_DEEPSLATE.asItem().builtInRegistryHolder());
 
         //items
         list.add(ECItems.SCULK_TISSUE.getDelegate());
@@ -79,6 +78,11 @@ public class ECDGModelProvider extends ModelProvider
 
 
         list.add(ECBlocks.SCULK_PILLAR);
+
+        list.add(ECBlocks.SCULKED_DEEPSLATE);
+        list.add(ECBlocks.SCULKED_DEEPSLATE_STAIRS);
+        list.add(ECBlocks.SCULKED_DEEPSLATE_SLAB);
+        list.add(ECBlocks.SCULKED_DEEPSLATE_WALL);
 
         list.add(ECBlocks.TIMELESS_MARKER);
 
@@ -157,10 +161,19 @@ public class ECDGModelProvider extends ModelProvider
 
 
         blockModels.createAxisAlignedPillarBlock(ECBlocks.SCULK_PILLAR.get(), TexturedModel.COLUMN);
-
         blockModels.createHorizontallyRotatedBlock(ECBlocks.TIMELESS_MARKER.get(), TexturedModel.COLUMN);
 
+        //sculked deepslate
+        {
+            BlockFamily family = new BlockFamily.Builder(ECBlocks.SCULKED_DEEPSLATE.get())
+                    .wall(ECBlocks.SCULKED_DEEPSLATE_WALL.get())
+                    .stairs(ECBlocks.SCULKED_DEEPSLATE_STAIRS.get())
+                    .slab(ECBlocks.SCULKED_DEEPSLATE_SLAB.get())
+                    .getFamily();
 
+            blockModels.createTrivialCube(ECBlocks.SCULKED_DEEPSLATE.get());
+            blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
+        }
 
 
 

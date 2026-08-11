@@ -65,6 +65,11 @@ public class ECCreativeModeTabs
                         .add(ECBlocks.SCULK_PILLAR)
                         .add(ECBlocks.SCULK_SLAB)
 
+                        .add(ECBlocks.SCULKED_DEEPSLATE)
+                        .add(ECBlocks.SCULKED_DEEPSLATE_STAIRS)
+                        .add(ECBlocks.SCULKED_DEEPSLATE_SLAB)
+                        .add(ECBlocks.SCULKED_DEEPSLATE_WALL)
+
         );
 
         FancyTabSections.addSection(echoes,
