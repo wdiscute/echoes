@@ -101,8 +101,8 @@ public class ECDGModelProvider extends ModelProvider
         //all 6 sides the same
         blockModels.createTrivialCube(ECBlocks.GLEEMSLATE.get());
         blockModels.createTrivialCube(ECBlocks.CUT_GLEEMSLATE.get());
-        blockModels.createRotatableColumn(ECBlocks.CHISELED_GLEEMSLATE.get());
-        blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_PILLAR.get());
+        blockModels.createTrivialCube(ECBlocks.CHISELED_GLEEMSLATE.get());
+        blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_BRICKS.get());
 
         blockModels.createAxisAlignedPillarBlock(ECBlocks.GLEEMSLATE_PILLAR.get(), TexturedModel.COLUMN);
         blockModels.createAxisAlignedPillarBlock(ECBlocks.TRIMMED_GLEEMSLATE.get(), TexturedModel.COLUMN);

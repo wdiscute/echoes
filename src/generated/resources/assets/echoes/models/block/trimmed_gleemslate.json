@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "all": "echoes:block/trimmed_gleemslate"
+    "end": "echoes:block/trimmed_gleemslate_top",
+    "side": "echoes:block/trimmed_gleemslate_side"
   }
 }
