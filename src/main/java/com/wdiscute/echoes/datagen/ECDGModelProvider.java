@@ -9,6 +9,7 @@ import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.Holder;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -34,10 +35,13 @@ public class ECDGModelProvider extends ModelProvider
 
         //6 sided blocks
         list.add(ECBlocks.GLEEMSLATE.asItem().builtInRegistryHolder());
+        list.add(ECBlocks.GLEEMSLATE_SLAB.asItem().builtInRegistryHolder());
+        list.add(ECBlocks.GLEEMSLATE_STAIRS.asItem().builtInRegistryHolder());
+        list.add(ECBlocks.GLEEMSLATE_WALL.asItem().builtInRegistryHolder());
+
         list.add(ECBlocks.CHISELED_GLEEMSLATE.asItem().builtInRegistryHolder());
         list.add(ECBlocks.CUT_GLEEMSLATE.asItem().builtInRegistryHolder());
         list.add(ECBlocks.GLEEMSLATE_BRICKS.asItem().builtInRegistryHolder());
-
         list.add(ECBlocks.GLEEMSLATE_PILLAR.asItem().builtInRegistryHolder());
         list.add(ECBlocks.TRIMMED_GLEEMSLATE.asItem().builtInRegistryHolder());
 
@@ -63,14 +67,16 @@ public class ECDGModelProvider extends ModelProvider
     {
         List<DeferredBlock<Block>> list = new ArrayList<>();
 
+        list.add(ECBlocks.GLEEMSLATE);
+        list.add(ECBlocks.GLEEMSLATE_SLAB);
+        list.add(ECBlocks.GLEEMSLATE_STAIRS);
+        list.add(ECBlocks.GLEEMSLATE_WALL);
+
+        list.add(ECBlocks.CHISELED_GLEEMSLATE);
         list.add(ECBlocks.GLEEMSLATE_PILLAR);
         list.add(ECBlocks.TRIMMED_GLEEMSLATE);
         list.add(ECBlocks.CUT_GLEEMSLATE);
         list.add(ECBlocks.GLEEMSLATE_BRICKS);
-
-        list.add(ECBlocks.GLEEMSLATE_PILLAR);
-        list.add(ECBlocks.TRIMMED_GLEEMSLATE);
-
 
 
         list.add(ECBlocks.SCULK_PILLAR);
@@ -94,13 +100,21 @@ public class ECDGModelProvider extends ModelProvider
 
         //all 6 sides the same
         blockModels.createTrivialCube(ECBlocks.GLEEMSLATE.get());
-        blockModels.createTrivialCube(ECBlocks.CHISELED_GLEEMSLATE.get());
         blockModels.createTrivialCube(ECBlocks.CUT_GLEEMSLATE.get());
-        blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_BRICKS.get());
+        blockModels.createRotatableColumn(ECBlocks.CHISELED_GLEEMSLATE.get());
+        blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_PILLAR.get());
 
-        //rotatable
         blockModels.createAxisAlignedPillarBlock(ECBlocks.GLEEMSLATE_PILLAR.get(), TexturedModel.COLUMN);
         blockModels.createAxisAlignedPillarBlock(ECBlocks.TRIMMED_GLEEMSLATE.get(), TexturedModel.COLUMN);
+
+        BlockFamily GLEEMSLATE_FAMILY = new BlockFamily.Builder(ECBlocks.GLEEMSLATE.get())
+                .wall(ECBlocks.GLEEMSLATE_WALL.get())
+                .stairs(ECBlocks.GLEEMSLATE_STAIRS.get())
+                .slab(ECBlocks.GLEEMSLATE_SLAB.get())
+                .generateStonecutterRecipe()
+                .getFamily();
+
+        blockModels.familyWithExistingFullBlock(GLEEMSLATE_FAMILY.getBaseBlock()).generateFor(GLEEMSLATE_FAMILY);
 
 
 

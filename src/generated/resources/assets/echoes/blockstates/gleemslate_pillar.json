@@ -1,16 +1,7 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "echoes:block/gleemslate_pillar",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
+    "": {
       "model": "echoes:block/gleemslate_pillar"
-    },
-    "axis=z": {
-      "model": "echoes:block/gleemslate_pillar",
-      "x": 90
     }
   }
 }

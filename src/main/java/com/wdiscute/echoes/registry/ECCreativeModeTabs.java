@@ -68,20 +68,21 @@ public class ECCreativeModeTabs
         );
 
         FancyTabSections.addSection(echoes,
-                new SectionColored(Echoes.rl("prisma"))
+                new SectionColored(Echoes.rl("blocks"))
                         .setBannerColor(0xff344545)
 
                         //6 sided
-                        .add(ECBlocks.GLEEMSLATE)
-                        .add(ECBlocks.CHISELED_GLEEMSLATE)
-                        .add(ECBlocks.CUT_GLEEMSLATE)
-                        .add(ECBlocks.GLEEMSLATE_BRICKS)
+                        .add(ECItems.ITEMS)
 
-                        //rotatable
-                        .add(ECBlocks.GLEEMSLATE_PILLAR)
-                        .add(ECBlocks.TRIMMED_GLEEMSLATE)
+                        //.add(ECBlocks.CHISELED_GLEEMSLATE)
+                        //.add(ECBlocks.CUT_GLEEMSLATE)
+                        //.add(ECBlocks.GLEEMSLATE_BRICKS)
 
-                        .add(ECBlocks.PRISMA_PANE)
+                        ////rotatable
+                        //.add(ECBlocks.GLEEMSLATE_PILLAR)
+                        //.add(ECBlocks.TRIMMED_GLEEMSLATE)
+
+                        //.add(ECBlocks.PRISMA_PANE)
 
         );
 

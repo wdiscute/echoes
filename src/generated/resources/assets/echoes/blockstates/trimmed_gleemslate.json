@@ -1,16 +1,7 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "echoes:block/trimmed_gleemslate",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
+    "": {
       "model": "echoes:block/trimmed_gleemslate"
-    },
-    "axis=z": {
-      "model": "echoes:block/trimmed_gleemslate",
-      "x": 90
     }
   }
 }

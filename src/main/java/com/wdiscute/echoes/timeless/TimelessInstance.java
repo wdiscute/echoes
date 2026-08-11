@@ -675,6 +675,8 @@ public class TimelessInstance
         StructureTemplateManager manager = sl.getStructureManager();
         StructurePlaceSettings placeSettings = new StructurePlaceSettings().setKnownShape(false);
 
+        if(stage == -1)
+            template = Echoes.rl("arena/starter");
 
         //todo check what radius in the ticket means
         //todo test with the neoforge chunk load event which chunks get loaded when this is called?
