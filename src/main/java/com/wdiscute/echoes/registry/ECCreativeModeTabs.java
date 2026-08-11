@@ -68,21 +68,45 @@ public class ECCreativeModeTabs
         );
 
         FancyTabSections.addSection(echoes,
-                new SectionColored(Echoes.rl("blocks"))
+                new SectionColored(Echoes.rl("gleemslate"))
                         .setBannerColor(0xff344545)
 
-                        //6 sided
-                        .add(ECItems.ITEMS)
+                        .add(ECBlocks.GLEEMSLATE)
+                        .add(ECBlocks.GLEEMSLATE_SLAB)
+                        .add(ECBlocks.GLEEMSLATE_STAIRS)
+                        .add(ECBlocks.GLEEMSLATE_WALL)
+                        .add(Items.AIR)
+                        .add(ECBlocks.CUT_GLEEMSLATE_WALL)
+                        .add(ECBlocks.CUT_GLEEMSLATE_STAIRS)
+                        .add(ECBlocks.CUT_GLEEMSLATE_SLAB)
+                        .add(ECBlocks.CUT_GLEEMSLATE)
 
-                        //.add(ECBlocks.CHISELED_GLEEMSLATE)
-                        //.add(ECBlocks.CUT_GLEEMSLATE)
-                        //.add(ECBlocks.GLEEMSLATE_BRICKS)
 
-                        ////rotatable
-                        //.add(ECBlocks.GLEEMSLATE_PILLAR)
-                        //.add(ECBlocks.TRIMMED_GLEEMSLATE)
+
+                        .add(ECBlocks.GLEEMSLATE_TILES)
+                        .add(ECBlocks.GLEEMSLATE_TILES_SLAB)
+                        .add(ECBlocks.GLEEMSLATE_TILES_STAIRS)
+                        .add(ECBlocks.GLEEMSLATE_TILES_WALL)
+                        .add(Items.AIR)
+                        .add(ECBlocks.GLEEMSLATE_BRICKS_WALL)
+                        .add(ECBlocks.GLEEMSLATE_BRICKS_STAIRS)
+                        .add(ECBlocks.GLEEMSLATE_BRICKS_SLAB)
+                        .add(ECBlocks.GLEEMSLATE_BRICKS)
+
+
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(ECBlocks.CHISELED_GLEEMSLATE)
+                        .add(ECBlocks.GLEEMSLATE_PILLAR)
+                        .add(ECBlocks.TRIMMED_GLEEMSLATE)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+
 
                         //.add(ECBlocks.PRISMA_PANE)
+
 
         );
 

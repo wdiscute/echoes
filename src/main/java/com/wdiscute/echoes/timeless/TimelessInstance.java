@@ -688,7 +688,7 @@ public class TimelessInstance
             template = template.withSuffix("/sculk_");
 
         if (structureType.equals(StructureType.GLEEMSLATE))
-            template = template.withSuffix("/gleemslate_");
+            template = template.withSuffix("/prisma_");
 
         for (int i = 0; i < 24; i++)
         {

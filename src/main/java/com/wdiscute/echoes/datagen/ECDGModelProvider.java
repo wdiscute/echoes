@@ -39,6 +39,7 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.GLEEMSLATE_STAIRS.asItem().builtInRegistryHolder());
         list.add(ECBlocks.GLEEMSLATE_WALL.asItem().builtInRegistryHolder());
 
+        list.add(ECBlocks.GLEEMSLATE_TILES.asItem().builtInRegistryHolder());
         list.add(ECBlocks.CHISELED_GLEEMSLATE.asItem().builtInRegistryHolder());
         list.add(ECBlocks.CUT_GLEEMSLATE.asItem().builtInRegistryHolder());
         list.add(ECBlocks.GLEEMSLATE_BRICKS.asItem().builtInRegistryHolder());
@@ -46,8 +47,6 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.TRIMMED_GLEEMSLATE.asItem().builtInRegistryHolder());
 
         list.add(ECBlocks.PRISMA_PANE.asItem().builtInRegistryHolder());
-
-
 
 
 

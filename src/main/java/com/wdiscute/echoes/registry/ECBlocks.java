@@ -23,38 +23,36 @@ public interface ECBlocks
     DeferredBlock<Block> DISPLAY = register("display", DisplayBlock::new);
 
     //gleemslate
-    DeferredBlock<Block> GLEEMSLATE = register("gleemslate", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_SLAB = register("gleemslate_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_STAIRS = register("gleemslate_stairs", (d) ->  new StairBlock(GLEEMSLATE.get().defaultBlockState(), d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_WALL = register("gleemslate_wall", (d) ->  new WallBlock(d.sound(SoundType.BONE_BLOCK)));
-
+    DeferredBlock<Block> GLEEMSLATE = register("gleemslate", (d) ->  new Block(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_SLAB = register("gleemslate_slab", (d) ->  new SlabBlock(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_STAIRS = register("gleemslate_stairs", (d) ->  new StairBlock(GLEEMSLATE.get().defaultBlockState(), d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_WALL = register("gleemslate_wall", (d) ->  new WallBlock(d.sound(SoundType.AMETHYST)));
 
     //cut gleemslate
-    DeferredBlock<Block> CUT_GLEEMSLATE = register("cut_gleemslate", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> CUT_GLEEMSLATE_SLAB = register("cut_gleemslate_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> CUT_GLEEMSLATE_STAIRS = register("cut_gleemslate_stairs", (d) ->  new StairBlock(CUT_GLEEMSLATE.get().defaultBlockState(), d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> CUT_GLEEMSLATE_WALL = register("cut_gleemslate_wall", (d) ->  new WallBlock(d.sound(SoundType.BONE_BLOCK)));
-
+    DeferredBlock<Block> CUT_GLEEMSLATE = register("cut_gleemslate", (d) ->  new Block(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> CUT_GLEEMSLATE_SLAB = register("cut_gleemslate_slab", (d) ->  new SlabBlock(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> CUT_GLEEMSLATE_STAIRS = register("cut_gleemslate_stairs", (d) ->  new StairBlock(CUT_GLEEMSLATE.get().defaultBlockState(), d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> CUT_GLEEMSLATE_WALL = register("cut_gleemslate_wall", (d) ->  new WallBlock(d.sound(SoundType.AMETHYST)));
 
     //gleemslate tiles
-    DeferredBlock<Block> GLEEMSLATE_TILES = register("gleemslate_tiles", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_TILES_SLAB = register("gleemslate_tiles_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_TILES_STAIRS = register("gleemslate_tiles_stairs", (d) ->  new StairBlock(GLEEMSLATE_TILES.get().defaultBlockState(), d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_TILES_WALL = register("gleemslate_tiles_wall", (d) ->  new WallBlock(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> GLEEMSLATE_TILES = register("gleemslate_tiles", (d) ->  new Block(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_TILES_SLAB = register("gleemslate_tiles_slab", (d) ->  new SlabBlock(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_TILES_STAIRS = register("gleemslate_tiles_stairs", (d) ->  new StairBlock(GLEEMSLATE_TILES.get().defaultBlockState(), d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_TILES_WALL = register("gleemslate_tiles_wall", (d) ->  new WallBlock(d.sound(SoundType.AMETHYST)));
 
     //gleemslate bricks
-    DeferredBlock<Block> GLEEMSLATE_BRICKS = register("gleemslate_bricks", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_BRICKS_SLAB = register("gleemslate_bricks_slab", (d) ->  new SlabBlock(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_BRICKS_STAIRS = register("gleemslate_bricks_stairs", (d) ->  new StairBlock(GLEEMSLATE_BRICKS.get().defaultBlockState(), d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> GLEEMSLATE_BRICKS_WALL = register("gleemslate_bricks_wall", (d) ->  new WallBlock(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> GLEEMSLATE_BRICKS = register("gleemslate_bricks", (d) ->  new Block(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_BRICKS_SLAB = register("gleemslate_bricks_slab", (d) ->  new SlabBlock(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_BRICKS_STAIRS = register("gleemslate_bricks_stairs", (d) ->  new StairBlock(GLEEMSLATE_BRICKS.get().defaultBlockState(), d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> GLEEMSLATE_BRICKS_WALL = register("gleemslate_bricks_wall", (d) ->  new WallBlock(d.sound(SoundType.AMETHYST)));
 
 
 
-    DeferredBlock<Block> CHISELED_GLEEMSLATE = register("chiseled_gleemslate", (d) ->  new Block(d.sound(SoundType.BONE_BLOCK)));
 
     //rotatable
-    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", (d) -> new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
-    DeferredBlock<Block> TRIMMED_GLEEMSLATE = register("trimmed_gleemslate", (d) ->  new RotatedPillarBlock(d.sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> GLEEMSLATE_PILLAR = register("gleemslate_pillar", (d) -> new RotatedPillarBlock(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> TRIMMED_GLEEMSLATE = register("trimmed_gleemslate", (d) ->  new RotatedPillarBlock(d.sound(SoundType.AMETHYST)));
+    DeferredBlock<Block> CHISELED_GLEEMSLATE = register("chiseled_gleemslate", (d) ->  new Block(d.sound(SoundType.AMETHYST)));
 
 
 
