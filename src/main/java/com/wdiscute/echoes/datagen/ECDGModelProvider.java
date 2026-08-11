@@ -98,23 +98,59 @@ public class ECDGModelProvider extends ModelProvider
         // .`-  /  `--'  `----'  `----' `--`--`--' `----'  `--'  `--`--'   `--'    `----'
         // `---'
 
-        //all 6 sides the same
-        blockModels.createTrivialCube(ECBlocks.GLEEMSLATE.get());
-        blockModels.createTrivialCube(ECBlocks.CUT_GLEEMSLATE.get());
+        //non family blocks
         blockModels.createTrivialCube(ECBlocks.CHISELED_GLEEMSLATE.get());
-        blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_BRICKS.get());
 
         blockModels.createAxisAlignedPillarBlock(ECBlocks.GLEEMSLATE_PILLAR.get(), TexturedModel.COLUMN);
         blockModels.createAxisAlignedPillarBlock(ECBlocks.TRIMMED_GLEEMSLATE.get(), TexturedModel.COLUMN);
 
-        BlockFamily GLEEMSLATE_FAMILY = new BlockFamily.Builder(ECBlocks.GLEEMSLATE.get())
-                .wall(ECBlocks.GLEEMSLATE_WALL.get())
-                .stairs(ECBlocks.GLEEMSLATE_STAIRS.get())
-                .slab(ECBlocks.GLEEMSLATE_SLAB.get())
-                .generateStonecutterRecipe()
-                .getFamily();
+        //gleemslate
+        {
+            BlockFamily family = new BlockFamily.Builder(ECBlocks.GLEEMSLATE.get())
+                    .wall(ECBlocks.GLEEMSLATE_WALL.get())
+                    .stairs(ECBlocks.GLEEMSLATE_STAIRS.get())
+                    .slab(ECBlocks.GLEEMSLATE_SLAB.get())
+                    .getFamily();
 
-        blockModels.familyWithExistingFullBlock(GLEEMSLATE_FAMILY.getBaseBlock()).generateFor(GLEEMSLATE_FAMILY);
+            blockModels.createTrivialCube(ECBlocks.GLEEMSLATE.get());
+            blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
+        }
+
+        //cut gleemslate
+        {
+            BlockFamily family = new BlockFamily.Builder(ECBlocks.CUT_GLEEMSLATE.get())
+                    .wall(ECBlocks.CUT_GLEEMSLATE_WALL.get())
+                    .stairs(ECBlocks.CUT_GLEEMSLATE_STAIRS.get())
+                    .slab(ECBlocks.CUT_GLEEMSLATE_SLAB.get())
+                    .getFamily();
+
+            blockModels.createTrivialCube(ECBlocks.CUT_GLEEMSLATE.get());
+            blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
+        }
+
+        //gleemslate tiles
+        {
+            BlockFamily family = new BlockFamily.Builder(ECBlocks.GLEEMSLATE_TILES.get())
+                    .wall(ECBlocks.GLEEMSLATE_TILES_WALL.get())
+                    .stairs(ECBlocks.GLEEMSLATE_TILES_STAIRS.get())
+                    .slab(ECBlocks.GLEEMSLATE_TILES_SLAB.get())
+                    .getFamily();
+
+            blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_TILES.get());
+            blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
+        }
+
+        //gleemslate bricks
+        {
+            BlockFamily family = new BlockFamily.Builder(ECBlocks.GLEEMSLATE_BRICKS.get())
+                    .wall(ECBlocks.GLEEMSLATE_BRICKS_WALL.get())
+                    .stairs(ECBlocks.GLEEMSLATE_BRICKS_STAIRS.get())
+                    .slab(ECBlocks.GLEEMSLATE_BRICKS_SLAB.get())
+                    .getFamily();
+
+            blockModels.createTrivialCube(ECBlocks.GLEEMSLATE_BRICKS.get());
+            blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
+        }
 
 
 

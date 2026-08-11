@@ -47,11 +47,11 @@ repositories {
 
 dependencies {
     //wdUtils
-    //jarJar(implementation("com.wdiscute:wdUtils:1.3-NEOFORGE-26.1.2"))
-    implementation files(".lib/wdutils-1.3-NEOFORGE-26.1.2.jar")
+    jarJar(implementation("com.wdiscute:wdUtils:1.3-NEOFORGE-26.1.2"))
+    //implementation files(".lib/wdutils-1.3-NEOFORGE-26.1.2.jar")
 
     //FTS
-    jarJar(implementation("maven.modrinth:fancytabsections:6.0-NEOFORGE-26.1.2"))
+    jarJar(implementation("maven.modrinth:fancytabsections:6.1-NEOFORGE-26.1.2"))
 
     //libtooltips
     jarJar(implementation("maven.modrinth:libtooltips:2.2-NEOFORGE-26.1.2"))

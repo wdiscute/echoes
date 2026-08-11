@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "echoes:block/cut_gleemslate",
+    "side": "echoes:block/cut_gleemslate",
+    "top": "echoes:block/cut_gleemslate"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "echoes:block/gleemslate_tiles_slab"
+    },
+    "type=double": {
+      "model": "echoes:block/gleemslate_tiles"
+    },
+    "type=top": {
+      "model": "echoes:block/gleemslate_tiles_slab_top"
+    }
+  }
+}
