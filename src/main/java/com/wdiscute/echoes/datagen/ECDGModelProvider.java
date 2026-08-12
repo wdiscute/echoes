@@ -35,10 +35,11 @@ public class ECDGModelProvider extends ModelProvider
 
         //6 sided blocks
         list.add(ECBlocks.GLEEMSLATE.asItem().builtInRegistryHolder());
+
+        list.add(ECBlocks.GLEEMSLATE.asItem().builtInRegistryHolder());
         list.add(ECBlocks.GLEEMSLATE_SLAB.asItem().builtInRegistryHolder());
         list.add(ECBlocks.GLEEMSLATE_STAIRS.asItem().builtInRegistryHolder());
         list.add(ECBlocks.GLEEMSLATE_WALL.asItem().builtInRegistryHolder());
-
         list.add(ECBlocks.GLEEMSLATE_TILES.asItem().builtInRegistryHolder());
         list.add(ECBlocks.CHISELED_GLEEMSLATE.asItem().builtInRegistryHolder());
         list.add(ECBlocks.CUT_GLEEMSLATE.asItem().builtInRegistryHolder());

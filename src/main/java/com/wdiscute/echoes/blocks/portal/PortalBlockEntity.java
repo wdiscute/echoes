@@ -2,6 +2,7 @@ package com.wdiscute.echoes.blocks.portal;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.registry.ECParticles;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.registry.ECBlockEntities;
@@ -83,10 +84,19 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                     pos.getX() + 0.5d, pos.getY() + 1.7d + random.nextFloat(), pos.getZ() + 0.5d,
                     0f, 0f, 0f);
 
-            if (random.nextFloat() > 0f)
-                level.addParticle(ParticleTypes.ASH, false, true,
-                        (double) pos.getX() + random.nextFloat(), (double) pos.getY() + 1.7d + random.nextFloat(), (double) pos.getZ() + random.nextFloat(),
+            //sculk particles close
+            if (random.nextFloat() > 0.8f)
+                level.addParticle(ECParticles.SCULK.get(), false, true,
+                        (double) pos.getX() + random.nextFloat(), (double) pos.getY() + 1.3d + random.nextFloat() * 2, (double) pos.getZ() + random.nextFloat(),
                         0f, 0f, 0f);
+
+            //sculk particles far
+            if (random.nextFloat() > 0.8f)
+                level.addParticle(ECParticles.SCULK.get(),
+                        (double) pos.getX() + random.nextInt(8) - 4 + random.nextFloat(),
+                        (double) pos.getY() + random.nextInt(3) - 1.5f + 1.3d + random.nextFloat() * 2,
+                        (double) pos.getZ() + random.nextInt(8) - 4 + random.nextFloat(), 0, 0, 0);
+
 
             if (random.nextFloat() > 0.9f)
                 level.addParticle(ParticleTypes.SCULK_SOUL, false, true,
@@ -200,7 +210,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         //if hub is not linked, make new dungeon from random uuid
                         if (hub == null)
                             newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
-                        //if hub is linked, teleport to linked instance
+                            //if hub is linked, teleport to linked instance
                         else
                         {
                             //if player is already on the hub linked instance, make new one

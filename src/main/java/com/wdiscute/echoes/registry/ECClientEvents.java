@@ -19,6 +19,7 @@ import com.wdiscute.echoes.entity.soul.SoulModel;
 import com.wdiscute.echoes.entity.soul.SoulRenderer;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
+import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -27,10 +28,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.ArrayList;
@@ -95,6 +93,13 @@ public class ECClientEvents
         event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.PORTAL.get(), PortalRenderer::new);
     }
+
+    @SubscribeEvent
+    public static void registerParticleFactories(RegisterParticleProvidersEvent event)
+    {
+        event.registerSpriteSet(ECParticles.SCULK.get(), SculkParticle.Provider::new);
+    }
+
 
     @SubscribeEvent
     public static void registerItemModelProperties(RegisterConditionalItemModelPropertyEvent event)

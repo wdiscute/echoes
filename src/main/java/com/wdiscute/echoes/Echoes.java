@@ -57,8 +57,10 @@ public class Echoes
         ECEntityDataSerializers.register(modEventBus);
         ECPerks.register(modEventBus);
         ECCreativeModeTabs.register(modEventBus);
+        ECParticles.register(modEventBus);
 
-        TimelessInstance.SphereCache.init(128);
+        TimelessInstance.RingCache.init(128);
+        TimelessInstance.SphereCache.init(30);
         TimelessProcessor.addDefaultProcessors();
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, ECConfig.SPEC);

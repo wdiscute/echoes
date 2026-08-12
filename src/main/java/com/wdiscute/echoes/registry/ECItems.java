@@ -3,11 +3,14 @@ package com.wdiscute.echoes.registry;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.item.RamattraItem;
 import com.wdiscute.echoes.item.SoulHeartContainer;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.utils.item.BasicItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.List;
 
 public interface ECItems
 {
@@ -18,7 +21,11 @@ public interface ECItems
     DeferredItem<Item> SOUL_HEART_CONTAINER = ITEMS.registerItem("soul_heart_container", SoulHeartContainer::new);
 
     //weapons
-    DeferredItem<Item> ECHO_BLADE = ITEMS.registerItem("echo_blade", BasicItem::new);
+    DeferredItem<Item> ECHO_BLADE = ITEMS.registerItem("echo_blade", (p) ->
+            new BasicItem(p.component(ECDataComponents.PERKS, List.of(
+                    new PerkInstance(ECPerks.EXTRA_DAMAGE, 6f),
+                    new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS, 1.7f)
+            ))));
 
     DeferredItem<Item> RAMATTRA = ITEMS.registerItem("ramattra", RamattraItem::new);
 

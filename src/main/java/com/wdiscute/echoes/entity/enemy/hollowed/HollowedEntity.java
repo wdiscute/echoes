@@ -1,5 +1,7 @@
 package com.wdiscute.echoes.entity.enemy.hollowed;
 
+import com.wdiscute.echoes.SculkAura;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
 
-public class HollowedEntity extends AbstractSkeleton
+public class HollowedEntity extends AbstractSkeleton implements SculkAura
 {
     public HollowedEntity(EntityType<? extends HollowedEntity> type, Level level)
     {
@@ -54,5 +56,11 @@ public class HollowedEntity extends AbstractSkeleton
         }
 
         return arrow;
+    }
+
+    @Override
+    public float getSculkAura(@Nullable ServerLevel sl)
+    {
+        return 7;
     }
 }

@@ -47,12 +47,23 @@ public class TimelessCorpse extends Entity implements SculkAura
         return true;
     }
 
+    float auraSize = 9;
+
+    @Override
+    public void tick()
+    {
+        if (entityData.get(STACK).isEmpty())
+            auraSize -= 0.5f;
+
+        super.tick();
+    }
+
     @Override
     public InteractionResult interact(Player player, InteractionHand hand, Vec3 location)
     {
         ItemStack stack = getStack();
 
-        if(player.level().isClientSide())
+        if (player.level().isClientSide())
             return stack.isEmpty() ? InteractionResult.FAIL : InteractionResult.SUCCESS;
 
         player.addItem(stack);
@@ -88,6 +99,6 @@ public class TimelessCorpse extends Entity implements SculkAura
     @Override
     public float getSculkAura(@Nullable ServerLevel sl)
     {
-        return entityData.get(STACK).isEmpty() ? 0 : 5;
+        return auraSize;
     }
 }

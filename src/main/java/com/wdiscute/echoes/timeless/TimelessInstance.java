@@ -14,6 +14,7 @@ import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
+import com.wdiscute.echoes.registry.ECParticles;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
 import com.wdiscute.utils.Utils;
@@ -243,13 +244,9 @@ public class TimelessInstance
 
     public void onHeartHit(ServerLevel sl, SculkHeartEntity heartEntity)
     {
-        heartAuraBoost = Math.clamp(heartAuraBoost + 5, 0, MAX_GLOBAL_AURA + 1);
-
         sl.playSound(null, heartEntity.blockPosition(), SoundEvents.SCULK_BLOCK_PLACE, SoundSource.HOSTILE, 1f, 1f);
-
-        //if not on closing sequence, spawn ring
-        //if (closingSequence == -1)
-        //    submitRing(heart.position(), heart.getSculkAura(null) + globalAuraBoost, 0.5f);
+        if (closingSequence == -1)
+            closingSequence = 0;
     }
 
     public SculkHeartEntity getHeart(ServerLevel sl)
@@ -267,24 +264,26 @@ public class TimelessInstance
 
     public void tick(ServerLevel sl)
     {
-        //passive decay of global aura
-        //start closing sequence
-        if (heartAuraBoost >= MAX_GLOBAL_AURA && closingSequence == -1)
-            closingSequence = 0;
-
         //add all entities with SculkAura aura w
-        sl.getEntities(
+        List<Entity> entitiesInInstance = sl.getEntities(
                 (Entity) null,
                 new AABB(origin).inflate(1000),
-                entity -> entity instanceof SculkAura
-        ).forEach(o ->
-        {
-            if(((SculkAura) o).getSculkAura(sl) == 0) return;
+                Utils::alwaysTrue
+        );
 
-            if (o instanceof SculkHeartEntity)
-                submitAura(o.position(), ((SculkAura) o).getSculkAura(sl) + heartAuraBoost);
-            else
-                submitAura(o.position(), ((SculkAura) o).getSculkAura(sl));
+        //submit sculk auras
+        entitiesInInstance.forEach(o ->
+        {
+            if (o instanceof SculkAura sculkAura)
+            {
+                if (sculkAura.getSculkAura(sl) == 0) return;
+
+                //if (o instanceof SculkHeartEntity)
+                //    submitAura(o.position(), sculkAura.getSculkAura(sl));
+                //else
+
+                submitAura(o.position(), sculkAura.getSculkAura(sl) + heartAuraBoost);
+            }
         });
 
         //process auras
@@ -298,6 +297,9 @@ public class TimelessInstance
         {
             //increase closing sequence
             closingSequence++;
+
+            if (closingSequence < 15)
+                heartAuraBoost++;
 
             SculkHeartEntity heart = getHeart(sl);
             if (heart != null)
@@ -354,19 +356,23 @@ public class TimelessInstance
                             new ECDBPlaySoundPayload("beacon_activate", 1, 1f));
                 }
 
-                if (closingSequence > 100)
+                if (closingSequence > 115)
                     heartAuraBoost--;
+
+                if (closingSequence == 130)
+                {
+                    //place portal
+                    BlockState blockState = ECBlocks.PORTAL.get().defaultBlockState();
+                    blockState = blockState.trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN);
+                    sl.setBlockAndUpdate(heart.blockPosition(), blockState);
+                }
 
                 if (closingSequence == 140)
                 {
                     //sets phase to finishing (not closed, so it doest get removed)
                     phase = Phase.FINISHED;
 
-                    //place portal
-                    BlockState blockState = ECBlocks.PORTAL.get().defaultBlockState();
-                    blockState = blockState.trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN);
-                    sl.setBlockAndUpdate(heart.blockPosition(), blockState);
-
+                    //remove heard
                     heart.remove(Entity.RemovalReason.DISCARDED);
                 }
             }
@@ -419,7 +425,7 @@ public class TimelessInstance
             if (ring.second() < 120)
             {
                 newRings.add(new Utils.Trio<>(ring.first(), ring.second() + ring.third(), ring.third()));
-                List<BlockPos> blockPos = SphereCache.get(ring.second().intValue());
+                List<BlockPos> blockPos = RingCache.get(ring.second().intValue());
                 if (ring.third() > 0)
                     blockPos.forEach(o -> setToSculk(sl, o.offset(BlockPos.containing(ring.first()))));
                 else
@@ -604,9 +610,20 @@ public class TimelessInstance
     private void processAuras(ServerLevel sl)
     {
         //do not process auras in hub
-        if(isHub()) return;
+        if (isHub()) return;
 
+        //spawn particles
+        auras.forEach(o ->
+        {
+            Vec3 pos = o.getFirst();
+            float size = o.getSecond() / 3;
 
+            sl.sendParticles(ECParticles.SCULK.get(), false, true,
+                    pos.x, pos.y, pos.z, (int) size,
+                    size, size, size, 0);
+        });
+
+        //don't run if auras haven't changed
         if (auras.equals(oldAuras) && rings.isEmpty())
         {
             auras.clear();
@@ -620,7 +637,7 @@ public class TimelessInstance
         {
             int size = aura.getSecond().intValue();
 
-            List<BlockPos> blockPos = filledSphere(size);
+            List<BlockPos> blockPos = SphereCache.get(size);
 
             blockPos.forEach(o -> currentInAura.add(o.offset(BlockPos.containing(aura.getFirst()))));
         }
@@ -675,7 +692,7 @@ public class TimelessInstance
         StructureTemplateManager manager = sl.getStructureManager();
         StructurePlaceSettings placeSettings = new StructurePlaceSettings().setKnownShape(false);
 
-        if(stage == -1)
+        if (stage == -1)
             template = Echoes.rl("arena/starter");
 
         //todo check what radius in the ticket means
@@ -716,22 +733,22 @@ public class TimelessInstance
         }
     }
 
-    public static final class SphereCache
+    public static final class RingCache
     {
         private static final Map<Integer, List<BlockPos>> CACHE = new HashMap<>();
 
         public static void init(int maxRadius)
         {
             for (int r = 1; r <= maxRadius; r++)
-                CACHE.put(r, buildSphereShell(r));
+                CACHE.put(r, buildRing(r));
         }
 
         public static List<BlockPos> get(int radius)
         {
-            return CACHE.computeIfAbsent(radius, SphereCache::buildSphereShell);
+            return CACHE.computeIfAbsent(radius, RingCache::buildRing);
         }
 
-        private static List<BlockPos> buildSphereShell(int radius)
+        private static List<BlockPos> buildRing(int radius)
         {
             Set<BlockPos> shell = new HashSet<>();
 
@@ -764,31 +781,51 @@ public class TimelessInstance
         }
     }
 
-    public static List<BlockPos> filledSphere(int radius)
+    public static final class SphereCache
     {
-        List<BlockPos> blocks = new ArrayList<>();
+        private static final Map<Integer, List<BlockPos>> CACHE = new HashMap<>();
 
-        int r2 = radius * radius;
-
-        for (int z = -radius; z <= radius; z++)
+        public static void init(int maxRadius)
         {
-            int z2 = z * z;
-
-            int sliceRadius = (int) Math.floor(Math.sqrt(r2 - z2));
-            int sliceR2 = sliceRadius * sliceRadius;
-
-            for (int y = -sliceRadius; y <= sliceRadius; y++)
-            {
-                int xMax = (int) Math.floor(Math.sqrt(sliceR2 - y * y));
-
-                for (int x = -xMax; x <= xMax; x++)
-                {
-                    blocks.add(new BlockPos(x, y, z));
-                }
-            }
+            CACHE.put(0, List.of());
+            for (int r = 1; r <= maxRadius; r++)
+                CACHE.put(r, buildSphereShell(r));
         }
 
-        return blocks;
+        public static List<BlockPos> get(int radius)
+        {
+            List<BlockPos> blockPos = CACHE.get(Math.max(0, radius));
+            if (blockPos == null)
+                throw new IllegalStateException("radius " + radius + " not cached");
+            return blockPos;
+        }
+
+        private static List<BlockPos> buildSphereShell(int radius)
+        {
+            List<BlockPos> blocks = new ArrayList<>();
+
+            int r2 = radius * radius;
+
+            for (int z = -radius; z <= radius; z++)
+            {
+                int z2 = z * z;
+
+                int sliceRadius = (int) Math.floor(Math.sqrt(r2 - z2));
+                int sliceR2 = sliceRadius * sliceRadius;
+
+                for (int y = -sliceRadius; y <= sliceRadius; y++)
+                {
+                    int xMax = (int) Math.floor(Math.sqrt(sliceR2 - y * y));
+
+                    for (int x = -xMax; x <= xMax; x++)
+                    {
+                        blocks.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+
+            return blocks;
+        }
     }
 
     public static final int FLAGS =
