@@ -136,6 +136,7 @@ public class UnleashedSoulEntity extends Projectile
             if (result.getEntity() instanceof LivingEntity entity)
             {
                 entity.hurt(this.damageSources().generic(), damage);
+                entity.invulnerableTime = 0;
             }
 
             this.discard();

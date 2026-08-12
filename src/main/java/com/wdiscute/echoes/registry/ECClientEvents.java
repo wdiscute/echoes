@@ -57,11 +57,19 @@ public class ECClientEvents
     {
         List<MutableComponent> perkComps = new ArrayList<>();
         for (var perk : event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()))
-            perkComps.addAll(Objects.requireNonNull(perk.perk().value().getItemTooltip(perk.amplifiers())));
+        {
+            List<MutableComponent> shopExtendedTooltip = perk.perk().value().getShopExtendedTooltip(perk.amplifiers());
+
+            if (shopExtendedTooltip.isEmpty())
+                perkComps.addAll(perk.perk().value().getItemTooltip(perk.amplifiers()));
+
+            perkComps.addAll(shopExtendedTooltip.reversed());
+        }
 
         for (var perkComp : perkComps)
             if (!event.getToolTip().isEmpty())
                 event.getToolTip().add(1, perkComp.withStyle(ChatFormatting.GRAY));
+
     }
 
     @SubscribeEvent

@@ -141,8 +141,12 @@ public class SoulEntity extends Entity
             return;
         }
 
-        //if (level().getPlayerByUUID(entityData.get(UUID)) == null)
-        //    remove(RemovalReason.DISCARDED);
+        if (level().getPlayerByUUID(entityData.get(UUID)) == null)
+        {
+            Player nearestPlayer = level().getNearestPlayer(this, 1000);
+            if(nearestPlayer != null)
+                entityData.set(UUID, nearestPlayer.getUUID());
+        }
 
         timeAlive++;
         if(timeAlive == 20)

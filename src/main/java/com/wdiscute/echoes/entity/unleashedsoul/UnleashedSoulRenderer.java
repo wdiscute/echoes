@@ -58,13 +58,11 @@ public class UnleashedSoulRenderer extends EntityRenderer<UnleashedSoulEntity, U
             );
         }
 
-        System.out.println(scale);
-
         poseStack.scale(scale, scale, scale);
 
         poseStack.translate(0.0F, -0.9F, -0.3F);
 
-        collector.submitModel(model, state, poseStack, RenderTypes.entityTranslucent(UnleashedSoulModel.TEXTURE_LOCATION), state.lightCoords, OverlayTexture.NO_OVERLAY, -1, null, 0, null);
+        collector.submitModel(model, state, poseStack, RenderTypes.entityTranslucent(UnleashedSoulModel.TEXTURE_LOCATION), 0x00ffffff, OverlayTexture.NO_OVERLAY, -1, null, 0, null);
 
         poseStack.popPose();
     }

@@ -31,9 +31,8 @@ public class ECDGDataEntriesProvider
         gen.addProvider(true,
                 new DataEntryProvider<>(output, ECDataEntries.SOULS,
                         Map.of(
-                                Utils.rl("husk"), 0.3f,
-                                Utils.rl("skeleton"), 1f,
-                                Utils.rl("zombie"), 1.6f
+                                Utils.rl("echoes", "hollowed"), 0.8f,
+                                Utils.rl("echoes", "sculked"), 1.3f
                         )
                 )
         );

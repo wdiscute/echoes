@@ -41,7 +41,7 @@ public interface ECEntities
 
     DeferredHolder<EntityType<?>, EntityType<SoulEntity>> SOUL =
             register("soul", SoulEntity::new, MobCategory.MISC,
-                    b -> b.sized(0.1f, 0.1f).noSave().noSummon());
+                    b -> b.sized(0.1f, 0.1f).noSave());
 
     DeferredHolder<EntityType<?>, EntityType<UnleashedSoulEntity>> UNLEASHED_SOUL =
             register("unleashed_soul", UnleashedSoulEntity::new, MobCategory.MISC,

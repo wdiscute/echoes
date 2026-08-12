@@ -25,7 +25,7 @@ public class RamattraItem extends Item
 {
     public RamattraItem(Properties properties)
     {
-        super(properties);
+        super(properties.stacksTo(1).useCooldown(10));
     }
 
     @Override

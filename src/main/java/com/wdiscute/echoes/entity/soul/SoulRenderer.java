@@ -45,7 +45,7 @@ public class SoulRenderer extends EntityRenderer<SoulEntity, SoulRenderState>
         ps.translate(0f, -1f, -0.22f);
         node.submitModel(
                 soul, state, ps, RenderTypes.entityTranslucent(SoulModel.TEXTURE_LOCATION),
-                state.lightCoords, OverlayTexture.NO_OVERLAY,
+                0x00ffffff, OverlayTexture.NO_OVERLAY,
                 -1, null, state.outlineColor, null
         );
 
