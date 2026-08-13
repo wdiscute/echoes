@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.blocks.GleemslateGrass;
 import com.wdiscute.echoes.blocks.PrismaPaneBlock;
 import com.wdiscute.echoes.blocks.display.DisplayBlock;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
@@ -21,6 +22,9 @@ public interface ECBlocks
     DeferredBlock<Block> PORTAL = register("portal", PortalBlock::new);
     DeferredBlock<Block> TIMELESS_MARKER = register("timeless_marker", TimelessMarkerBlock::new);
     DeferredBlock<Block> DISPLAY = register("display", DisplayBlock::new);
+
+
+    DeferredBlock<Block> GLEEMSLATE_GRASS = register("gleemslate_grass", (d) ->  new Block(d.sound(SoundType.AMETHYST)));
 
     //gleemslate
     DeferredBlock<Block> GLEEMSLATE = register("gleemslate", (d) ->  new Block(d.sound(SoundType.AMETHYST)));

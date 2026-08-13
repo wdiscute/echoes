@@ -22,6 +22,8 @@ import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.api.distmarker.Dist;
@@ -113,5 +115,14 @@ public class ECClientEvents
     public static void registerItemModelProperties(RegisterConditionalItemModelPropertyEvent event)
     {
         //event.register(Echoes.rl("is_casting"), IsCastingItemProperty.MAP_CODEC);
+    }
+
+    @SubscribeEvent
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.BlockTintSources event)
+    {
+        event.register(
+                List.of(BlockTintSources.grassBlock()),
+                ECBlocks.GLEEMSLATE_GRASS.get()
+        );
     }
 }
