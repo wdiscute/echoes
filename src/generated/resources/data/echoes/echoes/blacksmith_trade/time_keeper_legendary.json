@@ -1,0 +1,35 @@
+{
+  "cost": [
+    {
+      "count": 128,
+      "identifier": "echoes:prisma_shard"
+    },
+    {
+      "count": 64,
+      "identifier": "echoes:crystal_core"
+    }
+  ],
+  "rarity": "legendary",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            6.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
+            80.0
+          ],
+          "perk": "echoes:extra_ticks_per_kill"
+        }
+      ],
+      "echoes:rarity": "legendary"
+    },
+    "identifier": "echoes:time_keeper"
+  },
+  "weight": 2
+}

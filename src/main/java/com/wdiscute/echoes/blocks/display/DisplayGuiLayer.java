@@ -15,6 +15,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,8 +66,8 @@ public class DisplayGuiLayer implements GuiLayer
                 guiGraphics.fill(x, y, x + 140, height / 2 + 38 + yCostOffset + yPerkOffset, 0x66000000);
 
                 //Item Name
-                ScreenUtils.centeredText(guiGraphics,
-                        font, MutableComponent.create(stack.getHoverName().getContents()).withStyle(ChatFormatting.BOLD),
+                Component hoverName = stack.getHoverName();
+                ScreenUtils.centeredText(guiGraphics, font, hoverName,
                         x + 70, y + 6, 0xffffffff, true);
 
                 //rarity

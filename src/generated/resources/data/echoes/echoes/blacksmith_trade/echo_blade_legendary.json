@@ -1,0 +1,35 @@
+{
+  "cost": [
+    {
+      "count": 64,
+      "identifier": "echoes:sculked_teeth"
+    },
+    {
+      "count": 25,
+      "identifier": "echoes:hollowed_spine"
+    }
+  ],
+  "rarity": "legendary",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            8.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
+            8.0
+          ],
+          "perk": "echoes:extra_percentage_souls"
+        }
+      ],
+      "echoes:rarity": "legendary"
+    },
+    "identifier": "echoes:echo_blade"
+  },
+  "weight": 2
+}

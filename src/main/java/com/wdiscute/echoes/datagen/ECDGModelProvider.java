@@ -186,10 +186,31 @@ public class ECDGModelProvider extends ModelProvider
         }
 
 
-        itemModels.generateFlatItem(ECItems.SCULK_TISSUE.get(), ModelTemplates.FLAT_ITEM);
-
         //weapons
+        //sculk
         itemModels.generateFlatItem(ECItems.ECHO_BLADE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.TIME_REAPER.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
+        //prisma
+        itemModels.generateFlatItem(ECItems.PRISMA_SWORD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.LUCENT_WILL.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.TIME_KEEPER.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+
+
+
+        //materials
+        //sculk
+        itemModels.generateFlatItem(ECItems.SCULK_TISSUE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.HOLLOWED_SPINE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.SCULKED_TEETH.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.SCULK_TENDRIL.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.ECHOING_MARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.ROT_BRAIN.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        //prisma
+        itemModels.generateFlatItem(ECItems.PRISMA_SHARD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.LATTICE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.LUCENT_SHARD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.CRYSTAL_CORE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
     }
 }

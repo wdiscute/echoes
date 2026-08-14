@@ -1,0 +1,31 @@
+{
+  "cost": [
+    {
+      "count": 1,
+      "identifier": "echoes:sculked_teeth"
+    }
+  ],
+  "rarity": "common",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            4.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
+            4.0
+          ],
+          "perk": "echoes:extra_percentage_souls"
+        }
+      ],
+      "echoes:rarity": "common"
+    },
+    "identifier": "echoes:echo_blade"
+  },
+  "weight": 20
+}

@@ -1,0 +1,29 @@
+{
+  "cost": [
+    {
+      "count": 15,
+      "identifier": "echoes:sculked_teeth"
+    },
+    {
+      "count": 12,
+      "identifier": "echoes:hollowed_spine"
+    }
+  ],
+  "rarity": "rare",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            3.0
+          ],
+          "perk": "echoes:ramattra"
+        }
+      ],
+      "echoes:rarity": "rare"
+    },
+    "identifier": "echoes:ramattra"
+  },
+  "weight": 10
+}

@@ -17,11 +17,12 @@ public interface ECPerks
 
     DeferredHolder<Perk, ? extends Perk> EMPTY_PERK = register("empty", EmptyPerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_DAMAGE = register("extra_damage", ExtraDamagePerk::new);
-    DeferredHolder<Perk, ? extends Perk> EXTRA_SCULK_DAMAGE = register("extra_sculk_damage", ExtraSculkDamagePerk::new);
+    //DeferredHolder<Perk, ? extends Perk> EXTRA_SCULK_DAMAGE = register("extra_sculk_damage", ExtraSculkDamagePerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_TICKS_PER_KILL = register("extra_ticks_per_kill", ExtraTicksPerKillPerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_FLAT_SOULS = register("extra_flat_souls", ExtraFlatSoulsPerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_PERCENTAGE_SOULS = register("extra_percentage_souls", ExtraPercentageSoulsPerk::new);
     DeferredHolder<Perk, ? extends Perk> EXTRA_DAMAGE_CONSUMES_SOULS = register("extra_damage_consumes_souls", ExtraDamageConsumesSoulsPerk::new);
+    DeferredHolder<Perk, ? extends Perk> EXTRA_DAMAGE_CONSUMES_TIME = register("extra_damage_consumes_time", ExtraDamageConsumesTimePerk::new);
 
     //fake perks
     DeferredHolder<Perk, ? extends Perk> RAMATTRA = register("ramattra", RamattraPerk::new);

@@ -1,22 +1,14 @@
 {
   "cost": [
     {
-      "count": 20,
-      "data_components_patch": {},
-      "identifier": "echoes:sculk_tissue"
+      "count": 15,
+      "identifier": "echoes:sculked_teeth"
     },
     {
-      "count": 20,
-      "data_components_patch": {},
-      "identifier": "minecraft:diamond"
-    },
-    {
-      "count": 3,
-      "data_components_patch": {},
-      "identifier": "minecraft:gold_ingot"
+      "count": 5,
+      "identifier": "echoes:hollowed_spine"
     }
   ],
-  "power_level": 15,
   "rarity": "rare",
   "stack": {
     "count": 1,
@@ -30,11 +22,12 @@
         },
         {
           "amplifiers": [
-            1.6
+            6.0
           ],
           "perk": "echoes:extra_percentage_souls"
         }
-      ]
+      ],
+      "echoes:rarity": "rare"
     },
     "identifier": "echoes:echo_blade"
   },

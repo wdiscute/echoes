@@ -36,5 +36,5 @@
   "echoes.rarity.uncommon" : "<ecuncommon>§lUNCOMMON</ecuncommon>",
   "echoes.rarity.rare" : "<ecrare>§lRARE</ecrare>",
   "echoes.rarity.epic" : "<ecepic>§lEPIC</ecepic>",
-  "echoes.rarity.legendary" : "<ltrgb>LEGENDARY</ltrgb>"
+  "echoes.rarity.legendary" : "<eclegendary>LEGENDARY</eclegendary>"
 }

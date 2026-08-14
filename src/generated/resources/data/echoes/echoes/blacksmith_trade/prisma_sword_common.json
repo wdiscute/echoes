@@ -1,0 +1,31 @@
+{
+  "cost": [
+    {
+      "count": 1,
+      "identifier": "echoes:lasttice"
+    }
+  ],
+  "rarity": "common",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            4.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
+            0.3
+          ],
+          "perk": "echoes:extra_flat_souls"
+        }
+      ],
+      "echoes:rarity": "common"
+    },
+    "identifier": "echoes:prisma_sword"
+  },
+  "weight": 20
+}

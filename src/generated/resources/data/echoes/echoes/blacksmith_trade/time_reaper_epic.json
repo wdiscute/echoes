@@ -1,0 +1,34 @@
+{
+  "cost": [
+    {
+      "count": 32,
+      "identifier": "echoes:sculk_tendril"
+    },
+    {
+      "count": 30,
+      "identifier": "echoes:echoing_marrow"
+    },
+    {
+      "count": 1,
+      "identifier": "echoes:rot_BRAIN"
+    }
+  ],
+  "rarity": "epic",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            4.0,
+            4.0
+          ],
+          "perk": "echoes:extra_damage_consumes_time"
+        }
+      ],
+      "echoes:rarity": "epic"
+    },
+    "identifier": "echoes:time_reaper"
+  },
+  "weight": 5
+}

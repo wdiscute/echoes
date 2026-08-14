@@ -1,6 +1,7 @@
 package com.wdiscute.echoes;
 
 import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
+import com.wdiscute.libtooltips.RGBEffect;
 import com.wdiscute.libtooltips.Tooltips;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,10 +25,12 @@ public class EchoesClient
     {
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 
-        Tooltips.registerProcessor("ecepic",
+        Tooltips.registerProcessor("eccommon", (t, s, e) -> Component.literal(t));
+
+        Tooltips.registerProcessor("ecuncommon",
                 (t, s, e) -> ECTooltipGradient.process(t,
-                        Triple.of(61, 0, 255),
-                        Triple.of(255, 0, 224)
+                        Triple.of(11, 185, 2),
+                        Triple.of(2, 185, 69)
                 ));
 
         Tooltips.registerProcessor("ecrare",
@@ -36,14 +39,13 @@ public class EchoesClient
                         Triple.of(100, 180, 255)
                 ));
 
-        Tooltips.registerProcessor("ecuncommon",
+        Tooltips.registerProcessor("ecepic",
                 (t, s, e) -> ECTooltipGradient.process(t,
-                        Triple.of(11, 185, 2),
-                        Triple.of(2, 185, 69)
+                        Triple.of(61, 0, 255),
+                        Triple.of(255, 0, 224)
                 ));
 
-        Tooltips.registerProcessor("eccommon",
-                (t, s, e) -> Component.literal(t));
+        Tooltips.registerProcessor("eclegendary", RGBEffect::process);
     }
 
     public static void playSoundPayload(ECDBPlaySoundPayload ecdbPlaySoundPayload)

@@ -2,6 +2,7 @@ package com.wdiscute.echoes.registry;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -23,6 +24,8 @@ public interface ECDataComponents
     DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RAMATTRA_CAN_USE = register(
             "ramattra_can_use", builder -> builder.persistent(Codec.BOOL));
 
+    DeferredHolder<DataComponentType<?>, DataComponentType<BlacksmithTrade.Rarity>> RARITY = register(
+            "rarity", builder -> builder.persistent(BlacksmithTrade.Rarity.CODEC));
 
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                            UnaryOperator<DataComponentType.Builder<T>> builderOperator)

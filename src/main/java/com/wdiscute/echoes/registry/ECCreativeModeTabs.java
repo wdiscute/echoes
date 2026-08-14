@@ -14,6 +14,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ECCreativeModeTabs
@@ -44,7 +45,8 @@ public class ECCreativeModeTabs
                         .add((dwa) ->
                         {
                             List<ItemStack> trades = new ArrayList<>();
-                            for (BlacksmithTrade blacksmithTrade : dwa.lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList())
+                            for (BlacksmithTrade blacksmithTrade : dwa.lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY)
+                                    .stream().sorted(Comparator.comparingInt(o -> o.rarity().order())).toList())
                                 trades.add(blacksmithTrade.stack().toStack());
                             return trades;
                         })
@@ -55,6 +57,21 @@ public class ECCreativeModeTabs
                         .setBannerColor(0xff344545)
 
                         .add(ECItems.SCULK_TISSUE)
+                        .add(ECItems.HOLLOWED_SPINE)
+                        .add(ECItems.SCULKED_TEETH)
+                        .add(ECItems.SCULK_TENDRIL)
+                        .add(ECItems.ECHOING_MARROW)
+                        .add(ECItems.ROT_BRAIN)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+
+                        .add(ECItems.PRISMA_SHARD)
+                        .add(ECItems.LATTICE)
+                        .add(ECItems.LUCENT_SHARD)
+                        .add(ECItems.CRYSTAL_CORE)
+
+
 
         );
 

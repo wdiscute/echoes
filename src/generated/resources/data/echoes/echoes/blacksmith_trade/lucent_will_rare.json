@@ -1,0 +1,36 @@
+{
+  "cost": [
+    {
+      "count": 32,
+      "identifier": "echoes:lucent_shard"
+    },
+    {
+      "count": 15,
+      "identifier": "echoes:crystal_core"
+    }
+  ],
+  "rarity": "rare",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            6.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
+            3.0,
+            6.0
+          ],
+          "perk": "echoes:extra_damage_consumes_souls"
+        }
+      ],
+      "echoes:rarity": "rare"
+    },
+    "identifier": "echoes:lucent_will"
+  },
+  "weight": 10
+}

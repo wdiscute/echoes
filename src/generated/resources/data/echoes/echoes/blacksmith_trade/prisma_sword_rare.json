@@ -1,0 +1,35 @@
+{
+  "cost": [
+    {
+      "count": 15,
+      "identifier": "echoes:lasttice"
+    },
+    {
+      "count": 8,
+      "identifier": "echoes:prisma_shard"
+    }
+  ],
+  "rarity": "rare",
+  "stack": {
+    "count": 1,
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            6.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
+            1.3
+          ],
+          "perk": "echoes:extra_flat_souls"
+        }
+      ],
+      "echoes:rarity": "rare"
+    },
+    "identifier": "echoes:prisma_sword"
+  },
+  "weight": 10
+}
