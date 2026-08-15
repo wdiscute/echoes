@@ -1,35 +1,113 @@
 {
+  "itemGroup.echoes.echoes" : "Timeless Echoes",
 
-  "section.echoes.general" : "Must Have",
-  "section.echoes.blacksmith_trades" : "Blacksmith Trades",
-  "section.echoes.materials" : "Materials",
-  "section.echoes.sculk" : "Sculk",
-  "section.echoes.prisma" : "Prisma",
 
 
 
 
 
+  "section.echoes.general" : "Must Have",
 
   "block.echoes.portal" : "Timeless Portal",
   "block.echoes.display" : "Blacksmith Display",
-  "block.echoes.timeless_marker" : "TimelessMarker",
+  "block.echoes.timeless_marker" : "Timeless Marker",
+  "block.echoes.soul_heart_container" : "Soul Heart Container",
+
+
+
+
+
+
+
+
+
+  "section.echoes.sculk" : "Sculk",
 
   "block.echoes.sculk_pillar" : "Sculk Pillar",
   "block.echoes.sculk_slab" : "Sculk Slab",
 
-  "block.echoes.gleemslate" : "Gleemslate",
-  "block.echoes.chiseled_gleemslate" : "Chiseled Gleemslate",
-  "block.echoes.cut_gleemslate" : "Cut Gleemslate",
-  "block.echoes.gleemslate_bricks" : "Gleemslate Bricks",
+  "block.echoes.sculked_deepslate" : "Sculked Deepslate",
+  "block.echoes.sculked_deepslate_slab" : "Sculked Deepslate Slab",
+  "block.echoes.sculked_deepslate_stairs" : "Sculked Deepslate Stairs",
+  "block.echoes.sculked_deepslate_wall" : "Sculked Deepslate Wall",
 
+
+
+
+
+
+
+
+  "section.echoes.prisma" : "Prisma",
+
+  "block.echoes.gleemslate" : "Gleemslate",
+  "block.echoes.gleemslate_slab" : "Gleemslate Slab",
+  "block.echoes.gleemslate_stairs" : "Gleemslate Stairs",
+  "block.echoes.gleemslate_wall" : "Gleemslate Wall",
+
+  "block.echoes.cut_gleemslate" : "Cut Gleemslate",
+  "block.echoes.cut_gleemslate_slab" : "Cut Gleemslate Slab",
+  "block.echoes.cut_gleemslate_stairs" : "Cut Gleemslate Stairs",
+  "block.echoes.cut_gleemslate_wall" : "Cut Gleemslate Wall",
+
+  "block.echoes.gleemslate_tiles" : "Gleemslate Bricks",
+  "block.echoes.gleemslate_tiles_slab" : "Gleemslate Tiles Slab",
+  "block.echoes.gleemslate_tiles_stairs" : "Gleemslate Tiles Stairs",
+  "block.echoes.gleemslate_tiles_wall" : "Gleemslate Tiles Wall",
+
+  "block.echoes.gleemslate_bricks" : "Gleemslate Bricks",
+  "block.echoes.gleemslate_bricks_slab" : "Gleemslate Tiles Slab",
+  "block.echoes.gleemslate_bricks_stairs" : "Gleemslate Tiles Stairs",
+  "block.echoes.gleemslate_bricks_wall" : "Gleemslate Tiles Wall",
+
+  "block.echoes.chiseled_gleemslate" : "Chiseled Gleemslate",
   "block.echoes.gleemslate_pillar" : "Gleemslate Pillar",
   "block.echoes.trimmed_gleemslate" : "Trimmed Gleemslate",
 
-  "item.echoes.sculk_tissue" : "Sculk Tissue",
+
+
+
+
+
+
+
+
+  "section.echoes.blacksmith_trades" : "Blacksmith Trades",
 
   "item.echoes.echo_blade" : "Echo Blade",
   "item.echoes.ramattra" : "Ramattra",
+  "item.echoes.time_reaper" : "Time Reaper",
+  "item.echoes.gloombringer" : "Gloombringer",
+
+  "item.echoes.prisma_sword" : "Prisma Sword",
+  "item.echoes.lucent_will" : "Lucent Will",
+  "item.echoes.time_keeper" : "Time Keeper",
+
+
+
+
+
+
+
+
+
+
+  "section.echoes.materials" : "Materials",
+
+  "item.echoes.sculk_tissue" : "Sculk Tissue",
+  "item.echoes.hollowed_spine" : "Hollowed Spine",
+  "item.echoes.sculked_teeth" : "Sculked Teeth",
+  "item.echoes.sculk_tendril" : "Sculk Tendril",
+  "item.echoes.echoing_marrow" : "Echoing Marrow",
+  "item.echoes.rot_brain" : "Rot Brain",
+
+  "item.echoes.prisma_shard" : "Prisma Shard",
+  "item.echoes.lattice" : "Lattice",
+  "item.echoes.lucent_shard" : "Lucent Shard",
+  "item.echoes.crystal_core" : "Crystal Core",
+  "item.echoes.lucent_die" : "Lucent Die",
+
+
 
 
   "echoes.rarity.common" : "<eccommon>§lCOMMON</eccommon>",

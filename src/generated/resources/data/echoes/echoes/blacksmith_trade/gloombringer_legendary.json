@@ -2,11 +2,11 @@
   "cost": [
     {
       "count": 64,
-      "identifier": "echoes:lattice"
+      "identifier": "echoes:sculked_teeth"
     },
     {
-      "count": 32,
-      "identifier": "echoes:prisma_shard"
+      "count": 25,
+      "identifier": "echoes:hollowed_spine"
     }
   ],
   "rarity": "legendary",
@@ -16,20 +16,14 @@
       "echoes:perks": [
         {
           "amplifiers": [
-            8.0
+            30.0
           ],
           "perk": "echoes:extra_damage"
-        },
-        {
-          "amplifiers": [
-            4.0
-          ],
-          "perk": "echoes:extra_flat_souls"
         }
       ],
       "echoes:rarity": "legendary"
     },
-    "identifier": "echoes:prisma_sword"
+    "identifier": "echoes:gloombringer"
   },
   "weight": 2
 }

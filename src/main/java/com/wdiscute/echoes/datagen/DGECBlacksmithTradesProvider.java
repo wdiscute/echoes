@@ -7,6 +7,7 @@ import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.upgrades.perks.ExtraDamagePerk;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.Holder;
@@ -46,7 +47,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 ),
 
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(4, 5, 6, 7, 8)),
-                new RaritifiedPerk(ECPerks.EXTRA_PERCENTAGE_SOULS, new RarityValues(4, 5, 6, 7, 8))
+                new RaritifiedPerk(ECPerks.EXTRA_PERCENTAGE_SOULS, new RarityValues(1.6F, 1.8F, 2F, 2.2F, 2.5F))
         );
 
         //ramatra
@@ -70,9 +71,20 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 ),
 
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_TIME,
-                        new RarityValues(1, 2, 3, 4, 5),
+                        new RarityValues(20, 20, 20, 20, 20),
                         new RarityValues(1, 2, 3, 4, 5)
-                )
+                ),
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(6, 8, 10, 15, 20))
+        );
+
+        //gloombringer
+        allRarities(context, ECItems.GLOOMBRINGER.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.SCULKED_TEETH.get(), new RarityValues(1, 5, 15, 32, 64)),
+                        new RaritifiedCost(ECItems.HOLLOWED_SPINE.get(), new RarityValues(0, 2, 5, 10, 25))
+                ),
+
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(12, 16, 20, 25, 30))
         );
 
 
@@ -138,11 +150,6 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     private record RaritifiedPerk(Holder<Perk> perk, RarityValues... rarityValues)
     {
-        @SafeVarargs
-        public RaritifiedPerk
-        {
-        }
-
         public PerkInstance makePerkInstance(BlacksmithTrade.Rarity rarity)
         {
             List<Float> valuesForRarity = new ArrayList<>();

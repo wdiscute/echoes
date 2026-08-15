@@ -87,7 +87,7 @@ public class ECEvents
             for (PerkInstance perk : perks)
             {
                 float damageToAdd = perk.perk().value().addDamage(player, weaponItem, entityDamaged, perk.amplifiers());
-                event.setNewDamage(event.getNewDamage() + damageToAdd);
+                event.setNewDamage(event.getNewDamage() + damageToAdd * player.getAttackStrengthScale(0));
             }
         }
     }

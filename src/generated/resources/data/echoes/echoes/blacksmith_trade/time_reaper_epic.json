@@ -10,7 +10,7 @@
     },
     {
       "count": 1,
-      "identifier": "echoes:rot_BRAIN"
+      "identifier": "echoes:rot_brain"
     }
   ],
   "rarity": "epic",
@@ -20,10 +20,16 @@
       "echoes:perks": [
         {
           "amplifiers": [
-            4.0,
+            20.0,
             4.0
           ],
           "perk": "echoes:extra_damage_consumes_time"
+        },
+        {
+          "amplifiers": [
+            15.0
+          ],
+          "perk": "echoes:extra_damage"
         }
       ],
       "echoes:rarity": "epic"

@@ -6,6 +6,7 @@ import com.wdiscute.echoes.timeless.TimelessManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,8 +21,8 @@ public class ExtraTicksPerKillPerk extends SimplePerk
     public void onEntityKilled(@NotNull Player killer, @NotNull ItemStack weapon, @NotNull Entity entityKilled, List<Float> value)
     {
         TimelessInstance closest = TimelessManager.getClosest(killer.level().getServer(), killer.blockPosition());
-        if(closest != null && closest.timeToExit != Long.MAX_VALUE)
-            closest.timeToExit += value.getFirst().longValue();
+        if(closest != null && closest.timeToExit != Long.MAX_VALUE && killer.level() instanceof ServerLevel sl)
+            closest.setTime(sl, closest.timeToExit + value.getFirst().longValue());
         super.onEntityKilled(killer, weapon, entityKilled, value);
     }
 

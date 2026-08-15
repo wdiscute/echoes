@@ -6,6 +6,7 @@ import com.wdiscute.echoes.timeless.TimelessManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,9 +21,9 @@ public class ExtraDamageConsumesTimePerk extends SimplePerk
     public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, List<Float> value)
     {
         TimelessInstance closest = TimelessManager.getClosest(player.level().getServer(), player.blockPosition());
-        if(closest != null && closest.timeToExit != Long.MAX_VALUE)
+        if(closest != null && closest.timeToExit != Long.MAX_VALUE && player.level() instanceof ServerLevel sl)
         {
-            closest.timeToExit -= value.getFirst().longValue();
+            closest.setTime(sl, closest.timeToExit - value.getFirst().longValue());
             return value.get(1);
         }
         return 0;

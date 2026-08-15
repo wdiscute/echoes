@@ -16,20 +16,14 @@
       "echoes:perks": [
         {
           "amplifiers": [
-            5.0
+            16.0
           ],
           "perk": "echoes:extra_damage"
-        },
-        {
-          "amplifiers": [
-            1.8
-          ],
-          "perk": "echoes:extra_percentage_souls"
         }
       ],
       "echoes:rarity": "uncommon"
     },
-    "identifier": "echoes:echo_blade"
+    "identifier": "echoes:gloombringer"
   },
   "weight": 15
 }

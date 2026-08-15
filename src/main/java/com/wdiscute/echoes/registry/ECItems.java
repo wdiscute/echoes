@@ -22,7 +22,8 @@ public interface ECItems
     //sculk
     DeferredItem<Item> ECHO_BLADE = ITEMS.registerItem("echo_blade", (p) -> new EchoWeaponItem(p, -2.4f));
     DeferredItem<Item> RAMATTRA = ITEMS.registerItem("ramattra", RamattraItem::new);
-    DeferredItem<Item> TIME_REAPER = ITEMS.registerItem("time_reaper", RamattraItem::new);
+    DeferredItem<Item> TIME_REAPER = ITEMS.registerItem("time_reaper", (p) -> new EchoWeaponItem(p, -2.4f));
+    DeferredItem<Item> GLOOMBRINGER = ITEMS.registerItem("gloombringer", (p) -> new EchoWeaponItem(p, -3.4F));
 
     //prisma
     DeferredItem<Item> PRISMA_SWORD = ITEMS.registerItem("prisma_sword", (p) -> new EchoWeaponItem(p, -2.4f));
@@ -44,6 +45,7 @@ public interface ECItems
     DeferredItem<Item> LATTICE = ITEMS.registerItem("lattice", BasicItem::new);
     DeferredItem<Item> LUCENT_SHARD = ITEMS.registerItem("lucent_shard", BasicItem::new);
     DeferredItem<Item> CRYSTAL_CORE = ITEMS.registerItem("crystal_core", BasicItem::new);
+    DeferredItem<Item> LUCENT_DIE = ITEMS.registerItem("lucent_die", BasicItem::new);
 
     static void register(IEventBus modEventBus)
     {

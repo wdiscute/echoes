@@ -24,7 +24,7 @@ public class ECDataGenerators
         event.createProvider(DGECBlacksmithTradesProvider::new);
 
         //data entries
-        ECDGDataEntriesProvider.start(gen, output);
+        ECDGDataEntriesProvider.start(gen,  output);
 
         //models
         gen.addProvider(true, new ECDGModelProvider(output));

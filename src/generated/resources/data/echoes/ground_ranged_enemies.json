@@ -1,0 +1,8 @@
+[
+  {
+    "damage_increase_per_level": 1.0,
+    "health_increase_per_level": 2.0,
+    "id": "echoes:hollowed",
+    "weight": 10
+  }
+]

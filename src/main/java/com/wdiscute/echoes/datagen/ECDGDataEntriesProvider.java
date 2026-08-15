@@ -1,9 +1,15 @@
 package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.registry.ECDataEntries;
+import com.wdiscute.echoes.registry.*;
+import com.wdiscute.echoes.timeless.TimelessEnemyInstance;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
+import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import com.wdiscute.utils.datagen.DataEntryProvider;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 
@@ -12,8 +18,22 @@ import java.util.Map;
 
 public class ECDGDataEntriesProvider
 {
-    public static void start(DataGenerator gen, PackOutput output)
+    public static void start(DataGenerator gen,  PackOutput output)
     {
+        gen.addProvider(true,
+                new DataEntryProvider<>(output, ECDataEntries.STARTER_ITEM,
+                        new MaybeStack(BuiltInRegistries.ITEM.getKey(ECItems.ECHO_BLADE.get()), 1,
+                                DataComponentPatch.builder()
+                                        .set(ECDataComponents.PERKS.get(), List.of(
+                                                new PerkInstance(ECPerks.EXTRA_DAMAGE, 4f),
+                                                new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS, 1.6F)
+                                        ))
+                                        .set(ECDataComponents.RARITY.get(), BlacksmithTrade.Rarity.COMMON)
+                                        .build()
+                        )
+                )
+        );
+
         gen.addProvider(true,
                 new DataEntryProvider<>(output, ECDataEntries.STRUCTURE_ENTRIES,
                         List.of(Echoes.rl("arena/first"))
@@ -36,6 +56,29 @@ public class ECDGDataEntriesProvider
                         )
                 )
         );
+
+        gen.addProvider(true,
+                new DataEntryProvider<>(output, ECDataEntries.GROUND_MELEE_ENEMIES,
+                        List.of(
+                                new TimelessEnemyInstance(ECEntities.SCULKED.getId(),
+                                        0, 10, 0, 2, 1)
+
+
+                        )
+                )
+        );
+
+        gen.addProvider(true,
+                new DataEntryProvider<>(output, ECDataEntries.GROUND_RANGED_ENEMIES,
+                        List.of(
+                                new TimelessEnemyInstance(ECEntities.HOLLOWED.getId(),
+                                        0, 10, 0, 2, 1)
+
+
+                        )
+                )
+        );
+
     }
 
 

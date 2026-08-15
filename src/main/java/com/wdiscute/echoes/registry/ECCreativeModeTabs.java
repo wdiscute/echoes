@@ -70,6 +70,7 @@ public class ECCreativeModeTabs
                         .add(ECItems.LATTICE)
                         .add(ECItems.LUCENT_SHARD)
                         .add(ECItems.CRYSTAL_CORE)
+                        .add(ECItems.LUCENT_DIE)
 
 
 

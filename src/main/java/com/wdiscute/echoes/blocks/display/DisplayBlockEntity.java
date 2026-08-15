@@ -75,7 +75,7 @@ public class DisplayBlockEntity extends BlockEntity
                 List<BlacksmithTrade> list = sl.registryAccess().lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
 
                 if (!list.isEmpty())
-                    dbe.trade = list.get(sl.getRandom().nextInt(list.size()));
+                    dbe.trade = BlacksmithTrade.getRandomTrade(sl);
                 dbe.setChanged();
             }
 

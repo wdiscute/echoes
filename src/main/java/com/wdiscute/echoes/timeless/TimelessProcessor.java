@@ -1,22 +1,21 @@
 package com.wdiscute.echoes.timeless;
 
 import com.wdiscute.echoes.ECTags;
-import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
+import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
@@ -24,27 +23,21 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.npc.villager.Villager;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootTable;
-import org.spongepowered.asm.mixin.injection.selectors.ElementNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 public class TimelessProcessor
 {
     public static final List<Processor> PROCESSORS = new ArrayList<>();
-    public static final ResourceKey<LootTable> EMPTY_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, Identifier.withDefaultNamespace("empty"));
 
     public static void addDefaultProcessors()
     {
@@ -77,7 +70,7 @@ public class TimelessProcessor
                 else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.EAST))
                     corpse.setYRot(270);
 
-                corpse.setStack(ECItems.ECHO_BLADE.toStack());
+                corpse.setStack(ECDataEntries.STARTER_ITEM.get().toStack());
                 sl.addFreshEntityWithPassengers(corpse);
             }
 
@@ -100,19 +93,35 @@ public class TimelessProcessor
             //spawn ground melee enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_MELEE_ENEMY))
             {
-                Mob entity = ECEntities.SCULKED.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
-                //entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
-                entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
-                sl.addFreshEntityWithPassengers(entity);
+                TimelessEnemyInstance randomEnemy = TimelessEnemyInstance.getRandomEnemy(sl, ECDataEntries.GROUND_MELEE_ENEMIES.get(), instance.stage);
+                if(randomEnemy != null)
+                {
+                    Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
+                            .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
+
+                    if(entity instanceof Mob mob)
+                    {
+                        addToAttrib(mob, Attributes.MAX_HEALTH, randomEnemy.healthIncrease() * instance.stage);
+                        addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease()  * instance.stage);
+                    }
+                }
             }
 
             //spawn random ranged enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_RANGED_ENEMY))
             {
-                Mob entity = ECEntities.HOLLOWED.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
-                //entity.lootTable = Optional.of(EMPTY_LOOT_TABLE);
-                entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
-                sl.addFreshEntityWithPassengers(entity);
+                TimelessEnemyInstance randomEnemy = TimelessEnemyInstance.getRandomEnemy(sl, ECDataEntries.GROUND_MELEE_ENEMIES.get(), instance.stage);
+                if(randomEnemy != null)
+                {
+                    Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
+                            .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
+
+                    if(entity instanceof Mob mob)
+                    {
+                        addToAttrib(mob, Attributes.MAX_HEALTH, randomEnemy.healthIncrease() * instance.stage);
+                        addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease()  * instance.stage);
+                    }
+                }
             }
 
             //spawn blacksmith npc
@@ -132,10 +141,7 @@ public class TimelessProcessor
                 sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState());
                 if (sl.getBlockEntity(bp) instanceof DisplayBlockEntity dbe)
                 {
-                    List<BlacksmithTrade> list = sl.registryAccess().lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
-
-                    if (!list.isEmpty())
-                        dbe.trade = list.get(sl.getRandom().nextInt(list.size()));
+                    dbe.trade = BlacksmithTrade.getRandomTrade(sl);
                     dbe.setChanged();
                 }
             }
@@ -196,6 +202,16 @@ public class TimelessProcessor
         });
 
 
+    }
+
+    public static void addToAttrib(Mob entity, Holder<Attribute> attrib, float value)
+    {
+        if(entity.getAttributes().hasAttribute(attrib))
+        {
+            entity.getAttributes().getInstance(attrib)
+                    .addPermanentModifier(
+                            new AttributeModifier(attrib.getKey().identifier(), value, AttributeModifier.Operation.ADD_VALUE));
+        }
     }
 
     public static void add(Processor processor)

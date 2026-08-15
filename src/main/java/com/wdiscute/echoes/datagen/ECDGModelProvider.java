@@ -212,5 +212,6 @@ public class ECDGModelProvider extends ModelProvider
         itemModels.generateFlatItem(ECItems.LATTICE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.LUCENT_SHARD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.CRYSTAL_CORE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.LUCENT_DIE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
     }
 }

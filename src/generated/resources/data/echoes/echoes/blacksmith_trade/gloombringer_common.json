@@ -2,7 +2,7 @@
   "cost": [
     {
       "count": 1,
-      "identifier": "echoes:lattice"
+      "identifier": "echoes:sculked_teeth"
     }
   ],
   "rarity": "common",
@@ -12,20 +12,14 @@
       "echoes:perks": [
         {
           "amplifiers": [
-            4.0
+            12.0
           ],
           "perk": "echoes:extra_damage"
-        },
-        {
-          "amplifiers": [
-            0.3
-          ],
-          "perk": "echoes:extra_flat_souls"
         }
       ],
       "echoes:rarity": "common"
     },
-    "identifier": "echoes:prisma_sword"
+    "identifier": "echoes:gloombringer"
   },
   "weight": 20
 }
