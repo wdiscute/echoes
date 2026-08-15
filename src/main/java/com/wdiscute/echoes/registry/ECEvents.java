@@ -86,7 +86,7 @@ public class ECEvents
 
             for (PerkInstance perk : perks)
             {
-                float damageToAdd = perk.perk().value().addDamage(player, weaponItem, entityDamaged, perk.amplifiers());
+                float damageToAdd = perk.perk().addDamage(player, weaponItem, entityDamaged, perk.amplifiers());
                 event.setNewDamage(event.getNewDamage() + damageToAdd * player.getAttackStrengthScale(0));
             }
         }
@@ -145,11 +145,11 @@ public class ECEvents
 
         //add souls from perks
         for (PerkInstance perk : perks)
-            souls += perk.perk().value().addSouls(player, weapon, entityKilled, perk.amplifiers(), souls);
+            souls += perk.perk().addSouls(player, weapon, entityKilled, perk.amplifiers(), souls);
 
         //trigger perks
         for (PerkInstance perk : perks)
-            perk.perk().value().onEntityKilled(player, weapon, entityKilled, perk.amplifiers());
+            perk.perk().onEntityKilled(player, weapon, entityKilled, perk.amplifiers());
 
         //spawn souls
         if (player != null)

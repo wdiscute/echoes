@@ -54,7 +54,7 @@ public class DisplayGuiLayer implements GuiLayer
                 List<MutableComponent> perkComps = new ArrayList<>();
                 List<PerkInstance> perks = stack.getOrDefault(ECDataComponents.PERKS, List.of());
                 for (PerkInstance perkInstance : perks)
-                    perkComps.addAll(Objects.requireNonNull(perkInstance.perk().value().getShopTooltip(perkInstance.amplifiers())));
+                    perkComps.addAll(Objects.requireNonNull(perkInstance.perk().getShopTooltip(perkInstance.amplifiers())));
 
                 int yPerkOffset = perkComps.size() * 11;
                 int yCostOffset = dbe.trade.cost().size() * 16;
@@ -118,7 +118,8 @@ public class DisplayGuiLayer implements GuiLayer
 
                 //"Material Cost"
                 ScreenUtils.centeredText(guiGraphics, font, Component.literal("Material Cost").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_AQUA),
-                        x + 70, y - 4, 0xffffffff, false);
+                        x + 70, y - 4, 0xffffffff, true);
+
 
                 //render costs
                 for (int i = 0; i < dbe.trade.cost().size(); i++)
@@ -153,7 +154,7 @@ public class DisplayGuiLayer implements GuiLayer
                 for (PerkInstance perk : perks)
                 {
                     List<MutableComponent> tooltip =
-                            new ArrayList<>(perk.perk().value().getShopExtendedTooltip(perk.amplifiers()));
+                            new ArrayList<>(perk.perk().getShopExtendedTooltip(perk.amplifiers()));
 
                     if (tooltip.isEmpty())
                         continue;

@@ -60,10 +60,10 @@ public class ECClientEvents
         List<MutableComponent> perkComps = new ArrayList<>();
         for (var perk : event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()))
         {
-            List<MutableComponent> shopExtendedTooltip = perk.perk().value().getShopExtendedTooltip(perk.amplifiers());
+            List<MutableComponent> shopExtendedTooltip = perk.perk().getShopExtendedTooltip(perk.amplifiers());
 
             if (shopExtendedTooltip.isEmpty())
-                perkComps.addAll(perk.perk().value().getItemTooltip(perk.amplifiers()));
+                perkComps.addAll(perk.perk().getItemTooltip(perk.amplifiers()));
 
             perkComps.addAll(shopExtendedTooltip.reversed());
         }

@@ -23,9 +23,13 @@ public record TimelessEnemyInstance(Identifier id, int preferredLevel, int weigh
     );
 
 
-    public static @Nullable TimelessEnemyInstance getRandomEnemy(ServerLevel sl, List<TimelessEnemyInstance> allEnemies, int level)
+    public static @Nullable TimelessEnemyInstance getRandomEnemy(
+            ServerLevel sl,
+            List<TimelessEnemyInstance> allEnemies,
+            int level)
     {
-        if(allEnemies.isEmpty()) return null;
+        if (allEnemies.isEmpty())
+            return null;
 
         float totalWeight = 0.0f;
 
@@ -50,19 +54,22 @@ public record TimelessEnemyInstance(Identifier id, int preferredLevel, int weigh
 
     private static float getWeight(TimelessEnemyInstance enemy, int level)
     {
+        int preferredLevel = enemy.preferredLevel();
         int range = enemy.levelRange();
 
-        //if range is 0, enemy only works if level matches
+        //if no preferred level, return 1
+        if (preferredLevel == 0)
+            return 1.0f;
+
+        //if no range, return 1 if matching level
         if (range <= 0)
-            return level == enemy.preferredLevel() ? 1.0f : 0.0f;
+            return level == preferredLevel ? 1.0f : 0.0f;
 
-        float distance = Math.abs(level - enemy.preferredLevel());
+        float distance = Math.abs(level - preferredLevel);
 
-        //if further than max range
         if (distance >= range)
             return 0.0f;
 
-        //1 at preferredLevel, 0.0 at the edge of levelRange
         return 1.0f - (distance / range);
     }
 }

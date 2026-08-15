@@ -1,0 +1,101 @@
+{
+  "variants": {
+    "rarity=common,facing=east": {
+      "model": "echoes:block/display_common",
+      "y": 90
+    },
+    "rarity=common,facing=north": {
+      "model": "echoes:block/display_common"
+    },
+    "rarity=common,facing=south": {
+      "model": "echoes:block/display_common",
+      "y": 180
+    },
+    "rarity=common,facing=west": {
+      "model": "echoes:block/display_common",
+      "y": 270
+    },
+
+
+
+
+    "rarity=uncommon,facing=east": {
+      "model": "echoes:block/display_uncommon",
+      "y": 90
+    },
+    "rarity=uncommon,facing=north": {
+      "model": "echoes:block/display_uncommon"
+    },
+    "rarity=uncommon,facing=south": {
+      "model": "echoes:block/display_uncommon",
+      "y": 180
+    },
+    "rarity=uncommon,facing=west": {
+      "model": "echoes:block/display_uncommon",
+      "y": 270
+    },
+
+
+
+
+
+
+    "rarity=rare,facing=east": {
+      "model": "echoes:block/display_rare",
+      "y": 90
+    },
+    "rarity=rare,facing=north": {
+      "model": "echoes:block/display_rare"
+    },
+    "rarity=rare,facing=south": {
+      "model": "echoes:block/display_rare",
+      "y": 180
+    },
+    "rarity=rare,facing=west": {
+      "model": "echoes:block/display_rare",
+      "y": 270
+    },
+
+
+
+
+
+
+
+    "rarity=epic,facing=east": {
+      "model": "echoes:block/display_epic",
+      "y": 90
+    },
+    "rarity=epic,facing=north": {
+      "model": "echoes:block/display_epic"
+    },
+    "rarity=epic,facing=south": {
+      "model": "echoes:block/display_epic",
+      "y": 180
+    },
+    "rarity=epic,facing=west": {
+      "model": "echoes:block/display_epic",
+      "y": 270
+    },
+
+
+
+
+
+    "rarity=legendary,facing=east": {
+      "model": "echoes:block/display_legendary",
+      "y": 90
+    },
+    "rarity=legendary,facing=north": {
+      "model": "echoes:block/display_legendary"
+    },
+    "rarity=legendary,facing=south": {
+      "model": "echoes:block/display_legendary",
+      "y": 180
+    },
+    "rarity=legendary,facing=west": {
+      "model": "echoes:block/display_legendary",
+      "y": 270
+    }
+  }
+}

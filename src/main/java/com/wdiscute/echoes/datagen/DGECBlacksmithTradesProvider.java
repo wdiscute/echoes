@@ -159,7 +159,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 valuesForRarity.add(rarityValues.getForRarity(rarity));
             }
 
-            return new PerkInstance(perk, valuesForRarity);
+            return new PerkInstance(perk.value(), valuesForRarity);
         }
     }
 

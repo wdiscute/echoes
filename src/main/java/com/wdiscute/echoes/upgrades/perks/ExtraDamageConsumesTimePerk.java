@@ -32,7 +32,7 @@ public class ExtraDamageConsumesTimePerk extends SimplePerk
     @Override
     public List<MutableComponent> getTooltip(List<Float> value)
     {
-        return List.of(Component.literal("Temporal Decay"));
+        return List.of(Component.literal("Temporal Decay").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     @Override

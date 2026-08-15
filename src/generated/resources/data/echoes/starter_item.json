@@ -1,0 +1,21 @@
+{
+  "count": 1,
+  "data_components_patch": {
+    "echoes:perks": [
+      {
+        "amplifiers": [
+          4.0
+        ],
+        "perk": "echoes:extra_damage"
+      },
+      {
+        "amplifiers": [
+          1.6
+        ],
+        "perk": "echoes:extra_percentage_souls"
+      }
+    ],
+    "echoes:rarity": "common"
+  },
+  "identifier": "echoes:echo_blade"
+}

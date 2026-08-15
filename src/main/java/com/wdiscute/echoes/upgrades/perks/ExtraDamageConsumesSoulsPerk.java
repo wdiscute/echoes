@@ -30,7 +30,7 @@ public class ExtraDamageConsumesSoulsPerk extends SimplePerk
     @Override
     public List<MutableComponent> getTooltip(List<Float> value)
     {
-        return List.of(Component.literal("Soulrend"));
+        return List.of(Component.literal("Soulrend").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     @Override

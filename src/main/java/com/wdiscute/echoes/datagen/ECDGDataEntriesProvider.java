@@ -8,6 +8,7 @@ import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import com.wdiscute.utils.datagen.DataEntryProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
@@ -15,13 +16,14 @@ import net.minecraft.data.PackOutput;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class ECDGDataEntriesProvider
 {
-    public static void start(DataGenerator gen,  PackOutput output)
+    public static void start(DataGenerator gen, PackOutput output, CompletableFuture<HolderLookup.Provider> lookup)
     {
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.STARTER_ITEM,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.STARTER_ITEM,
                         new MaybeStack(BuiltInRegistries.ITEM.getKey(ECItems.ECHO_BLADE.get()), 1,
                                 DataComponentPatch.builder()
                                         .set(ECDataComponents.PERKS.get(), List.of(
@@ -35,13 +37,13 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.STRUCTURE_ENTRIES,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.STRUCTURE_ENTRIES,
                         List.of(Echoes.rl("arena/first"))
                 )
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.HUBS,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.HUBS,
                         List.of(
                                 Echoes.rl("hub/first")
                         )
@@ -49,7 +51,7 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.SOULS,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.SOULS,
                         Map.of(
                                 Utils.rl("echoes", "hollowed"), 0.8f,
                                 Utils.rl("echoes", "sculked"), 1.3f
@@ -58,7 +60,7 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.GROUND_MELEE_ENEMIES,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_MELEE_ENEMIES,
                         List.of(
                                 new TimelessEnemyInstance(ECEntities.SCULKED.getId(),
                                         0, 10, 0, 2, 1)
@@ -69,7 +71,7 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.GROUND_RANGED_ENEMIES,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_RANGED_ENEMIES,
                         List.of(
                                 new TimelessEnemyInstance(ECEntities.HOLLOWED.getId(),
                                         0, 10, 0, 2, 1)
@@ -79,7 +81,6 @@ public class ECDGDataEntriesProvider
                 )
         );
 
+
     }
-
-
 }

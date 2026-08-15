@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.timeless;
 
 import com.wdiscute.echoes.ECTags;
+import com.wdiscute.echoes.blocks.display.DisplayBlock;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -138,12 +140,17 @@ public class TimelessProcessor
             if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_STAND))
             {
                 sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
-                sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState());
                 if (sl.getBlockEntity(bp) instanceof DisplayBlockEntity dbe)
                 {
                     dbe.trade = BlacksmithTrade.getRandomTrade(sl);
                     dbe.setChanged();
+
+                    sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState()
+                            .setValue(HorizontalDirectionalBlock.FACING, state.getValueOrElse(HorizontalDirectionalBlock.FACING, Direction.NORTH))
+                            .setValue(DisplayBlock.RARITY, dbe.trade.rarity())
+                    );
                 }
+
             }
 
             //spawn portal

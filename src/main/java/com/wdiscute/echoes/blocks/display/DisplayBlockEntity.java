@@ -76,6 +76,8 @@ public class DisplayBlockEntity extends BlockEntity
 
                 if (!list.isEmpty())
                     dbe.trade = BlacksmithTrade.getRandomTrade(sl);
+
+                sl.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(DisplayBlock.RARITY, dbe.trade.rarity()));
                 dbe.setChanged();
             }
 
