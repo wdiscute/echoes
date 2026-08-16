@@ -5,11 +5,18 @@ import com.mojang.serialization.MapCodec;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BlockItemStateProperties;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +36,19 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
     }
 
     @Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData)
+    {
+        ItemStack stack = new ItemStack(this);
+
+        stack.update(
+                DataComponents.BLOCK_STATE,
+                BlockItemStateProperties.EMPTY,
+                props -> props.with(TYPE, state)
+        );
+        return stack;
+    }
+
+    @Override
     protected MapCodec<? extends HorizontalDirectionalBlock> codec()
     {
         return null;
@@ -45,8 +65,8 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
         FLYING_ENEMY,
         BLACKSMITH_NPC,
         BLACKSMITH_STAND,
-        FOUNTAIN,
         PORTAL,
+        CHEST,
         ;
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);

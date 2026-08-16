@@ -119,7 +119,7 @@ public class ECCreativeModeTabs
 
                         .add(Items.AIR)
                         .add(Items.AIR)
-                        .add(Items.AIR)
+                        .add(ECBlocks.GLEEMSLATE_GRASS)
                         .add(ECBlocks.CHISELED_GLEEMSLATE)
                         .add(ECBlocks.GLEEMSLATE_PILLAR)
                         .add(ECBlocks.TRIMMED_GLEEMSLATE)

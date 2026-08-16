@@ -112,7 +112,7 @@ public class TimelessProcessor
             //spawn random ranged enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_RANGED_ENEMY))
             {
-                TimelessEnemyInstance randomEnemy = TimelessEnemyInstance.getRandomEnemy(sl, ECDataEntries.GROUND_MELEE_ENEMIES.get(), instance.stage);
+                TimelessEnemyInstance randomEnemy = TimelessEnemyInstance.getRandomEnemy(sl, ECDataEntries.GROUND_RANGED_ENEMIES.get(), instance.stage);
                 if(randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
@@ -162,33 +162,12 @@ public class TimelessProcessor
                 sl.setBlockAndUpdate(bp, blockState);
             }
 
-            //spawn fountain
-            if (type.equals(TimelessMarkerBlock.Type.FOUNTAIN))
+            //spawn portal
+            if (type.equals(TimelessMarkerBlock.Type.CHEST))
             {
                 sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
-
-                //center pillar
-                sl.setBlockAndUpdate(bp, Blocks.QUARTZ_PILLAR.defaultBlockState());
-                sl.setBlockAndUpdate(bp.above(), Blocks.QUARTZ_PILLAR.defaultBlockState());
-                sl.setBlockAndUpdate(bp.above().above(), Blocks.QUARTZ_PILLAR.defaultBlockState());
-                sl.setBlockAndUpdate(bp.above().above().above(), Blocks.LANTERN.defaultBlockState());
-
-                //water around it
-                sl.setBlockAndUpdate(bp.east(), Blocks.WATER.defaultBlockState());
-                sl.setBlockAndUpdate(bp.west(), Blocks.WATER.defaultBlockState());
-                sl.setBlockAndUpdate(bp.north(), Blocks.WATER.defaultBlockState());
-                sl.setBlockAndUpdate(bp.south(), Blocks.WATER.defaultBlockState());
-
-                //water border
-                sl.setBlockAndUpdate(bp.south().south(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-                sl.setBlockAndUpdate(bp.east().east(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-                sl.setBlockAndUpdate(bp.west().west(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-                sl.setBlockAndUpdate(bp.north().north(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-
-                sl.setBlockAndUpdate(bp.north().east(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-                sl.setBlockAndUpdate(bp.north().west(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-                sl.setBlockAndUpdate(bp.south().east(), Blocks.QUARTZ_BLOCK.defaultBlockState());
-                sl.setBlockAndUpdate(bp.south().west(), Blocks.QUARTZ_BLOCK.defaultBlockState());
+                BlockState blockState = Blocks.CHEST.defaultBlockState();
+                sl.setBlockAndUpdate(bp, blockState);
             }
 
         });
