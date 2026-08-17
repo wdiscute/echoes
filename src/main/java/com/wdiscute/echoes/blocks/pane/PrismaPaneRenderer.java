@@ -181,8 +181,8 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
 
         poseStack.translate(-0.5F, 0.0F, -0.3F);
 
-        int color1 = 0xFF6a8ff9;
-        int color2 = 0xFFb69dec;
+        int color1 = 0xFFbeb0eb;
+        int color2 = 0xFF5d8fd4;
 
         int color21 = 0xFFdecced;
         int color22 = 0xFFd9c0ed;
@@ -197,7 +197,7 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         float uCellOffset = cellOffset(horizontalCoord);
         float vCellOffset = cellOffset(state.blockPos.getY());
 
-        final float LAYER1_V_SPEED = 20000f, LAYER1_V_DIR = 1f;
+        final float LAYER1_V_SPEED = 30000f, LAYER1_V_DIR = -1f;
         final float LAYER1_U_SPEED = 86000f, LAYER1_U_DIR = 1f;
 
         final float LAYER2_V_SPEED = 44000f, LAYER2_V_DIR = 1f;
