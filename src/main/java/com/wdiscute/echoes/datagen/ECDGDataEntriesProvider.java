@@ -2,7 +2,8 @@ package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.*;
-import com.wdiscute.echoes.timeless.TimelessEnemyInstance;
+import com.wdiscute.echoes.timeless.TimelessEnemyEntry;
+import com.wdiscute.echoes.timeless.TimelessLevelEntry;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.utils.MaybeStack;
@@ -37,15 +38,17 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.STRUCTURE_ENTRIES,
-                        List.of(Echoes.rl("arena/first"))
-                )
-        );
-
-        gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.HUBS,
+                new DataEntryProvider<>(output, lookup, ECDataEntries.TIMELESS_LEVELS,
                         List.of(
-                                Echoes.rl("hub/first")
+                                //starter
+                                new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, false),
+
+                                //hub
+                                new TimelessLevelEntry(Echoes.rl("timeless/hub"), 0, 10, 0, true),
+
+                                //arenas
+                                new TimelessLevelEntry(Echoes.rl("timeless/first"), 0, 10, 0, false),
+                                new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, false)
                         )
                 )
         );
@@ -62,7 +65,7 @@ public class ECDGDataEntriesProvider
         gen.addProvider(true,
                 new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_MELEE_ENEMIES,
                         List.of(
-                                new TimelessEnemyInstance(ECEntities.SCULKED.getId(),
+                                new TimelessEnemyEntry(ECEntities.SCULKED.getId(),
                                         0, 10, 0, 2, 1)
 
 
@@ -73,7 +76,7 @@ public class ECDGDataEntriesProvider
         gen.addProvider(true,
                 new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_RANGED_ENEMIES,
                         List.of(
-                                new TimelessEnemyInstance(ECEntities.HOLLOWED.getId(),
+                                new TimelessEnemyEntry(ECEntities.HOLLOWED.getId(),
                                         0, 10, 0, 2, 1)
 
 

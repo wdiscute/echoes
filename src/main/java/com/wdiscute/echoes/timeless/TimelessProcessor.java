@@ -10,7 +10,6 @@ import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.echoes.registry.ECEntities;
-import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +43,7 @@ public class TimelessProcessor
     public static void addDefaultProcessors()
     {
         //timeless marker processor
-        add((instance, sl, state, bp, structureType) ->
+        add((instance, sl, state, bp, _) ->
         {
             if (!state.is(ECBlocks.TIMELESS_MARKER))
                 return;
@@ -96,7 +95,7 @@ public class TimelessProcessor
             //spawn ground melee enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_MELEE_ENEMY))
             {
-                TimelessEnemyInstance randomEnemy = TimelessEnemyInstance.getRandomEnemy(sl, ECDataEntries.GROUND_MELEE_ENEMIES.get(), instance.stage);
+                TimelessEnemyEntry randomEnemy = TimelessEnemyEntry.getRandomEnemy(sl, ECDataEntries.GROUND_MELEE_ENEMIES.get(), instance.stage);
                 if(randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
@@ -113,7 +112,7 @@ public class TimelessProcessor
             //spawn random ranged enemy
             if (type.equals(TimelessMarkerBlock.Type.GROUND_RANGED_ENEMY))
             {
-                TimelessEnemyInstance randomEnemy = TimelessEnemyInstance.getRandomEnemy(sl, ECDataEntries.GROUND_RANGED_ENEMIES.get(), instance.stage);
+                TimelessEnemyEntry randomEnemy = TimelessEnemyEntry.getRandomEnemy(sl, ECDataEntries.GROUND_RANGED_ENEMIES.get(), instance.stage);
                 if(randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
@@ -153,7 +152,6 @@ public class TimelessProcessor
                             .setValue(DisplayBlock.RARITY, dbe.trade.rarity())
                     );
                 }
-
             }
 
             //spawn portal
@@ -175,12 +173,11 @@ public class TimelessProcessor
 
         });
 
-
-        //sculk structure processor (should run after the markers' logic)
-        add((instance, sl, state, bp, structureType) ->
+        //sculk structure processor
+        add((instance, sl, state, bp, isSculk) ->
         {
             //only run for sculk
-            if (!structureType.equals(TimelessInstance.StructureType.SCULK)) return;
+            if (!isSculk) return;
 
             if (!state.isEmpty())
                 instance.STORED_STATES.put(bp, state);
@@ -189,8 +186,6 @@ public class TimelessProcessor
             if (!state.is(ECTags.SKIPS_SCULK_TRANSFORMATION))
                 sl.setBlock(bp, Blocks.AIR.defaultBlockState(), 0);
         });
-
-
     }
 
     public static void addToAttrib(Mob entity, Holder<Attribute> attrib, float value)
@@ -208,14 +203,14 @@ public class TimelessProcessor
         PROCESSORS.add(processor);
     }
 
-    public static void process(TimelessInstance instance, ServerLevel sl, BlockState state, BlockPos bp, TimelessInstance.StructureType type)
+    public static void process(TimelessInstance instance, ServerLevel sl, BlockState state, BlockPos bp, boolean isSculk)
     {
         for (Processor p : PROCESSORS)
-            p.process(instance, sl, state, bp, type);
+            p.process(instance, sl, state, bp, isSculk);
     }
 
     public interface Processor
     {
-        void process(TimelessInstance instance, ServerLevel sl, BlockState state, BlockPos bp, TimelessInstance.StructureType type);
+        void process(TimelessInstance instance, ServerLevel sl, BlockState state, BlockPos bp, boolean isSculk);
     }
 }

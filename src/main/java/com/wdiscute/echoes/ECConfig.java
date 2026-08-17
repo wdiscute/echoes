@@ -11,27 +11,20 @@ public class ECConfig
             .translation("echoes.configuration.enable_portal_post_processing")
             .define("enable_portal_post_processing", true);
 
+    static final ModConfigSpec SPEC = BUILDER_CLIENT.build();
 
-    public static final ModConfigSpec.LongValue BASE_TIMELESS_DURATION = BUILDER_CLIENT
+
+    private static final ModConfigSpec.Builder BUILDER_SERVER = new ModConfigSpec.Builder();
+
+    public static final ModConfigSpec.LongValue BASE_TIMELESS_DURATION = BUILDER_SERVER
             .comment("The base timer when entering the Timeless.")
             .translation("echoes.configuration.base_timeless_duration")
             .defineInRange("base_timeless_duration", 1200, 0, Long.MAX_VALUE);
 
-    public static final ModConfigSpec.LongValue TIMELESS_DURATION_ADDED = BUILDER_CLIENT
+    public static final ModConfigSpec.LongValue TIMELESS_DURATION_ADDED = BUILDER_SERVER
             .comment("How many ticks to add each time a portal is entered inside the Timeless. e.g. lvl3 -> lvl4")
             .translation("echoes.configuration.timeless_duration_added")
             .defineInRange("timeless_duration_added", 1200, 0, Long.MAX_VALUE);
 
-
-    static final ModConfigSpec SPEC = BUILDER_CLIENT.build();
-
-
-    //private static final ModConfigSpec.Builder BUILDER_SERVER = new ModConfigSpec.Builder();
-
-    //public static final ModConfigSpec.IntValue MAX_TACKLE_BOX_FISH_STORAGE = BUILDER_SERVER
-    //        .comment("Sets the maximum number of fishes the tackle box can store in it's 'infinite slot'")
-    //        .translation("starcatcher.configuration.max_tackle_box_fish_storage")
-    //        .defineInRange("max_tackle_box_fish_storage", 900, 0, 999);
-
-    //static final ModConfigSpec SPEC_SERVER = BUILDER_SERVER.build();
+    static final ModConfigSpec SPEC_SERVER = BUILDER_SERVER.build();
 }

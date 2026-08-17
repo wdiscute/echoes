@@ -22,7 +22,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-public class PrismaPaneBlock extends HorizontalDirectionalBlock implements EntityBlock
+public class PrismaPaneBlock extends Block implements EntityBlock
 {
     public PrismaPaneBlock(Properties properties)
     {
@@ -45,13 +45,6 @@ public class PrismaPaneBlock extends HorizontalDirectionalBlock implements Entit
         WEST,
         NORTHWEST,
         ;
-    }
-
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec()
-    {
-        return simpleCodec(PrismaPaneBlock::new);
     }
 
     @Override

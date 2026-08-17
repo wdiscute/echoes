@@ -183,37 +183,37 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                     if (currentInstance == null)
                         throw new IllegalStateException("player in timeless tried to use a portal but there's no instances active at all. player should not be in timeless.");
 
-                    //if currently in a hub
+                    //if currently in a isHub
                     if (currentInstance.isHub())
                     {
                         //get new dungeon
                         TimelessInstance newDungeon = TimelessManager.getOrCreate(level.getServer(), currentInstance.linkedInstance);
 
-                        //set linked in new dungeon to the hub
+                        //set linked in new dungeon to the isHub
                         newDungeon.linkedInstance = currentInstance.uuid;
 
-                        //set new dungeon stage to hub + 1
+                        //set new dungeon stage to isHub + 1
                         newDungeon.setStage(Math.max(currentInstance.stage + 1, newDungeon.stage));
 
                         //add player + generate dungeon
                         newDungeon.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
                     }
-                    //if not in a hub
+                    //if not in a isHub
                     else
                     {
-                        //get hub
+                        //get isHub
                         TimelessInstance hub = TimelessManager.getOrNull(level.getServer(), currentInstance.linkedInstance);
                         TimelessInstance newDungeon;
 
-                        //if hub linked instance is the one youre already in, make new one and increase stage
+                        //if isHub linked instance is the one youre already in, make new one and increase stage
 
-                        //if hub is not linked, make new dungeon from random uuid
+                        //if isHub is not linked, make new dungeon from random uuid
                         if (hub == null)
                             newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
-                            //if hub is linked, teleport to linked instance
+                            //if isHub is linked, teleport to linked instance
                         else
                         {
-                            //if player is already on the hub linked instance, make new one
+                            //if player is already on the isHub linked instance, make new one
                             if (hub.linkedInstance.equals(currentInstance.uuid))
                             {
                                 newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
@@ -226,9 +226,9 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         //set stage
                         newDungeon.setStage(Math.max(currentInstance.stage + 1, newDungeon.stage));
 
-                        //if new dungeon is not hub
+                        //if new dungeon is not isHub
                         if (!newDungeon.isHub())
-                            //set linked to the hub (currentInstance.linkedInstance holds the hub)
+                            //set linked to the isHub (currentInstance.linkedInstance holds the isHub)
                             newDungeon.linkedInstance = currentInstance.linkedInstance;
 
 

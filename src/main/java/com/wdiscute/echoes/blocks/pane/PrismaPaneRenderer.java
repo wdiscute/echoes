@@ -165,6 +165,12 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
     }
 
     @Override
+    public boolean shouldRender(PrismaPaneBlockEntity blockEntity, Vec3 cameraPosition)
+    {
+        return  true;
+    }
+
+    @Override
     public void submit(PrismaPaneRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera)
     {
         poseStack.pushPose();

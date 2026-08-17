@@ -31,13 +31,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -79,11 +79,11 @@ public class TimelessInstance
 
     public boolean shouldClose(ServerLevel sl)
     {
-        //if hub
+        //if isHub
         if (isHub())
         {
             TimelessInstance maybeInstance = TimelessManager.getOrNull(sl.getServer(), linkedInstance);
-            //if no players in hub
+            //if no players in isHub
             if (getPlayers(sl).isEmpty())
             {
                 //if no linked instance, close
@@ -95,7 +95,7 @@ public class TimelessInstance
             }
 
         }
-        //if not hub
+        //if not isHub
         else
         {
             //close if time expired
@@ -213,16 +213,12 @@ public class TimelessInstance
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;
 
-        //not hub
-        if (this.stage % 5 != 0)
+        spawnStructure(sl);
+
+        //if hub apply hub linking logic
+        if (isHub())
         {
-            spawnStructure(sl, StructureType.SCULK);
-            spawnStructure(sl, StructureType.GLEEMSLATE);
-        }
-        //hub
-        else
-        {
-            //set outside portal link to the new hub
+            //set outside portal link to the new isHub
             ServerLevel overworld = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
             if (overworld.getBlockEntity(portalPos) instanceof PortalBlockEntity pbe)
             {
@@ -232,7 +228,7 @@ public class TimelessInstance
 
             setTime(sl, Long.MAX_VALUE);
             phase = Phase.FINISHED;
-            spawnStructure(sl, StructureType.HUB);
+            spawnStructure(sl);
         }
 
         //spawnpoint blocks
@@ -463,7 +459,8 @@ public class TimelessInstance
 
         //make transition or use respawn point if no pos/dim is set
         ServerLevel level = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
-
+        if (level == null)
+            level = sl.getServer().getLevel(Level.OVERWORLD);
 
         float x = sl.getRandom().nextFloat() / 2 - 0.5f;
         float z = sl.getRandom().nextFloat() / 2 - 0.5f;
@@ -481,7 +478,7 @@ public class TimelessInstance
         //set time to exit so it doesn't render on gui
         TimelessData.setTimeToExit(player, Long.MAX_VALUE);
 
-        //set currentStage to last hub (every 5 levels)
+        //set currentStage to last isHub (every 5 levels)
         TimelessData.setCurrentStage(player, stage);
         TimelessData.attemptToSetMaxStage(player, stage);
 
@@ -611,7 +608,7 @@ public class TimelessInstance
 
     private void processAuras(ServerLevel sl)
     {
-        //do not process auras in hub
+        //do not process auras in isHub
         if (isHub()) return;
 
         //spawn particles
@@ -668,46 +665,25 @@ public class TimelessInstance
         auras.add(Pair.of(pos, radius));
     }
 
-    public enum StructureType implements StringRepresentableAutoForEnums
-    {
-        SCULK,
-        GLEEMSLATE,
-        HUB;
-
-        public static final Codec<StructureType> CODEC = StringRepresentable.fromEnum(StructureType::values);
-
-        public boolean isBase()
-        {
-            return this.equals(SCULK) || this.equals(GLEEMSLATE);
-        }
-    }
-
-    private void spawnStructure(ServerLevel sl, StructureType structureType)
+    private void spawnStructure(ServerLevel sl)
     {
         //get template structure path
-        Identifier template;
-        if (structureType.isBase())
-            template = ECDataEntries.STRUCTURE_ENTRIES.get().stream().findAny().orElse(Echoes.MISSINGNO);
-        else
-            template = ECDataEntries.HUBS.get().get(sl.getRandom().nextInt(ECDataEntries.HUBS.get().size()));
+        TimelessLevelEntry randomLevel = TimelessLevelEntry.getRandomLevel(sl, stage);
 
+        if (randomLevel == null)
+            return;
+
+        Identifier template = randomLevel.id();
+
+        //actually spawn structure
+        doSpawnStructure(sl, template.withSuffix("/sculk_"), true);
+        doSpawnStructure(sl, template.withSuffix("/prisma_"), false);
+    }
+
+    private void doSpawnStructure(ServerLevel sl, Identifier template, boolean sculk)
+    {
         StructureTemplateManager manager = sl.getStructureManager();
         StructurePlaceSettings placeSettings = new StructurePlaceSettings().setKnownShape(false);
-
-        if (stage == -1)
-            template = Echoes.rl("arena/starter");
-
-        //todo check what radius in the ticket means
-        //todo test with the neoforge chunk load event which chunks get loaded when this is called?
-
-        if (structureType.equals(StructureType.HUB))
-            template = template.withSuffix("/hub_");
-
-        if (structureType.equals(StructureType.SCULK))
-            template = template.withSuffix("/sculk_");
-
-        if (structureType.equals(StructureType.GLEEMSLATE))
-            template = template.withSuffix("/prisma_");
 
         for (int i = 0; i < 24; i++)
         {
@@ -730,7 +706,7 @@ public class TimelessInstance
                 for (int x = placementBP.getX(); x < placementBP.getX() + 48; x++)
                     for (int y = placementBP.getY(); y < placementBP.getY() + 48; y++)
                         for (int z = placementBP.getZ(); z < placementBP.getZ() + 48; z++)
-                            TimelessProcessor.process(this, sl, sl.getBlockState(new BlockPos(x, y, z)), new BlockPos(x, y, z), structureType);
+                            TimelessProcessor.process(this, sl, sl.getBlockState(new BlockPos(x, y, z)), new BlockPos(x, y, z), sculk);
             }
         }
     }

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "echoes:timeless/starter",
+    "preferred_level": -1,
+    "weight": 10
+  },
+  {
+    "id": "echoes:timeless/hub",
+    "is_hub": true,
+    "weight": 10
+  },
+  {
+    "id": "echoes:timeless/first",
+    "weight": 10
+  },
+  {
+    "id": "echoes:timeless/second",
+    "weight": 10
+  }
+]

@@ -64,6 +64,7 @@ public class Echoes
         TimelessProcessor.addDefaultProcessors();
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, ECConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, ECConfig.SPEC_SERVER);
     }
 
 }
