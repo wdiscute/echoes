@@ -58,7 +58,7 @@ public record TimelessHearts(int soulHearts, int soulHP
     public static void absorbSoul(Player player)
     {
         TimelessHearts data = player.getData(ECDataAttachments.TIMELESS_HEARTS);
-        if (data.soulHP < data.soulHearts * 4)
+        if (data.soulHP < data.soulHearts * 2)
             player.setData(ECDataAttachments.TIMELESS_HEARTS, data.withSoulHP(data.soulHP + 1));
     }
 }

@@ -54,28 +54,40 @@ public class SoulEntity extends Entity
         {
             if (velocity == null)
             {
-                Vec3 forward = player.getEyePosition().subtract(position()).normalize();
-                double maxElevation = Math.sin(Math.toRadians(75)); // ≈ 0.966
+                Vec3 away = position().subtract(player.getEyePosition());
 
                 Vec3 dir;
-                do
+
+                if (away.lengthSqr() < 1.0E-8)
                 {
-                    dir = new Vec3(
-                            random.nextDouble() * 2 - 1,
-                            random.nextDouble() * 2 - 1,
-                            random.nextDouble() * 2 - 1
-                    );
+                    double angle = random.nextDouble() * Math.PI * 2.0;
+                    dir = new Vec3(Math.cos(angle), 0.0, Math.sin(angle));
+                }
+                else
+                {
+                    away = away.normalize();
 
-                    if (dir.lengthSqr() > 1 || dir.lengthSqr() == 0)
-                        continue;
+                    dir = away.add(random.nextDouble() * 2.0 - 1.0, random.nextDouble() * 2.0 - 1.0, random.nextDouble() * 2.0 - 1.0)
+                            .normalize();
 
-                    dir = dir.normalize();
+                    if (dir.y < 0)
+                        dir = new Vec3(dir.x, -dir.y, dir.z).normalize();
 
-                } while (
-                        dir.y < 0 ||
-                        dir.y > maxElevation ||
-                        dir.dot(forward) > 0
-                );
+                    if (dir.y > Math.sin(Math.toRadians(75)))
+                    {
+                        double horizontal = Math.sqrt(dir.x * dir.x + dir.z * dir.z);
+
+                        if (horizontal > 1.0E-8)
+                        {
+                            double y = Math.sin(Math.toRadians(75));
+
+                            dir = new Vec3(
+                                    dir.x / horizontal * Math.cos(Math.toRadians(75)), y,
+                                    dir.z / horizontal * Math.cos(Math.toRadians(75))
+                            );
+                        }
+                    }
+                }
 
                 double speed = 0.10 + random.nextDouble() * 0.20;
                 velocity = dir.scale(speed);
@@ -144,21 +156,21 @@ public class SoulEntity extends Entity
         if (level().getPlayerByUUID(entityData.get(UUID)) == null)
         {
             Player nearestPlayer = level().getNearestPlayer(this, 1000);
-            if(nearestPlayer != null)
+            if (nearestPlayer != null)
                 entityData.set(UUID, nearestPlayer.getUUID());
         }
 
         timeAlive++;
-        if(timeAlive == 20)
+        if (timeAlive == 20)
         {
             Player playerByUUID = level().getPlayerByUUID(entityData.get(UUID));
-            if(playerByUUID != null)
+            if (playerByUUID != null)
             {
                 TimelessData.awardSoul(playerByUUID, 1);
                 TimelessHearts.absorbSoul(playerByUUID);
             }
         }
-        if (timeAlive > 1000)
+        if (timeAlive > 1000 && extraSoulsToSpawn <= 0)
             remove(RemovalReason.DISCARDED);
     }
 

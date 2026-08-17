@@ -43,7 +43,7 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
 
     public PortalBlock(Properties properties)
     {
-        super(properties);
+        super(properties.strength(1.5F, 6.0F));
     }
 
     public enum State implements StringRepresentable

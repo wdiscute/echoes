@@ -23,7 +23,9 @@ import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.MutableComponent;
@@ -32,6 +34,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.ArrayList;
@@ -112,11 +115,16 @@ public class ECClientEvents
         event.registerSpriteSet(ECParticles.SCULK.get(), SculkParticle.Provider::new);
     }
 
-
     @SubscribeEvent
-    public static void registerItemModelProperties(RegisterConditionalItemModelPropertyEvent event)
+    public static void onRenderGuiLayer(RenderGuiLayerEvent.Pre event)
     {
-        //event.register(Echoes.rl("is_casting"), IsCastingItemProperty.MAP_CODEC);
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null)
+            return;
+
+        if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.FOOD_LEVEL))
+            event.setCanceled(true);
     }
 
     @SubscribeEvent

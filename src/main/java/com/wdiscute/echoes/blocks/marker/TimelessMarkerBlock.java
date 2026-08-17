@@ -32,7 +32,7 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
 
     public TimelessMarkerBlock(Properties properties)
     {
-        super(properties);
+        super(properties.strength(1.5F, 6.0F));
     }
 
     @Override

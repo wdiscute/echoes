@@ -26,7 +26,10 @@ public class PrismaPaneBlock extends HorizontalDirectionalBlock implements Entit
 {
     public PrismaPaneBlock(Properties properties)
     {
-        super(properties.lightLevel(o -> 15));
+        super(properties
+                .requiresCorrectToolForDrops()
+                .strength(1.5F, 6.0F)
+                .lightLevel(_ -> 15));
     }
 
     public static final EnumProperty<Facing> FACING = EnumProperty.create("facing", Facing.class);

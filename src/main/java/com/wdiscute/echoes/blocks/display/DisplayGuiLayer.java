@@ -32,6 +32,8 @@ public class DisplayGuiLayer implements GuiLayer
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
+        if(Minecraft.getInstance().options.hideGui) return;
+
         if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult)
         {
             BlockState blockState = player.level().getBlockState(hitResult.getBlockPos());

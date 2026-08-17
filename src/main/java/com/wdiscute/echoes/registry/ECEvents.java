@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -71,10 +72,11 @@ public class ECEvents
         LivingEntity entityDamaged = event.getEntity();
         Entity damager = event.getSource().getEntity();
 
-        if(entityDamaged instanceof Player player)
+        if (entityDamaged instanceof Player player)
         {
             //decrease damage based on soul hearts
-            event.setNewDamage(event.getNewDamage() - TimelessHearts.getAbsorbedDamage(player, (int) event.getNewDamage()));;
+            event.setNewDamage(event.getNewDamage() - TimelessHearts.getAbsorbedDamage(player, (int) event.getNewDamage()));
+            ;
         }
 
         //trigger perks
@@ -91,7 +93,6 @@ public class ECEvents
             }
         }
     }
-
 
 
     @SubscribeEvent
@@ -185,6 +186,13 @@ public class ECEvents
         event.put(ECEntities.SCULK_HEART.get(), SculkHeartEntity.createAttributes().build());
         event.put(ECEntities.SCULKED.get(), SculkedEntity.createAttributes().build());
         event.put(ECEntities.HOLLOWED.get(), AbstractSkeleton.createAttributes().build());
+    }
+
+    @SubscribeEvent
+    public static void onBreakSpeed(PlayerEvent.BreakSpeed event)
+    {
+        if (event.getEntity().level().dimension().equals(Echoes.TIMELESS))
+            event.setCanceled(true);
     }
 
     @SubscribeEvent

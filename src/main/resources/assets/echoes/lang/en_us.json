@@ -40,6 +40,11 @@
 
   "section.echoes.prisma" : "Prisma",
 
+  "block.echoes.gleemslate_grass" : "Gleemslate Grass",
+  "block.echoes.chiseled_gleemslate" : "Chiseled Gleemslate",
+  "block.echoes.gleemslate_pillar" : "Gleemslate Pillar",
+  "block.echoes.trimmed_gleemslate" : "Trimmed Gleemslate",
+
   "block.echoes.gleemslate" : "Gleemslate",
   "block.echoes.gleemslate_slab" : "Gleemslate Slab",
   "block.echoes.gleemslate_stairs" : "Gleemslate Stairs",
@@ -50,19 +55,15 @@
   "block.echoes.cut_gleemslate_stairs" : "Cut Gleemslate Stairs",
   "block.echoes.cut_gleemslate_wall" : "Cut Gleemslate Wall",
 
-  "block.echoes.gleemslate_tiles" : "Gleemslate Bricks",
+  "block.echoes.gleemslate_tiles" : "Gleemslate Tiles",
   "block.echoes.gleemslate_tiles_slab" : "Gleemslate Tiles Slab",
   "block.echoes.gleemslate_tiles_stairs" : "Gleemslate Tiles Stairs",
   "block.echoes.gleemslate_tiles_wall" : "Gleemslate Tiles Wall",
 
   "block.echoes.gleemslate_bricks" : "Gleemslate Bricks",
-  "block.echoes.gleemslate_bricks_slab" : "Gleemslate Tiles Slab",
-  "block.echoes.gleemslate_bricks_stairs" : "Gleemslate Tiles Stairs",
-  "block.echoes.gleemslate_bricks_wall" : "Gleemslate Tiles Wall",
-
-  "block.echoes.chiseled_gleemslate" : "Chiseled Gleemslate",
-  "block.echoes.gleemslate_pillar" : "Gleemslate Pillar",
-  "block.echoes.trimmed_gleemslate" : "Trimmed Gleemslate",
+  "block.echoes.gleemslate_bricks_slab" : "Gleemslate Bricks Slab",
+  "block.echoes.gleemslate_bricks_stairs" : "Gleemslate Bricks Stairs",
+  "block.echoes.gleemslate_bricks_wall" : "Gleemslate Bricks Wall",
 
 
 

@@ -16,13 +16,11 @@ public class TimelessGUILayer implements GuiLayer
 {
     public static final ScreenUtils.Image SOUL_BAR_BACKGROUND = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_bar_background.png"), 250, 20);
     public static final ScreenUtils.Image SOUL_BAR_PROGRESS = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_bar_progress.png"), 250, 20);
-    public static final ScreenUtils.Image SOUL_HEART_0 = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_0.png"), 9, 9);
-    public static final ScreenUtils.Image SOUL_HEART_1 = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_1.png"), 9, 9);
-    public static final ScreenUtils.Image SOUL_HEART_2 = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_2.png"), 9, 9);
-    public static final ScreenUtils.Image SOUL_HEART_3 = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_3.png"), 9, 9);
-    public static final ScreenUtils.Image SOUL_HEART_4 = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_4.png"), 9, 9);
+    public static final ScreenUtils.Image SOUL_HEART_EMPTY = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_empty.png"), 9, 9);
+    public static final ScreenUtils.Image SOUL_HEART_HALF = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_half.png"), 9, 9);
+    public static final ScreenUtils.Image SOUL_HEART_FULL = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_heart_full.png"), 9, 9);
 
-    public long lastFrame = System.nanoTime();
+    public long lastFrame = System.currentTimeMillis();
     public float smoothSouls = 0;
 
     @Override
@@ -30,6 +28,7 @@ public class TimelessGUILayer implements GuiLayer
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
+        if(Minecraft.getInstance().options.hideGui) return;
 
         TimelessData timelessData = TimelessData.get(player);
         TimelessHearts timelessHearts = TimelessHearts.get(player);
@@ -52,7 +51,7 @@ public class TimelessGUILayer implements GuiLayer
         int y = height - 37;
         float smoothingTime = 0.2f;
         long now = System.nanoTime();
-        float t = Math.min((now - lastFrame) / 1_000_000_000f / smoothingTime, 1.0f);
+        float t = Math.min((now - lastFrame) / 1000000f / smoothingTime, 1.0f);
         smoothSouls = smoothSouls + (timelessData.souls() - smoothSouls) * t;
         lastFrame = now;
 
@@ -73,30 +72,20 @@ public class TimelessGUILayer implements GuiLayer
 
         //render empty hearts overlay
         for (int i = 0; i < timelessHearts.soulHearts(); i++)
-            SOUL_HEART_0.render(guiGraphics, x + 34 + 8 * i, y - 2);
+            SOUL_HEART_EMPTY.render(guiGraphics, x + 206 - 8 * i, y - 2);
 
         //render full hearts
-        int fullHearts = timelessHearts.soulHP() / 4;
+        int fullHearts = timelessHearts.soulHP() / 2;
         for (int i = 0; i < fullHearts; i++)
-            SOUL_HEART_4.render(guiGraphics, x + 34 + 8 * i, y - 2);
+            SOUL_HEART_FULL.render(guiGraphics, x + 206 - 8 * i, y - 2);
 
         //render last heart
-        int quarterHearts = timelessHearts.soulHP() % 4;
-        switch (quarterHearts)
-        {
-            case 1:
-                SOUL_HEART_1.render(guiGraphics, x + 34 + 8 * fullHearts, y - 2);
-                break;
-            case 2:
-                SOUL_HEART_2.render(guiGraphics, x + 34 + 8 * fullHearts, y - 2);
-                break;
+        if (timelessHearts.soulHP() % 2 == 1)
+            SOUL_HEART_HALF.render(guiGraphics, x + 206 - 8 * fullHearts, y - 2);
 
-            case 3:
-                SOUL_HEART_3.render(guiGraphics, x + 34 + 8 * fullHearts, y - 2);
-                break;
 
-            default:
-        }
+
+
 
 
 
