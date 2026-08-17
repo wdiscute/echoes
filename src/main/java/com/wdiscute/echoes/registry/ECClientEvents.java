@@ -5,6 +5,7 @@ import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.blocks.display.DisplayGuiLayer;
 import com.wdiscute.echoes.blocks.display.DisplayRenderer;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
+import com.wdiscute.echoes.blocks.pane.PrismaPaneRenderer;
 import com.wdiscute.echoes.blocks.portal.PortalRenderer;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModel;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
@@ -100,6 +101,7 @@ public class ECClientEvents
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
         event.registerBlockEntityRenderer(ECBlockEntities.TIMELESS_MARKER.get(), TimelessMarkerRenderer::new);
+        event.registerBlockEntityRenderer(ECBlockEntities.PRISMA_PANE.get(), PrismaPaneRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.PORTAL.get(), PortalRenderer::new);
     }

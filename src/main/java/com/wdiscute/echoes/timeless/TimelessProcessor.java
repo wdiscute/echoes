@@ -80,6 +80,7 @@ public class TimelessProcessor
             if (type.equals(TimelessMarkerBlock.Type.HEART))
             {
                 SculkHeartEntity heart = ECEntities.SCULK_HEART.get().create(sl, EntitySpawnReason.TRIGGERED);
+                heart.setPersistenceRequired();
                 heart.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(heart);
             }
@@ -100,9 +101,9 @@ public class TimelessProcessor
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
                             .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
-
                     if(entity instanceof Mob mob)
                     {
+                        mob.setPersistenceRequired();
                         addToAttrib(mob, Attributes.MAX_HEALTH, randomEnemy.healthIncrease() * instance.stage);
                         addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease()  * instance.stage);
                     }
@@ -120,6 +121,7 @@ public class TimelessProcessor
 
                     if(entity instanceof Mob mob)
                     {
+                        mob.setPersistenceRequired();
                         addToAttrib(mob, Attributes.MAX_HEALTH, randomEnemy.healthIncrease() * instance.stage);
                         addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease()  * instance.stage);
                     }
@@ -139,6 +141,7 @@ public class TimelessProcessor
             //spawn blacksmith stand
             if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_STAND))
             {
+                sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState());
                 sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
                 if (sl.getBlockEntity(bp) instanceof DisplayBlockEntity dbe)
                 {
