@@ -69,7 +69,7 @@ public class ECDGDataEntriesProvider
                 new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_MELEE_ENEMIES,
                         List.of(
                                 new TimelessEnemyEntry(ECEntities.SCULKED.getId(),
-                                        0, 10, 0, 2, 1, 1)
+                                        0, 10, 0, 1.3f, 0.5f, 1)
 
 
                         )
@@ -80,7 +80,7 @@ public class ECDGDataEntriesProvider
                 new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_RANGED_ENEMIES,
                         List.of(
                                 new TimelessEnemyEntry(ECEntities.HOLLOWED.getId(),
-                                        0, 10, 0, 2, 1, 1)
+                                        0, 10, 0, 1.3f, 0.5f, 1)
 
 
                         )

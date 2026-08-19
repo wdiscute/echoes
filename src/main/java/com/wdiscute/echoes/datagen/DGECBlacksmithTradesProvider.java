@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.registry.ECPerks;
@@ -39,6 +40,41 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     private static void bootstrap(BootstrapContext<BlacksmithTrade> context)
     {
+
+        //
+        //
+        // ,--.--.  ,---.   ,---.   ,---.  ,--.,--. ,--.--.  ,---.  ,---.
+        // |  .--' | .-. : (  .-'  | .-. | |  ||  | |  .--' | .--' | .-. :
+        // |  |    \   --. .-'  `) ' '-' ' '  ''  ' |  |    \ `--. \   --.
+        // `--'     `----' `----'   `---'   `----'  `--'     `---'  `----'
+        //   ,--.                       ,--.
+        // ,-'  '-. ,--.--.  ,--,--.  ,-|  |  ,---.
+        // '-.  .-' |  .--' ' ,-.  | ' .-. | | .-. :
+        //   |  |   |  |    \ '-'  | \ `-' | \   --.
+        //   `--'   `--'     `--`--'  `---'   `----'
+        //
+
+        //10 spine > echoing marrow
+        resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.HOLLOWED_SPINE.get()),
+                new MaybeStack(ECItems.ECHOING_MARROW.get(), 10));
+
+        //10 teeth > 1 brain
+        resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.ROT_BRAIN.get()),
+                new MaybeStack(ECItems.SCULKED_TEETH.get(), 10));
+
+
+        //
+        //                         ,--. ,--.
+        //  ,---.   ,---. ,--.,--. |  | |  |,-.
+        // (  .-'  | .--' |  ||  | |  | |     /
+        // .-'  `) \ `--. '  ''  ' |  | |  \  \
+        // `----'   `---'  `----'  `--' `--'`--'
+        // ,--.   ,--.  ,---.   ,--,--.  ,---.   ,---.  ,--,--,   ,---.
+        // |  |.'.|  | | .-. : ' ,-.  | | .-. | | .-. | |      \ (  .-'
+        // |   .'.   | \   --. \ '-'  | | '-' ' ' '-' ' |  ||  | .-'  `)
+        // '--'   '--'  `----'  `--`--' |  |-'   `---'  `--''--' `----'
+        //                              `--'
+
         //echo blade
         allRarities(context, ECItems.ECHO_BLADE.get(),
                 List.of(
@@ -53,8 +89,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         //ramatra
         allRarities(context, ECItems.RAMATTRA.get(),
                 List.of(
-                        new RaritifiedCost(ECItems.SCULKED_TEETH.get(), new RarityValues(1, 5, 15, 32, 64)),
-                        new RaritifiedCost(ECItems.HOLLOWED_SPINE.get(), new RarityValues(3, 7, 12, 30, 57))
+                        new RaritifiedCost(ECItems.SCULKED_TEETH.get(), new RarityValues(10, 25, 40, 70, 120)),
+                        new RaritifiedCost(ECItems.HOLLOWED_SPINE.get(), new RarityValues(1, 3, 6, 10, 32))
                 ),
 
                 new RaritifiedPerk(ECPerks.RAMATTRA,
@@ -65,7 +101,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         //time reaper
         allRarities(context, ECItems.TIME_REAPER.get(),
                 List.of(
-                        new RaritifiedCost(ECItems.SCULK_TENDRIL.get(), new RarityValues(1, 5, 15, 32, 64)),
+                        new RaritifiedCost(ECBlocks.SCULK_TENDRIL.get().asItem(), new RarityValues(1, 5, 15, 32, 64)),
                         new RaritifiedCost(ECItems.ECHOING_MARROW.get(), new RarityValues(3, 7, 12, 30, 57)),
                         new RaritifiedCost(ECItems.ROT_BRAIN.get(), new RarityValues(1, 1, 1, 1, 1))
                 ),
@@ -87,6 +123,18 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(12, 16, 20, 25, 30))
         );
 
+        //
+        //                 ,--.
+        //  ,---.  ,--.--. `--'  ,---.  ,--,--,--.  ,--,--.
+        // | .-. | |  .--' ,--. (  .-'  |        | ' ,-.  |
+        // | '-' ' |  |    |  | .-'  `) |  |  |  | \ '-'  |
+        // |  |-'  `--'    `--' `----'  `--`--`--'  `--`--'
+        // `--'
+        // ,--.   ,--.  ,---.   ,--,--.  ,---.   ,---.  ,--,--,   ,---.
+        // |  |.'.|  | | .-. : ' ,-.  | | .-. | | .-. | |      \ (  .-'
+        // |   .'.   | \   --. \ '-'  | | '-' ' ' '-' ' |  ||  | .-'  `)
+        // '--'   '--'  `----'  `--`--' |  |-'   `---'  `--''--' `----'
+        //                              `--'
 
         //prisma sword
         allRarities(context, ECItems.PRISMA_SWORD.get(),
@@ -181,6 +229,12 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 case LEGENDARY -> legendary;
             };
         }
+    }
+
+    static void resourceTrade(BootstrapContext<BlacksmithTrade> context, BlacksmithTrade.Rarity rarity, int weight, MaybeStack stack, MaybeStack... cost)
+    {
+        //register trade
+        register(context, new BlacksmithTrade(stack, rarity, Arrays.stream(cost).toList(), weight));
     }
 
     static void allRarities(BootstrapContext<BlacksmithTrade> context, Item item, List<RaritifiedCost> cost, RaritifiedPerk... perks)

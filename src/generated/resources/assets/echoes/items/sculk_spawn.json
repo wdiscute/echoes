@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "echoes:item/sculk_tissue"
+    "model": "echoes:item/sculk_spawn"
   }
 }

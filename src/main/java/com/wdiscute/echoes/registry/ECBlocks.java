@@ -61,6 +61,9 @@ public interface ECBlocks
     //sculk
     DeferredBlock<Block> SCULK_PILLAR = register("sculk_pillar", (d) -> new RotatedPillarBlock(d.strength(1.5F, 6.0F).sound(SoundType.BONE_BLOCK)));
     DeferredBlock<Block> SCULK_SLAB = register("sculk_slab", (d) -> new SlabBlock(d.strength(1.5F, 6.0F).sound(SoundType.BONE_BLOCK)));
+    DeferredBlock<Block> SCULK_TENDRIL = register("sculk_tendril", SculkTendrilBlock::new);
+
+
 
     //sculked deepslate
     DeferredBlock<Block> SCULKED_DEEPSLATE = register("sculked_deepslate", (d) -> new Block(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));

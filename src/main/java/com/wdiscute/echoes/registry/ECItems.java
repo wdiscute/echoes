@@ -33,10 +33,9 @@ public interface ECItems
 
     //materials
     //sculk
-    DeferredItem<Item> SCULK_TISSUE = ITEMS.registerItem("sculk_tissue", BasicItem::new);
+    DeferredItem<Item> SCULK_SPAWN = ITEMS.registerItem("sculk_spawn", BasicItem::new);
     DeferredItem<Item> HOLLOWED_SPINE = ITEMS.registerItem("hollowed_spine", BasicItem::new);
     DeferredItem<Item> SCULKED_TEETH = ITEMS.registerItem("sculked_teeth", BasicItem::new);
-    DeferredItem<Item> SCULK_TENDRIL = ITEMS.registerItem("sculk_tendril", BasicItem::new);
     DeferredItem<Item> ECHOING_MARROW = ITEMS.registerItem("echoing_marrow", BasicItem::new);
     DeferredItem<Item> ROT_BRAIN = ITEMS.registerItem("rot_brain", BasicItem::new); // rare drop from sculked
 

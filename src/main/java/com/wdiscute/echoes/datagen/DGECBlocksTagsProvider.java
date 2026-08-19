@@ -6,6 +6,7 @@ import com.wdiscute.echoes.registry.ECBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 import java.lang.classfile.TypeAnnotation;
@@ -26,6 +27,12 @@ public class DGECBlocksTagsProvider extends BlockTagsProvider
     {
         tag(ECTags.SKIPS_SCULK_TRANSFORMATION)
                 .add(ECBlocks.PORTAL.get());
+
+        tag(ECTags.SUPPORTS_SCULK_TENDRIL)
+                .add(Blocks.SCULK)
+                .add(ECBlocks.SCULK_PILLAR.get())
+                .add(ECBlocks.SCULKED_DEEPSLATE.get())
+        ;
 
 
         tag(BlockTags.WALLS)

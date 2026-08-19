@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "echoes:item/sculk_tissue"
+    "layer0": "echoes:item/sculk_spawn"
   }
 }

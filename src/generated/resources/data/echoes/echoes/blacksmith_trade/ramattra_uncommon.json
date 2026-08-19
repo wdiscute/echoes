@@ -1,11 +1,11 @@
 {
   "cost": [
     {
-      "count": 5,
+      "count": 25,
       "identifier": "echoes:sculked_teeth"
     },
     {
-      "count": 7,
+      "count": 3,
       "identifier": "echoes:hollowed_spine"
     }
   ],

@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
@@ -20,6 +21,13 @@ public class HollowedEntity extends AbstractSkeleton implements SculkAura
     public HollowedEntity(EntityType<? extends HollowedEntity> type, Level level)
     {
         super(type, level);
+        setDropChance(EquipmentSlot.MAINHAND, 0);
+        setDropChance(EquipmentSlot.OFFHAND, 0);
+        setDropChance(EquipmentSlot.HEAD, 0);
+        setDropChance(EquipmentSlot.BODY, 0);
+        setDropChance(EquipmentSlot.LEGS, 0);
+        setDropChance(EquipmentSlot.FEET, 0);
+        setDropChance(EquipmentSlot.CHEST, 0);
     }
 
     @Override

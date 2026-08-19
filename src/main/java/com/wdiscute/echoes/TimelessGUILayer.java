@@ -29,7 +29,7 @@ public class TimelessGUILayer implements GuiLayer
     public long lastFrame = System.currentTimeMillis();
     public float smoothSouls = 0;
     private static final List<TimedItemStack> loot = new ArrayList<>();
-
+    public static final int DEFAULT_LOOT_TIME = 70;
     public static void addLoot(MaybeStack stack, boolean showNotif)
     {
         ItemStack itemStack = stack.toStack();
@@ -37,11 +37,11 @@ public class TimelessGUILayer implements GuiLayer
         {
             List<TimedItemStack> list = loot.stream().filter(o -> ItemStack.isSameItemSameComponents(o.stack, itemStack)).toList();
             if (list.isEmpty())
-                loot.add(new TimedItemStack(itemStack, showNotif ? 200 : -1));
+                loot.add(new TimedItemStack(itemStack, showNotif ? DEFAULT_LOOT_TIME : -1));
             else
             {
                 list.getFirst().count += itemStack.getCount();
-                list.getFirst().ticks = showNotif ? 200 : -1;
+                list.getFirst().ticks = showNotif ? DEFAULT_LOOT_TIME : -1;
             }
         }
     }
@@ -134,8 +134,8 @@ public class TimelessGUILayer implements GuiLayer
             ScreenUtils.fill(guiGraphics,
                     cornerOffset - 5,
                     height - cornerOffset - 18 - i * 24, 30 + font.width(text.getVisualOrderText()),
-                    20, ((int) (255 - 136 * Math.clamp(200 - timedItemStack.ticks, 0, 20) / 20.0) << 24)
-                        | ((int) (255 * (1 - Math.clamp(200 - timedItemStack.ticks, 0, 20) / 20.0)) * 0x010101));
+                    20, ((int) (255 - 136 * Math.clamp(DEFAULT_LOOT_TIME - timedItemStack.ticks, 0, 20) / 20.0) << 24)
+                        | ((int) (255 * (1 - Math.clamp(DEFAULT_LOOT_TIME - timedItemStack.ticks, 0, 20) / 20.0)) * 0x010101));
 
             ScreenUtils.text(guiGraphics, font, text,
                     cornerOffset + 20, height - cornerOffset - 12 - i * 24, 0xffffffff, true);
@@ -183,7 +183,6 @@ public class TimelessGUILayer implements GuiLayer
         }
 
         ScreenUtils.centeredText(guiGraphics, font, Component.literal("level: " + timelessData.currentStage()), width / 2, 20, 0xffffffff, true);
-        ScreenUtils.centeredText(guiGraphics, font, Component.literal("souls: " + timelessData.souls()), width / 2, 30, 0xffffffff, true);
     }
 }
 

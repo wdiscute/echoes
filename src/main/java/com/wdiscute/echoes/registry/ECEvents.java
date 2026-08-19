@@ -1,5 +1,6 @@
 package com.wdiscute.echoes.registry;
 
+import com.wdiscute.echoes.ECConfig;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
@@ -32,6 +33,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -129,7 +131,7 @@ public class ECEvents
         {
             TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), entityKilled.blockPosition());
             if (closest != null)
-                closest.addLoot(sl, entityKilled.getData(ECDataAttachments.LOOT_COUNT));
+                closest.addLoot(sl, (float) (entityKilled.getData(ECDataAttachments.LOOT_COUNT) * ECConfig.GLOBAL_EXTRA_TIMELESS_LOOT_DROPS.getAsDouble()));
         }
 
         float souls = ECDataEntries.SOULS.get().getOrDefault(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType()), 0f);
@@ -196,6 +198,13 @@ public class ECEvents
 
     @SubscribeEvent
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event)
+    {
+        if (event.getEntity().level().dimension().equals(Echoes.TIMELESS))
+            event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onEntityPlace(BlockEvent.EntityPlaceEvent event)
     {
         if (event.getEntity().level().dimension().equals(Echoes.TIMELESS))
             event.setCanceled(true);

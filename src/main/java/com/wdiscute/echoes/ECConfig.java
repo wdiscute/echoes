@@ -17,9 +17,14 @@ public class ECConfig
     private static final ModConfigSpec.Builder BUILDER_SERVER = new ModConfigSpec.Builder();
 
     public static final ModConfigSpec.LongValue GLOBAL_EXTRA_TIMELESS_DURATION = BUILDER_SERVER
-            .comment("Adds ticks to the base duration of a level inside the Timeless .")
+            .comment("Adds ticks to the base duration of a level inside the Timeless.")
             .translation("echoes.configuration.global_extra_timeless_duration")
             .defineInRange("global_extra_timeless_duration", 0, 0, Long.MAX_VALUE);
+
+    public static final ModConfigSpec.DoubleValue GLOBAL_EXTRA_TIMELESS_LOOT_DROPS = BUILDER_SERVER
+            .comment("Each level will multiply the loot drops by this amount")
+            .translation("echoes.configuration.global_extra_timeless_duration")
+            .defineInRange("global_extra_timeless_loot_drops", 0.1f, 0, Float.MAX_VALUE);
 
     static final ModConfigSpec SPEC_SERVER = BUILDER_SERVER.build();
 }

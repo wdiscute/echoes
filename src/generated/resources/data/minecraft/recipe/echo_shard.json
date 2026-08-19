@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "S": "minecraft:amethyst_shard",
-    "T": "echoes:sculk_tissue"
+    "T": "echoes:sculk_spawn"
   },
   "pattern": [
     "TTT",

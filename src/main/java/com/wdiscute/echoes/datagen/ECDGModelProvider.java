@@ -3,27 +3,15 @@ package com.wdiscute.echoes.datagen;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECItems;
-import net.minecraft.client.color.item.GrassColorSource;
-import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.MultiVariant;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
-import net.minecraft.client.renderer.block.dispatch.Variant;
-import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.ArrayList;
@@ -64,7 +52,7 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.SCULKED_DEEPSLATE.asItem().builtInRegistryHolder());
 
         //items
-        list.add(ECItems.SCULK_TISSUE.getDelegate());
+        list.add(ECItems.SCULK_SPAWN.getDelegate());
         list.add(ECItems.ECHO_BLADE.getDelegate());
 
         return list.stream();
@@ -200,10 +188,9 @@ public class ECDGModelProvider extends ModelProvider
 
         //materials
         //sculk
-        itemModels.generateFlatItem(ECItems.SCULK_TISSUE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.SCULK_SPAWN.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.HOLLOWED_SPINE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.SCULKED_TEETH.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(ECItems.SCULK_TENDRIL.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.ECHOING_MARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.ROT_BRAIN.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 

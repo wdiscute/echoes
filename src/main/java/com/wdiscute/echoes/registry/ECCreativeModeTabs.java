@@ -7,11 +7,8 @@ import net.mcexpanded.fancytabsections.Section.SectionColored;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -56,10 +53,10 @@ public class ECCreativeModeTabs
                 new SectionColored(Echoes.rl("materials"))
                         .setBannerColor(0xff344545)
 
-                        .add(ECItems.SCULK_TISSUE)
+                        .add(ECItems.SCULK_SPAWN)
                         .add(ECItems.HOLLOWED_SPINE)
                         .add(ECItems.SCULKED_TEETH)
-                        .add(ECItems.SCULK_TENDRIL)
+                        .add(ECBlocks.SCULK_TENDRIL)
                         .add(ECItems.ECHOING_MARROW)
                         .add(ECItems.ROT_BRAIN)
                         .add(Items.AIR)
@@ -80,6 +77,8 @@ public class ECCreativeModeTabs
                 new SectionColored(Echoes.rl("sculk"))
                         .setBannerColor(0xff344545)
 
+                        .add(Blocks.SCULK)
+                        .add(ECBlocks.SCULK_TENDRIL)
                         .add(ECBlocks.SCULK_PILLAR)
                         .add(ECBlocks.SCULK_SLAB)
 

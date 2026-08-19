@@ -1,0 +1,13 @@
+{
+  "cost": [
+    {
+      "count": 10,
+      "identifier": "echoes:echoing_marrow"
+    }
+  ],
+  "rarity": "common",
+  "stack": {
+    "identifier": "echoes:hollowed_spine"
+  },
+  "weight": 10
+}

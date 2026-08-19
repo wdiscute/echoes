@@ -33,6 +33,8 @@ import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -464,7 +466,10 @@ public class TimelessInstance
 
         ServerLevel sl = player.level();
 
-        //list client loot
+        //add regen
+        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 5));
+
+        //client loot
         PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(List.of()));
 
         //save overworld inventory and swap to timeless inventory

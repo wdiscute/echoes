@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.ModList;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -244,7 +245,8 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         float uBaseLayer4 = uBaseBase + drift(LAYER4_U_SPEED, LAYER4_U_DIR);
         float vBaseLayer4 = vBaseBase + drift(LAYER4_V_SPEED, LAYER4_V_DIR);
 
-        int light = IrisCompat.isShaderPackInUse() ? 0xF000D8 : state.lightCoords;
+        //if iris, use lower light so it doesn't look as bright, otherwise use block light
+        int light = ModList.get().isLoaded("iris") && IrisCompat.isShaderPackInUse() ? 0xF000D8 : state.lightCoords;
 
         submitFace(0, RenderTypes.entityCutout(Echoes.rl("textures/pane_base.png")), poseStack, submitNodeCollector,
                 state.blockPos.getCenter(), color1, color2, uBaseBase, vBaseBase, state.facing, light);

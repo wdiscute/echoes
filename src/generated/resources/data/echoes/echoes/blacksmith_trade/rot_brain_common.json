@@ -1,0 +1,13 @@
+{
+  "cost": [
+    {
+      "count": 10,
+      "identifier": "echoes:sculked_teeth"
+    }
+  ],
+  "rarity": "common",
+  "stack": {
+    "identifier": "echoes:rot_brain"
+  },
+  "weight": 10
+}

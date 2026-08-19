@@ -44,6 +44,10 @@ public class ECDataGenerators
 
         //loot table
         gen.addProvider(true, new LootTableProvider(output, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(DGECBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
+                List.of(
+                        new LootTableProvider.SubProviderEntry(DGECBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(DGECEntityLootTableProvider::new, LootContextParamSets.ENTITY)
+                ),
+                lookupProvider));
     }
 }
