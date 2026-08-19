@@ -200,7 +200,6 @@ public class ECDGModelProvider extends ModelProvider
         //prisma
         itemModels.generateFlatItem(ECItems.PRISMA_SWORD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.LUCENT_WILL.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(ECItems.TIME_KEEPER.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
 
 
