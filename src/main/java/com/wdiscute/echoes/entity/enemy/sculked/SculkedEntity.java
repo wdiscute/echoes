@@ -21,7 +21,7 @@ public class SculkedEntity extends Zombie implements SculkAura
     public static AttributeSupplier.Builder createAttributes()
     {
         return Monster.createMonsterAttributes()
-                .add(Attributes.FOLLOW_RANGE, 10.0)
+                .add(Attributes.FOLLOW_RANGE, 7.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.23F)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
                 .add(Attributes.ARMOR, 2.0)
@@ -32,6 +32,6 @@ public class SculkedEntity extends Zombie implements SculkAura
     @Override
     public float getSculkAura(@Nullable ServerLevel sl)
     {
-        return 7;
+        return 3;
     }
 }

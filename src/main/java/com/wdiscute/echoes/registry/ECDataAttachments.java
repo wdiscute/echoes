@@ -41,6 +41,12 @@ public interface ECDataAttachments
                     .build()
     );
 
+    Supplier<AttachmentType<Float>> LOOT_COUNT = ATTACHMENT_TYPES.register(
+            "loot_count", () -> AttachmentType.builder(() -> 0f)
+                    .serialize(Codec.FLOAT.fieldOf("count"))
+                    .build()
+    );
+
     Supplier<AttachmentType<List<PerkInstance>>> PERKS = ATTACHMENT_TYPES.register(
             "perks", () -> AttachmentType.builder(() -> List.<PerkInstance>of())
                     .serialize(PerkInstance.CODEC.listOf().fieldOf("perks"))

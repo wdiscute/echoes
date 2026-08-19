@@ -8,6 +8,7 @@ import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
+import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
@@ -54,7 +55,16 @@ public class TimelessProcessor
 
             //set spawnpoint
             if (type.equals(TimelessMarkerBlock.Type.SPAWN_POINT))
+            {
                 instance.spawnPoint = bp;
+                instance.direction = switch (state.getValueOrElse(PortalBlock.FACING, Direction.NORTH))
+                {
+                    case WEST -> 1;
+                    case SOUTH -> 2;
+                    case EAST -> 3;
+                    default -> 0;
+                };
+            }
 
             //spawn timeless corpse
             if (type.equals(TimelessMarkerBlock.Type.TIMELESS_CORPSE))
@@ -96,15 +106,17 @@ public class TimelessProcessor
             if (type.equals(TimelessMarkerBlock.Type.GROUND_MELEE_ENEMY))
             {
                 TimelessEnemyEntry randomEnemy = TimelessEnemyEntry.getRandomEnemy(sl, ECDataEntries.GROUND_MELEE_ENEMIES.get(), instance.stage);
-                if(randomEnemy != null)
+                if (randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
                             .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
-                    if(entity instanceof Mob mob)
+                    if (entity instanceof Mob mob)
                     {
+                        mob.setData(ECDataAttachments.LOOT_COUNT, randomEnemy.lootRolls());
                         mob.setPersistenceRequired();
                         addToAttrib(mob, Attributes.MAX_HEALTH, randomEnemy.healthIncrease() * instance.stage);
-                        addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease()  * instance.stage);
+                        addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease() * instance.stage);
+                        mob.heal(mob.getMaxHealth());
                     }
                 }
             }
@@ -113,16 +125,18 @@ public class TimelessProcessor
             if (type.equals(TimelessMarkerBlock.Type.GROUND_RANGED_ENEMY))
             {
                 TimelessEnemyEntry randomEnemy = TimelessEnemyEntry.getRandomEnemy(sl, ECDataEntries.GROUND_RANGED_ENEMIES.get(), instance.stage);
-                if(randomEnemy != null)
+                if (randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
                             .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
 
-                    if(entity instanceof Mob mob)
+                    if (entity instanceof Mob mob)
                     {
                         mob.setPersistenceRequired();
+                        mob.setData(ECDataAttachments.LOOT_COUNT, randomEnemy.lootRolls());
                         addToAttrib(mob, Attributes.MAX_HEALTH, randomEnemy.healthIncrease() * instance.stage);
-                        addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease()  * instance.stage);
+                        addToAttrib(mob, Attributes.ATTACK_DAMAGE, randomEnemy.damageIncrease() * instance.stage);
+                        mob.heal(mob.getMaxHealth());
                     }
                 }
             }
@@ -190,7 +204,7 @@ public class TimelessProcessor
 
     public static void addToAttrib(Mob entity, Holder<Attribute> attrib, float value)
     {
-        if(entity.getAttributes().hasAttribute(attrib))
+        if (entity.getAttributes().hasAttribute(attrib))
         {
             entity.getAttributes().getInstance(attrib)
                     .addPermanentModifier(

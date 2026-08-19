@@ -11,7 +11,6 @@
   ],
   "rarity": "epic",
   "stack": {
-    "count": 1,
     "data_components_patch": {
       "echoes:perks": [
         {

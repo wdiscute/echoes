@@ -26,7 +26,11 @@ public class DisplayBlock extends HorizontalDirectionalBlock implements EntityBl
 
     public DisplayBlock(Properties properties)
     {
-        super(properties.noOcclusion().strength(1.5F, 6.0F));
+        super(properties
+                .lightLevel(_ -> 10)
+                .noOcclusion()
+                .strength(1.5F, 6.0F)
+        );
     }
 
     @Override

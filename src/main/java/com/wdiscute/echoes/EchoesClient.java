@@ -1,6 +1,6 @@
 package com.wdiscute.echoes;
 
-import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
+import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.libtooltips.RGBEffect;
 import com.wdiscute.libtooltips.Tooltips;
 import net.minecraft.client.Minecraft;
@@ -48,7 +48,7 @@ public class EchoesClient
         Tooltips.registerProcessor("eclegendary", RGBEffect::process);
     }
 
-    public static void playSoundPayload(ECDBPlaySoundPayload ecdbPlaySoundPayload)
+    public static void playSoundPayload(ECCBPlaySoundPayload ecdbPlaySoundPayload)
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;

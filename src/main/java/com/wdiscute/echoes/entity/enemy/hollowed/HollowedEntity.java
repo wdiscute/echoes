@@ -61,6 +61,6 @@ public class HollowedEntity extends AbstractSkeleton implements SculkAura
     @Override
     public float getSculkAura(@Nullable ServerLevel sl)
     {
-        return 7;
+        return 3;
     }
 }

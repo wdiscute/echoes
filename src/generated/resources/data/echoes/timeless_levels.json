@@ -2,6 +2,7 @@
   {
     "id": "echoes:timeless/starter",
     "preferred_level": -1,
+    "ticks": 12000,
     "weight": 10
   },
   {
@@ -11,10 +12,17 @@
   },
   {
     "id": "echoes:timeless/first",
+    "ticks": 6000,
     "weight": 10
   },
   {
     "id": "echoes:timeless/second",
+    "ticks": 6000,
+    "weight": 10
+  },
+  {
+    "id": "echoes:timeless/third",
+    "ticks": 6000,
     "weight": 10
   }
 ]

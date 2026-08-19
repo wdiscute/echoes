@@ -5,13 +5,11 @@
       "identifier": "echoes:prisma_shard"
     },
     {
-      "count": 1,
       "identifier": "echoes:crystal_core"
     }
   ],
   "rarity": "common",
   "stack": {
-    "count": 1,
     "data_components_patch": {
       "echoes:perks": [
         {

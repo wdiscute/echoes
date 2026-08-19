@@ -1,13 +1,11 @@
 {
   "cost": [
     {
-      "count": 1,
       "identifier": "echoes:sculked_teeth"
     }
   ],
   "rarity": "common",
   "stack": {
-    "count": 1,
     "data_components_patch": {
       "echoes:perks": [
         {

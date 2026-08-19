@@ -1,18 +1,19 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
-import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
+import com.wdiscute.echoes.network.ECCBAddLootPayload;
+import com.wdiscute.echoes.network.ECCBSetLootPayload;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
+import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -46,7 +46,11 @@ public class ECEvents
     @SubscribeEvent
     public static void timelessTick(LevelTickEvent.Post event)
     {
-        if (event.getLevel().isClientSide()) return;
+        if (event.getLevel().isClientSide())
+        {
+            TimelessGUILayer.tick(event.getLevel());
+            return;
+        }
 
         ServerLevel sl = (ServerLevel) event.getLevel();
 
@@ -58,10 +62,8 @@ public class ECEvents
     public static void timelessTick(EntityJoinLevelEvent event)
     {
         if (event.getLevel().dimension().equals(Echoes.TIMELESS))
-        {
             if (event.getEntity() instanceof ExperienceOrb)
                 event.setCanceled(true);
-        }
     }
 
     @SubscribeEvent
@@ -72,12 +74,10 @@ public class ECEvents
         LivingEntity entityDamaged = event.getEntity();
         Entity damager = event.getSource().getEntity();
 
+        //decrease damage based on soul hearts
         if (entityDamaged instanceof Player player)
-        {
-            //decrease damage based on soul hearts
             event.setNewDamage(event.getNewDamage() - TimelessHearts.getAbsorbedDamage(player, (int) event.getNewDamage()));
-            ;
-        }
+
 
         //trigger perks
         if (damager instanceof Player player)
@@ -94,18 +94,18 @@ public class ECEvents
         }
     }
 
-
     @SubscribeEvent
     public static void onDeathEvent(LivingDeathEvent event)
     {
         if (event.getEntity().level().isClientSide()) return;
 
         LivingEntity entityKilled = event.getEntity();
-        Entity killer = event.getSource().getEntity();
-        ServerLevel sl = ((ServerLevel) entityKilled.level());
 
         //if not in timeless return
         if (!entityKilled.level().dimension().equals(Echoes.TIMELESS)) return;
+
+        Entity killer = event.getSource().getEntity();
+        ServerLevel sl = ((ServerLevel) entityKilled.level());
 
         //if player died
         if (entityKilled instanceof Player)
@@ -124,6 +124,12 @@ public class ECEvents
                 if (closest != null) closest.removePlayer(sp);
             }
             return;
+        }
+        else
+        {
+            TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), entityKilled.blockPosition());
+            if (closest != null)
+                closest.addLoot(sl, entityKilled.getData(ECDataAttachments.LOOT_COUNT));
         }
 
         float souls = ECDataEntries.SOULS.get().getOrDefault(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType()), 0f);
@@ -201,9 +207,21 @@ public class ECEvents
         final PayloadRegistrar registrar = event.registrar("1");
 
         registrar.playToClient(
-                ECDBPlaySoundPayload.TYPE,
-                ECDBPlaySoundPayload.STREAM_CODEC,
-                ECDBPlaySoundPayload::handle
+                ECCBPlaySoundPayload.TYPE,
+                ECCBPlaySoundPayload.STREAM_CODEC,
+                ECCBPlaySoundPayload::handle
+        );
+
+        registrar.playToClient(
+                ECCBAddLootPayload.TYPE,
+                ECCBAddLootPayload.STREAM_CODEC,
+                ECCBAddLootPayload::handle
+        );
+
+        registrar.playToClient(
+                ECCBSetLootPayload.TYPE,
+                ECCBSetLootPayload.STREAM_CODEC,
+                ECCBSetLootPayload::handle
         );
     }
 

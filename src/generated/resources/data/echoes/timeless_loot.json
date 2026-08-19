@@ -1,0 +1,26 @@
+[
+  {
+    "stack": {
+      "identifier": "minecraft:diamond"
+    },
+    "weight": 2
+  },
+  {
+    "stack": {
+      "identifier": "minecraft:gold_ingot"
+    },
+    "weight": 10
+  },
+  {
+    "stack": {
+      "identifier": "minecraft:iron_ingot"
+    },
+    "weight": 10
+  },
+  {
+    "stack": {
+      "identifier": "echoes:prisma_shard"
+    },
+    "weight": 20
+  }
+]

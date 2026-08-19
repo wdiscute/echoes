@@ -50,7 +50,7 @@ public class LanternEntity extends Entity implements SculkAura
 
         pickupCooldown--;
 
-        //if attached entity doesn't exist any more, clear uuid
+        //if attached entity doesn't exist any more, list uuid
         Entity attachedEntity = level().getEntity(entityData.get(UUID));
         if (attachedEntity == null)
         {

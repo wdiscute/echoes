@@ -9,10 +9,12 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.SculkAura;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
-import com.wdiscute.echoes.network.ECDBPlaySoundPayload;
+import com.wdiscute.echoes.entity.lantern.LanternEntity;
+import com.wdiscute.echoes.network.ECCBAddLootPayload;
+import com.wdiscute.echoes.network.ECCBSetLootPayload;
+import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataAttachments;
-import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECParticles;
 import com.wdiscute.utils.MaybeStack;
@@ -27,17 +29,18 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -77,40 +80,90 @@ public class TimelessInstance
         return phase == Phase.ONGOING || phase == Phase.FINISHED;
     }
 
-    public boolean shouldClose(ServerLevel sl)
+    public void attemptClose(ServerLevel sl)
     {
-        //if isHub
+        //if hub
         if (isHub())
         {
             TimelessInstance maybeInstance = TimelessManager.getOrNull(sl.getServer(), linkedInstance);
+
             //if no players in isHub
             if (getPlayers(sl).isEmpty())
             {
                 //if no linked instance, close
                 if (maybeInstance == null)
-                    return true;
-                    //if linked instance, delegate closing to the instance
+                    close(sl);
                 else
-                    return maybeInstance.shouldClose(sl);
+                    //if linked instance, delegate closing to the instance
+                    maybeInstance.attemptClose(sl);
             }
-
         }
-        //if not isHub
+        //if not hub
         else
         {
             //close if time expired
-            if (timeToExit < sl.getGameTime()) return true;
+            if (timeToExit < sl.getGameTime())
+            {
+                close(sl);
+                return;
+            }
 
             //close if marked as finished (heart destroyed) and has no players
-            if (phase == Phase.FINISHED && getPlayers(sl).isEmpty()) return true;
+            if (getPlayers(sl).isEmpty())
+                close(sl);
         }
+    }
 
-        return false;
+    private void close(ServerLevel sl)
+    {
+        //do not run if already closed
+        if (phase == Phase.CLOSED) return;
+
+        //remove players
+        List<ServerPlayer> players = getPlayers(sl);
+        players.forEach(this::removePlayer);
+
+        phase = Phase.CLOSED;
+
+        //set loot
+        ServerLevel levelToReturn = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
+
+        if (levelToReturn != null)
+        {
+            levelToReturn.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(portalPos), 1);
+            if (levelToReturn.getBlockEntity(portalPos) instanceof PortalBlockEntity pbe)
+                pbe.setLooting(loot);
+        }
     }
 
     public boolean isHub()
     {
         return stage % 5 == 0;
+    }
+
+    public void addLoot(ServerLevel sl, float lootCount)
+    {
+        //if luck allows for the extra .X% to give an extra drop
+        //example 5.3f will give 5 rolls + 30% chance of extra
+        float extraDrop = lootCount % 1;
+        if(sl.getRandom().nextFloat() < extraDrop)
+            lootCount++;
+
+        for (int i = 0; i < lootCount; i++)
+        {
+            loot = new ArrayList<>(loot);
+
+            TimelessLootEntry randomLoot = TimelessLootEntry.getRandomLoot(sl.getRandom(), stage);
+
+            if (randomLoot != null)
+            {
+                //add random loot to instance loot
+                loot.add(randomLoot.stack());
+
+                //set notif to players
+                getPlayers(sl).forEach(o -> PacketDistributor.sendToPlayer(o, new ECCBAddLootPayload(randomLoot.stack(), true)));
+            }
+        }
     }
 
     public enum Phase implements StringRepresentableAutoForEnums
@@ -122,64 +175,20 @@ public class TimelessInstance
 
         public static final Codec<Phase> CODEC = StringRepresentable.fromEnum(Phase::values);
         public static final StreamCodec<FriendlyByteBuf, Phase> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(Phase.class);
-
     }
-
-    public TimelessInstance(UUID uuid,
-                            BlockPos origin, BlockPos spawnPoint,
-                            Phase phase,
-                            List<Utils.Duo<BlockPos, BlockState>> storedStates,
-                            List<BlockPos> flippedStates,
-                            long lastsUntil,
-                            Identifier portalDimension,
-                            BlockPos portalPos,
-                            int stage,
-                            UUID nextInstance
-    )
-    {
-        this.uuid = uuid;
-        this.origin = origin;
-        this.spawnPoint = spawnPoint;
-        this.phase = phase;
-        this.timeToExit = lastsUntil;
-        this.portalDimension = portalDimension;
-        this.portalPos = portalPos;
-        this.stage = stage;
-        this.linkedInstance = nextInstance;
-        storedStates.forEach(o -> STORED_STATES.put(o.first(), o.second()));
-        FLIPPED_BLOCKS.addAll(flippedStates);
-    }
-
-    public static TimelessInstance create(UUID uuid)
-    {
-        BlockPos origin = new BlockPos(Utils.r.nextInt(50000000 / 2), 100, Utils.r.nextInt(50000000 / 2));
-        return new TimelessInstance(
-                uuid,
-                origin,
-                origin,
-                Phase.NEW,
-                List.of(),
-                List.of(),
-                Long.MAX_VALUE,
-                Echoes.MISSINGNO,
-                BlockPos.ZERO,
-                -1,
-                UUID.randomUUID()
-        );
-    }
-
-    private static final int MAX_GLOBAL_AURA = 30;
 
     //saved data
     public final UUID uuid;
     public final BlockPos origin;
     public BlockPos spawnPoint;
+    public int direction;
     public Phase phase;
     public long timeToExit;
     public BlockPos portalPos;
     public Identifier portalDimension;
     public int stage;
     public UUID linkedInstance;
+    public List<MaybeStack> loot;
 
     //converted to list for saving
     public final Map<BlockPos, BlockState> STORED_STATES = new HashMap<>();
@@ -203,17 +212,27 @@ public class TimelessInstance
         if (stage == -1)
             stage = timelessData.maxStage();
 
-        //if player was already in an instance, add config duration to the timer
-        if (timelessData.timeToExit() != Long.MAX_VALUE)
-            this.timeToExit = timelessData.timeToExit() + ECConfig.TIMELESS_DURATION_ADDED.get();
-            //otherwise set to base duration
-        else
-            this.timeToExit = sl.getGameTime() + ECConfig.BASE_TIMELESS_DURATION.get();
-
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;
 
-        spawnStructure(sl);
+        TimelessLevelEntry entry = spawnStructure(sl);
+
+        int ticks;
+        if (entry == null)
+            ticks = 1200;
+        else
+            ticks = entry.ticks();
+
+        //if player was already in an instance, add next level ticks + current
+        if (timelessData.timeToExit() != Long.MAX_VALUE)
+            this.timeToExit = timelessData.timeToExit() + ticks + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
+            //otherwise set to base duration
+        else
+            this.timeToExit = sl.getGameTime() + ticks + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
+
+        //if first level, no time limit
+        if (stage == -1)
+            this.timeToExit = Long.MAX_VALUE;
 
         //if hub apply hub linking logic
         if (isHub())
@@ -228,7 +247,6 @@ public class TimelessInstance
 
             setTime(sl, Long.MAX_VALUE);
             phase = Phase.FINISHED;
-            spawnStructure(sl);
         }
 
         //spawnpoint blocks
@@ -305,37 +323,37 @@ public class TimelessInstance
                 if (closingSequence == 1)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("shriek", 1, 1));
+                            new ECCBPlaySoundPayload("shriek", 1, 1));
 
                 if (closingSequence == 20)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("shriek", 0.4f, 0.8f));
+                            new ECCBPlaySoundPayload("shriek", 0.4f, 0.8f));
 
                 if (closingSequence == 40)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("shriek", 1, 1.3f));
+                            new ECCBPlaySoundPayload("shriek", 1, 1.3f));
 
                 if (closingSequence == 60)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("shriek", 0.3f, 1f));
+                            new ECCBPlaySoundPayload("shriek", 0.3f, 1f));
 
                 if (closingSequence == 80)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("shriek", 1, 0.4f));
+                            new ECCBPlaySoundPayload("shriek", 1, 0.4f));
 
                 if (closingSequence == 100)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("shriek", 1, 0.5f));
+                            new ECCBPlaySoundPayload("shriek", 1, 0.5f));
 
                 if (closingSequence == 70)
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("beacon_deactivate", 1, 1f));
+                            new ECCBPlaySoundPayload("beacon_deactivate", 1, 1f));
 
                 if (closingSequence == 70)
                     submitRing(heart.position(), 30, -1);
@@ -347,11 +365,11 @@ public class TimelessInstance
                 {
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("beacon_deactivate", 1, 1f));
+                            new ECCBPlaySoundPayload("beacon_deactivate", 1, 1f));
 
                     PacketDistributor.sendToPlayersNear(
                             sl, null, heart.getX(), heart.getY(), heart.getZ(), 1000,
-                            new ECDBPlaySoundPayload("beacon_activate", 1, 1f));
+                            new ECCBPlaySoundPayload("beacon_activate", 1, 1f));
                 }
 
                 if (closingSequence > 115)
@@ -369,6 +387,12 @@ public class TimelessInstance
                 {
                     //sets phase to finishing (not closed, so it doest get removed)
                     phase = Phase.FINISHED;
+
+                    entitiesInInstance.forEach(o ->
+                    {
+                        if (o instanceof LanternEntity)
+                            o.remove(Entity.RemovalReason.DISCARDED);
+                    });
 
                     //remove heard
                     heart.remove(Entity.RemovalReason.DISCARDED);
@@ -408,12 +432,6 @@ public class TimelessInstance
         return sl.getPlayers(o -> origin.distManhattan(o.blockPosition()) < 1000);
     }
 
-    public void kickPlayers(ServerLevel sl)
-    {
-        //remove all players
-        getPlayers(sl).forEach(this::removePlayer);
-    }
-
     private void processRings(ServerLevel sl)
     {
         List<Utils.Trio<Vec3, Float, Float>> newRings = new ArrayList<>();
@@ -446,6 +464,9 @@ public class TimelessInstance
 
         ServerLevel sl = player.level();
 
+        //list client loot
+        PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(List.of()));
+
         //save overworld inventory and swap to timeless inventory
         List<MaybeStack> inventory = data.inventory();
         List<MaybeStack> list = new ArrayList<>();
@@ -461,6 +482,9 @@ public class TimelessInstance
         ServerLevel level = sl.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, portalDimension));
         if (level == null)
             level = sl.getServer().getLevel(Level.OVERWORLD);
+
+        //load dimension to return to
+        level.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(portalPos), 1);
 
         float x = sl.getRandom().nextFloat() / 2 - 0.5f;
         float z = sl.getRandom().nextFloat() / 2 - 0.5f;
@@ -494,6 +518,7 @@ public class TimelessInstance
         //load dimension + structures
         attemptLoad(player, sl, portalPos, portalDimension);
 
+
         //if player is not on timeless, swap inventory
         if (!player.level().dimension().equals(Echoes.TIMELESS))
         {
@@ -513,6 +538,20 @@ public class TimelessInstance
             //store overworld inventory
             TimelessData.setInventory(player, list);
         }
+        else
+        {
+            //add loot from current instance to next instance, in case 2 players enter new instance after slower player killed a mob
+            TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), player.blockPosition());
+            if (closest != null)
+            {
+                loot = new ArrayList<>(loot);
+                loot.addAll(closest.loot);
+                closest.loot = List.of();
+            }
+        }
+
+        //set client loot to instance loot
+        PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(loot));
 
         //set time to exit
         TimelessData.setTimeToExit(player, getTimeToExit(sl));
@@ -530,7 +569,7 @@ public class TimelessInstance
         TeleportTransition trans = new TeleportTransition(sl,
                 new Vec3(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ()),
                 Vec3.ZERO,
-                -90,
+                direction * 90 + 180,
                 0,
                 Utils::nothing
         );
@@ -665,19 +704,20 @@ public class TimelessInstance
         auras.add(Pair.of(pos, radius));
     }
 
-    private void spawnStructure(ServerLevel sl)
+    private TimelessLevelEntry spawnStructure(ServerLevel sl)
     {
         //get template structure path
-        TimelessLevelEntry randomLevel = TimelessLevelEntry.getRandomLevel(sl, stage);
+        TimelessLevelEntry randomLevel = TimelessLevelEntry.getRandomLoot(sl, stage);
 
         if (randomLevel == null)
-            return;
+            return null;
 
         Identifier template = randomLevel.id();
 
         //actually spawn structure
         doSpawnStructure(sl, template.withSuffix("/sculk_"), true);
         doSpawnStructure(sl, template.withSuffix("/prisma_"), false);
+        return randomLevel;
     }
 
     private void doSpawnStructure(ServerLevel sl, Identifier template, boolean sculk)
@@ -813,11 +853,61 @@ public class TimelessInstance
             | Block.UPDATE_MOVE_BY_PISTON
             | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
 
+    public TimelessInstance(UUID uuid,
+                            BlockPos origin, BlockPos spawnPoint,
+                            int direction,
+                            Phase phase,
+                            List<Utils.Duo<BlockPos, BlockState>> storedStates,
+                            List<BlockPos> flippedStates,
+                            long lastsUntil,
+                            Identifier portalDimension,
+                            BlockPos portalPos,
+                            int stage,
+                            UUID nextInstance,
+                            List<MaybeStack> loot
+    )
+    {
+        this.uuid = uuid;
+        this.origin = origin;
+        this.spawnPoint = spawnPoint;
+        this.direction = direction;
+        this.phase = phase;
+        this.timeToExit = lastsUntil;
+        this.portalDimension = portalDimension;
+        this.portalPos = portalPos;
+        this.stage = stage;
+        this.linkedInstance = nextInstance;
+        storedStates.forEach(o -> STORED_STATES.put(o.first(), o.second()));
+        FLIPPED_BLOCKS.addAll(flippedStates);
+        this.loot = loot;
+    }
+
+    public static TimelessInstance create(UUID uuid)
+    {
+        BlockPos origin = new BlockPos(Utils.r.nextInt(50000000 / 2), 100, Utils.r.nextInt(50000000 / 2));
+        return new TimelessInstance(
+                uuid,
+                origin,
+                origin,
+                0,
+                Phase.NEW,
+                List.of(),
+                List.of(),
+                Long.MAX_VALUE,
+                Echoes.MISSINGNO,
+                BlockPos.ZERO,
+                -1,
+                UUID.randomUUID(),
+                List.of()
+        );
+    }
+
     public static final Codec<TimelessInstance> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     UUIDUtil.CODEC.fieldOf("uuid").forGetter(o -> o.uuid),
                     BlockPos.CODEC.fieldOf("origin").forGetter(o -> o.origin),
                     BlockPos.CODEC.optionalFieldOf("spawn_point", BlockPos.ZERO).forGetter(o -> o.spawnPoint),
+                    Codec.INT.optionalFieldOf("direction", 0).forGetter(o -> o.direction),
                     Phase.CODEC.fieldOf("phase").forGetter(o -> o.phase),
                     Utils.Duo.codec(BlockPos.CODEC, BlockState.CODEC).listOf().fieldOf("stored_states").forGetter(TimelessInstance::getSculkBlocks),
                     BlockPos.CODEC.listOf().fieldOf("flipped_blocks").forGetter(TimelessInstance::getFlippedBlocks),
@@ -825,6 +915,7 @@ public class TimelessInstance
                     Identifier.CODEC.fieldOf("portal_dim").forGetter(o -> o.portalDimension),
                     BlockPos.CODEC.optionalFieldOf("portal_pos", BlockPos.ZERO).forGetter(o -> o.portalPos),
                     Codec.INT.fieldOf("currentStage").forGetter(o -> o.stage),
-                    UUIDUtil.CODEC.fieldOf("next_instance").forGetter(o -> o.linkedInstance)
+                    UUIDUtil.CODEC.fieldOf("next_instance").forGetter(o -> o.linkedInstance),
+                    MaybeStack.CODEC.listOf().fieldOf("loot").forGetter(o -> o.loot)
             ).apply(instance, TimelessInstance::new));
 }

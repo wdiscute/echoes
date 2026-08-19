@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, int levelRange, boolean isHub)
+public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, int levelRange, int ticks, boolean isHub)
 {
     public static final Codec<TimelessLevelEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -17,11 +17,12 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
                     Codec.INT.optionalFieldOf("preferred_level", 0).forGetter(TimelessLevelEntry::preferredLevel),
                     Codec.INT.fieldOf("weight").forGetter(TimelessLevelEntry::weight),
                     Codec.INT.optionalFieldOf("level_range", 0).forGetter(TimelessLevelEntry::levelRange),
+                    Codec.INT.optionalFieldOf("ticks", 0).forGetter(TimelessLevelEntry::ticks),
                     Codec.BOOL.optionalFieldOf("is_hub", false).forGetter(TimelessLevelEntry::isHub)
             ).apply(instance, TimelessLevelEntry::new)
     );
 
-    public static @Nullable TimelessLevelEntry getRandomLevel(ServerLevel sl, int level)
+    public static @Nullable TimelessLevelEntry getRandomLoot(ServerLevel sl, int level)
     {
         List<TimelessLevelEntry> entries = ECDataEntries.TIMELESS_LEVELS.get();
 

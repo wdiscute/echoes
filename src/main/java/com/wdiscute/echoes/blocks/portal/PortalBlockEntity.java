@@ -125,8 +125,11 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
     {
         level.setBlockAndUpdate(getBlockPos(), getBlockState().trySetValue(PortalBlock.STATE, PortalBlock.State.LOOTING));
 
-        //filter out empty MaybeStack's
-        this.loot = new ArrayList<>(loot.stream().filter(o -> !o.isEmpty()).toList());
+        //add to loot (add instead of setting so hub loot doesn't replace the current loot when closing instances
+        this.loot = new ArrayList<>(this.loot);
+        this.loot.addAll(loot);
+
+        setChanged();
 
         lootCooldown = 60;
     }
@@ -143,7 +146,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
             BlockPos bp = getBlockPos();
             if (loot == null || loot.isEmpty())
             {
-                level.setBlockAndUpdate(bp, getBlockState().trySetValue(PortalBlock.STATE, PortalBlock.State.CLOSED));
+                level.setBlockAndUpdate(bp, getBlockState().trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN));
                 level.playSound(null, bp, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS);
                 return;
             }
@@ -201,11 +204,11 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                     //if not in a isHub
                     else
                     {
-                        //get isHub
+                        //get hub
                         TimelessInstance hub = TimelessManager.getOrNull(level.getServer(), currentInstance.linkedInstance);
                         TimelessInstance newDungeon;
 
-                        //if isHub linked instance is the one youre already in, make new one and increase stage
+                        //if isHub linked instance is the one you're already in, make new one and increase stage
 
                         //if isHub is not linked, make new dungeon from random uuid
                         if (hub == null)
@@ -230,7 +233,6 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         if (!newDungeon.isHub())
                             //set linked to the isHub (currentInstance.linkedInstance holds the isHub)
                             newDungeon.linkedInstance = currentInstance.linkedInstance;
-
 
                         //add player
                         newDungeon.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);

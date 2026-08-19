@@ -105,15 +105,11 @@ public class TimelessManager extends SavedData
 
     public void tick(ServerLevel sl)
     {
-        //set instances finished to closed if it should not stay open (aka the children instances can also close)
-        instances.forEach(o ->
-        {
-            if (o.shouldClose(sl))
-            {
-                o.phase = TimelessInstance.Phase.CLOSED;
-                o.kickPlayers(sl);
-            }
-        });
+        if (sl.getWeatherData().isRaining() || sl.getWeatherData().isThundering())
+            sl.getWeatherData().setClearWeatherTime(Integer.MAX_VALUE);
+
+        //attempt close instance
+        instances.forEach(o -> o.attemptClose(sl));
 
         instances.stream().filter(o -> o.shouldTick(sl)).forEach(o -> o.tick(sl));
         instances.removeIf(o -> o.phase.equals(TimelessInstance.Phase.CLOSED));

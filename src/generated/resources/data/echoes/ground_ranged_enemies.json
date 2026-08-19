@@ -3,6 +3,9 @@
     "damage_increase_per_level": 1.0,
     "health_increase_per_level": 2.0,
     "id": "echoes:hollowed",
-    "weight": 10
+    "level_range": 10,
+    "loot_rolls": 1,
+    "preferred_level": 0,
+    "weight": 0
   }
 ]

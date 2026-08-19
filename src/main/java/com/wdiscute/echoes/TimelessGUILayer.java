@@ -2,15 +2,21 @@ package com.wdiscute.echoes;
 
 import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
+import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.ScreenUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.gui.GuiLayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TimelessGUILayer implements GuiLayer
 {
@@ -22,13 +28,57 @@ public class TimelessGUILayer implements GuiLayer
 
     public long lastFrame = System.currentTimeMillis();
     public float smoothSouls = 0;
+    private static final List<TimedItemStack> loot = new ArrayList<>();
+
+    public static void addLoot(MaybeStack stack, boolean showNotif)
+    {
+        ItemStack itemStack = stack.toStack();
+        if (!itemStack.isEmpty())
+        {
+            List<TimedItemStack> list = loot.stream().filter(o -> ItemStack.isSameItemSameComponents(o.stack, itemStack)).toList();
+            if (list.isEmpty())
+                loot.add(new TimedItemStack(itemStack, showNotif ? 200 : -1));
+            else
+            {
+                list.getFirst().count += itemStack.getCount();
+                list.getFirst().ticks = showNotif ? 200 : -1;
+            }
+        }
+    }
+
+    public static void tick(Level level)
+    {
+        loot.forEach(o -> o.ticks--);
+    }
+
+    public static void setLoot(List<MaybeStack> list)
+    {
+        loot.clear();
+
+        for (MaybeStack maybeStack : list)
+            addLoot(maybeStack, false);
+    }
+
+    private static class TimedItemStack
+    {
+        ItemStack stack;
+        int ticks;
+        int count;
+
+        public TimedItemStack(ItemStack stack, int ticks)
+        {
+            this.stack = stack;
+            this.ticks = ticks;
+            this.count = stack.getCount();
+        }
+    }
 
     @Override
     public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker)
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
-        if(Minecraft.getInstance().options.hideGui) return;
+        if (Minecraft.getInstance().options.hideGui) return;
 
         TimelessData timelessData = TimelessData.get(player);
         TimelessHearts timelessHearts = TimelessHearts.get(player);
@@ -38,6 +88,7 @@ public class TimelessGUILayer implements GuiLayer
 
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        Font font = Minecraft.getInstance().font;
 
         //
         //                         ,--.     ,--.
@@ -60,14 +111,46 @@ public class TimelessGUILayer implements GuiLayer
         SOUL_BAR_BACKGROUND.render(guiGraphics, x, y);
         SOUL_BAR_PROGRESS.render(guiGraphics, x + 35, y, 35, 0, barWidth, 20);
 
+        //
+        // ,--.                   ,--.
+        // |  |  ,---.   ,---.  ,-'  '-.
+        // |  | | .-. | | .-. | '-.  .-'
+        // |  | ' '-' ' ' '-' '   |  |
+        // `--'  `---'   `---'    `--'
+        //
+
+        List<TimedItemStack> filteredLoot = player.isCrouching() ? List.copyOf(loot) : (loot.stream().filter(o -> o.ticks > 0).toList());
+        for (int i = 0; i < filteredLoot.size(); i++)
+        {
+            int cornerOffset = 10;
+            TimedItemStack timedItemStack = filteredLoot.get(i);
+            ItemStack stack = timedItemStack.stack;
+
+            MutableComponent text = MutableComponent.create(stack.getHoverName().getContents());
+            for (Component sibling : text.getSiblings())
+                text.append(sibling);
+            text.append(Component.literal(" x" + timedItemStack.count));
+
+            ScreenUtils.fill(guiGraphics,
+                    cornerOffset - 5,
+                    height - cornerOffset - 18 - i * 24, 30 + font.width(text.getVisualOrderText()),
+                    20, ((int) (255 - 136 * Math.clamp(200 - timedItemStack.ticks, 0, 20) / 20.0) << 24)
+                        | ((int) (255 * (1 - Math.clamp(200 - timedItemStack.ticks, 0, 20) / 20.0)) * 0x010101));
+
+            ScreenUtils.text(guiGraphics, font, text,
+                    cornerOffset + 20, height - cornerOffset - 12 - i * 24, 0xffffffff, true);
+
+            ScreenUtils.item(guiGraphics, stack, cornerOffset, height - cornerOffset - 16 - i * 24);
+
+        }
 
 
         //
-        //                         ,--.     ,--.                                 ,--.
-        // ,---.   ,---.  ,--.,--. |  |     |  ,---.   ,---.   ,--,--. ,--.--. ,-'  '-.  ,---.
-        //(  .-'  | .-. | |  ||  | |  |     |  .-.  | | .-. : ' ,-.  | |  .--' '-.  .-' (  .-'
-        //.-'  `) ' '-' ' '  ''  ' |  |     |  | |  | \   --. \ '-'  | |  |      |  |   .-'  `)
-        //`----'   `---'   `----'  `--'     `--' `--'  `----'  `--`--' `--'      `--'   `----'
+        //                          ,--.     ,--.                                 ,--.
+        //  ,---.   ,---.  ,--.,--. |  |     |  ,---.   ,---.   ,--,--. ,--.--. ,-'  '-.  ,---.
+        // (  .-'  | .-. | |  ||  | |  |     |  .-.  | | .-. : ' ,-.  | |  .--' '-.  .-' (  .-'
+        // .-'  `) ' '-' ' '  ''  ' |  |     |  | |  | \   --. \ '-'  | |  |      |  |   .-'  `)
+        // `----'   `---'   `----'  `--'     `--' `--'  `----'  `--`--' `--'      `--'   `----'
         //
 
         //render empty hearts overlay
@@ -84,11 +167,6 @@ public class TimelessGUILayer implements GuiLayer
             SOUL_HEART_HALF.render(guiGraphics, x + 206 - 8 * fullHearts, y - 2);
 
 
-
-
-
-
-
         //display time remaining if not Long.MAX_VALUE (isHub)
         if (timelessData.timeToExit() != Long.MAX_VALUE)
         {
@@ -101,11 +179,11 @@ public class TimelessGUILayer implements GuiLayer
             long remainingSeconds = seconds % 60;
 
             String time = String.format("%02d:%02d", minutes, remainingSeconds);
-            ScreenUtils.centeredText(guiGraphics, Minecraft.getInstance().font, Component.literal(time), width / 2, 10, 0xffffffff, true);
+            ScreenUtils.centeredText(guiGraphics, font, Component.literal(time), width / 2, 10, 0xffffffff, true);
         }
 
-        ScreenUtils.centeredText(guiGraphics, Minecraft.getInstance().font, Component.literal("level: " + timelessData.currentStage()), width / 2, 20, 0xffffffff, true);
-        ScreenUtils.centeredText(guiGraphics, Minecraft.getInstance().font, Component.literal("souls: " + timelessData.souls()), width / 2, 30, 0xffffffff, true);
+        ScreenUtils.centeredText(guiGraphics, font, Component.literal("level: " + timelessData.currentStage()), width / 2, 20, 0xffffffff, true);
+        ScreenUtils.centeredText(guiGraphics, font, Component.literal("souls: " + timelessData.souls()), width / 2, 30, 0xffffffff, true);
     }
 }
 

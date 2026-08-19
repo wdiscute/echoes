@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.timeless.TimelessLevelEntry;
 import com.wdiscute.echoes.timeless.TimelessEnemyEntry;
+import com.wdiscute.echoes.timeless.TimelessLootEntry;
 import com.wdiscute.utils.DataEntry;
 import com.wdiscute.utils.MaybeStack;
 import net.minecraft.resources.Identifier;
@@ -16,6 +17,10 @@ public interface ECDataEntries
 {
     DataEntry<List<TimelessLevelEntry>> TIMELESS_LEVELS = DataEntry.register(Echoes.rl("timeless_levels"),
             TimelessLevelEntry.CODEC.listOf(),
+            List.of());
+
+    DataEntry<List<TimelessLootEntry>> TIMELESS_LOOT = DataEntry.register(Echoes.rl("timeless_loot"),
+            TimelessLootEntry.CODEC.listOf(),
             List.of());
 
     DataEntry<Map<Identifier, Float>> SOULS = DataEntry.register(Echoes.rl("souls_per_entity"),

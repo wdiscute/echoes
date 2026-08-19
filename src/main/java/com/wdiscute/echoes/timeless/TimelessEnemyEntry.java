@@ -8,17 +8,18 @@ import net.minecraft.server.level.ServerLevel;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record TimelessEnemyEntry(Identifier id, int preferredLevel, int weight, int levelRange, float healthIncrease,
-                                 float damageIncrease)
+public record TimelessEnemyEntry(Identifier id, int preferredLevel, int levelRange, int weight, float healthIncrease,
+                                 float damageIncrease, float lootRolls)
 {
     public static final Codec<TimelessEnemyEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(TimelessEnemyEntry::id),
-                    Codec.INT.optionalFieldOf("preferred_level", 0).forGetter(TimelessEnemyEntry::preferredLevel),
+                    Codec.INT.fieldOf("preferred_level").forGetter(TimelessEnemyEntry::preferredLevel),
+                    Codec.INT.fieldOf("level_range").forGetter(TimelessEnemyEntry::levelRange),
                     Codec.INT.fieldOf("weight").forGetter(TimelessEnemyEntry::weight),
-                    Codec.INT.optionalFieldOf("level_range", 0).forGetter(TimelessEnemyEntry::levelRange),
                     Codec.FLOAT.fieldOf("health_increase_per_level").forGetter(TimelessEnemyEntry::healthIncrease),
-                    Codec.FLOAT.fieldOf("damage_increase_per_level").forGetter(TimelessEnemyEntry::damageIncrease)
+                    Codec.FLOAT.fieldOf("damage_increase_per_level").forGetter(TimelessEnemyEntry::damageIncrease),
+                    Codec.FLOAT.fieldOf("loot_rolls").forGetter(TimelessEnemyEntry::lootRolls)
             ).apply(instance, TimelessEnemyEntry::new)
     );
 

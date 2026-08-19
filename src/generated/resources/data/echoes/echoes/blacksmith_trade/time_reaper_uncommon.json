@@ -9,13 +9,11 @@
       "identifier": "echoes:echoing_marrow"
     },
     {
-      "count": 1,
       "identifier": "echoes:rot_brain"
     }
   ],
   "rarity": "uncommon",
   "stack": {
-    "count": 1,
     "data_components_patch": {
       "echoes:perks": [
         {
