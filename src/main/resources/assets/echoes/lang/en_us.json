@@ -31,7 +31,10 @@
   "block.echoes.sculked_deepslate_stairs" : "Sculked Deepslate Stairs",
   "block.echoes.sculked_deepslate_wall" : "Sculked Deepslate Wall",
 
-
+  "block.echoes.sculked_deepslate_bricks" : "Sculked Deepslate Bricks",
+  "block.echoes.sculked_deepslate_bricks_slab" : "Sculked Deepslate Bricks Slab",
+  "block.echoes.sculked_deepslate_bricks_stairs" : "Sculked Deepslate Bricks Stairs",
+  "block.echoes.sculked_deepslate_bricks_wall" : "Sculked Deepslate Bricks Wall",
 
 
 
@@ -95,7 +98,7 @@
 
   "section.echoes.materials" : "Materials",
 
-  "item.echoes.sculk_tissue" : "Sculk Tissue",
+  "item.echoes.sculk_spawn" : "Sculk Spawn",
   "item.echoes.hollowed_spine" : "Hollowed Spine",
   "item.echoes.sculked_teeth" : "Sculked Teeth",
   "block.echoes.sculk_tendril" : "Sculk Tendril",

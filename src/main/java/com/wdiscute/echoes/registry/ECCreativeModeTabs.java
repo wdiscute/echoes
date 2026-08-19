@@ -68,9 +68,6 @@ public class ECCreativeModeTabs
                         .add(ECItems.LUCENT_SHARD)
                         .add(ECItems.CRYSTAL_CORE)
                         .add(ECItems.LUCENT_DIE)
-
-
-
         );
 
         FancyTabSections.addSection(echoes,
@@ -82,10 +79,26 @@ public class ECCreativeModeTabs
                         .add(ECBlocks.SCULK_PILLAR)
                         .add(ECBlocks.SCULK_SLAB)
 
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+
+
+
                         .add(ECBlocks.SCULKED_DEEPSLATE)
                         .add(ECBlocks.SCULKED_DEEPSLATE_STAIRS)
                         .add(ECBlocks.SCULKED_DEEPSLATE_SLAB)
                         .add(ECBlocks.SCULKED_DEEPSLATE_WALL)
+
+                        .add(Items.AIR)
+
+                        .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_WALL)
+                        .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_SLAB)
+                        .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_STAIRS)
+                        .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS)
+
 
         );
 
@@ -103,8 +116,6 @@ public class ECCreativeModeTabs
                         .add(ECBlocks.CUT_GLEEMSLATE_SLAB)
                         .add(ECBlocks.CUT_GLEEMSLATE)
 
-
-
                         .add(ECBlocks.GLEEMSLATE_TILES)
                         .add(ECBlocks.GLEEMSLATE_TILES_SLAB)
                         .add(ECBlocks.GLEEMSLATE_TILES_STAIRS)
@@ -115,21 +126,15 @@ public class ECCreativeModeTabs
                         .add(ECBlocks.GLEEMSLATE_BRICKS_SLAB)
                         .add(ECBlocks.GLEEMSLATE_BRICKS)
 
-
-                        .add(Items.AIR)
                         .add(Items.AIR)
                         .add(ECBlocks.GLEEMSLATE_GRASS)
                         .add(ECBlocks.CHISELED_GLEEMSLATE)
+                        .add(Items.AIR)
+                        .add(ECBlocks.PRISMA_PANE)
+                        .add(Items.AIR)
                         .add(ECBlocks.GLEEMSLATE_PILLAR)
                         .add(ECBlocks.TRIMMED_GLEEMSLATE)
                         .add(Items.AIR)
-                        .add(Items.AIR)
-                        .add(Items.AIR)
-
-
-                        //.add(ECBlocks.PRISMA_PANE)
-
-
         );
 
 

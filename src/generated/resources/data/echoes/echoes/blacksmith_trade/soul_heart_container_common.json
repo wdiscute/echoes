@@ -1,0 +1,17 @@
+{
+  "cost": [
+    {
+      "count": 4,
+      "identifier": "echoes:rot_brain"
+    },
+    {
+      "count": 4,
+      "identifier": "echoes:hollowed_spine"
+    }
+  ],
+  "rarity": "common",
+  "stack": {
+    "identifier": "echoes:soul_heart_container"
+  },
+  "weight": 10
+}

@@ -6,6 +6,7 @@ import com.wdiscute.echoes.registry.ECBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
@@ -32,7 +33,11 @@ public class DGECBlocksTagsProvider extends BlockTagsProvider
                 .add(Blocks.SCULK)
                 .add(ECBlocks.SCULK_PILLAR.get())
                 .add(ECBlocks.SCULKED_DEEPSLATE.get())
+                .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS.get())
         ;
+
+        tag(BlockTags.SUPPORTS_VEGETATION)
+                .add(ECBlocks.GLEEMSLATE_GRASS.get());
 
 
         tag(BlockTags.WALLS)

@@ -58,18 +58,26 @@ public interface ECBlocks
     DeferredBlock<Block> GLEEMSLATE_BRICKS_WALL = register("gleemslate_bricks_wall", GleemslateWallBlock::new);
 
 
+
+
     //sculk
     DeferredBlock<Block> SCULK_PILLAR = register("sculk_pillar", (d) -> new RotatedPillarBlock(d.strength(1.5F, 6.0F).sound(SoundType.BONE_BLOCK)));
     DeferredBlock<Block> SCULK_SLAB = register("sculk_slab", (d) -> new SlabBlock(d.strength(1.5F, 6.0F).sound(SoundType.BONE_BLOCK)));
     DeferredBlock<Block> SCULK_TENDRIL = register("sculk_tendril", SculkTendrilBlock::new);
-
-
 
     //sculked deepslate
     DeferredBlock<Block> SCULKED_DEEPSLATE = register("sculked_deepslate", (d) -> new Block(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
     DeferredBlock<Block> SCULKED_DEEPSLATE_SLAB = register("sculked_deepslate_slab", (d) -> new SlabBlock(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
     DeferredBlock<Block> SCULKED_DEEPSLATE_STAIRS = register("sculked_deepslate_stairs", (d) -> new StairBlock(SCULKED_DEEPSLATE.get().defaultBlockState(), d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
     DeferredBlock<Block> SCULKED_DEEPSLATE_WALL = register("sculked_deepslate_wall", (d) -> new WallBlock(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
+
+    //sculked deepslate bricks
+    DeferredBlock<Block> SCULKED_DEEPSLATE_BRICKS = register("sculked_deepslate_bricks", (d) -> new Block(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
+    DeferredBlock<Block> SCULKED_DEEPSLATE_BRICKS_SLAB = register("sculked_deepslate_bricks_slab", (d) -> new SlabBlock(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
+    DeferredBlock<Block> SCULKED_DEEPSLATE_BRICKS_STAIRS = register("sculked_deepslate_bricks_stairs", (d) -> new StairBlock(SCULKED_DEEPSLATE_BRICKS.get().defaultBlockState(), d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
+    DeferredBlock<Block> SCULKED_DEEPSLATE_BRICKS_WALL = register("sculked_deepslate_bricks_wall", (d) -> new WallBlock(d.strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE)));
+
+
 
     static DeferredBlock<Block> register(String name, Function<BlockBehaviour.Properties, ? extends Block> supplier)
     {

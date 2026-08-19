@@ -21,6 +21,7 @@ public class HollowedEntity extends AbstractSkeleton implements SculkAura
     public HollowedEntity(EntityType<? extends HollowedEntity> type, Level level)
     {
         super(type, level);
+        xpReward = 0;
         setDropChance(EquipmentSlot.MAINHAND, 0);
         setDropChance(EquipmentSlot.OFFHAND, 0);
         setDropChance(EquipmentSlot.HEAD, 0);

@@ -47,7 +47,7 @@ public class TimelessCorpse extends Entity implements SculkAura
         return true;
     }
 
-    float auraSize = 9;
+    float auraSize = 5;
 
     @Override
     public void tick()

@@ -50,6 +50,7 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.SCULK_PILLAR.asItem().builtInRegistryHolder());
         list.add(ECBlocks.TIMELESS_MARKER.asItem().builtInRegistryHolder());
         list.add(ECBlocks.SCULKED_DEEPSLATE.asItem().builtInRegistryHolder());
+        list.add(ECBlocks.SCULKED_DEEPSLATE_BRICKS.asItem().builtInRegistryHolder());
 
         //items
         list.add(ECItems.SCULK_SPAWN.getDelegate());
@@ -81,6 +82,11 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.SCULKED_DEEPSLATE_STAIRS);
         list.add(ECBlocks.SCULKED_DEEPSLATE_SLAB);
         list.add(ECBlocks.SCULKED_DEEPSLATE_WALL);
+
+        list.add(ECBlocks.SCULKED_DEEPSLATE_BRICKS);
+        list.add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_STAIRS);
+        list.add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_SLAB);
+        list.add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_WALL);
 
         list.add(ECBlocks.TIMELESS_MARKER);
 
@@ -170,6 +176,18 @@ public class ECDGModelProvider extends ModelProvider
                     .getFamily();
 
             blockModels.createTrivialCube(ECBlocks.SCULKED_DEEPSLATE.get());
+            blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
+        }
+
+        //sculked deepslate bricks
+        {
+            BlockFamily family = new BlockFamily.Builder(ECBlocks.SCULKED_DEEPSLATE_BRICKS.get())
+                    .wall(ECBlocks.SCULKED_DEEPSLATE_BRICKS_WALL.get())
+                    .stairs(ECBlocks.SCULKED_DEEPSLATE_BRICKS_STAIRS.get())
+                    .slab(ECBlocks.SCULKED_DEEPSLATE_BRICKS_SLAB.get())
+                    .getFamily();
+
+            blockModels.createTrivialCube(ECBlocks.SCULKED_DEEPSLATE_BRICKS.get());
             blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
         }
 

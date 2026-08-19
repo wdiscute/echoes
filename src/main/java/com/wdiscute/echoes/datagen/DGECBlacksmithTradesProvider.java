@@ -62,6 +62,10 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.ROT_BRAIN.get()),
                 new MaybeStack(ECItems.SCULKED_TEETH.get(), 10));
 
+        //10 spine > echoing marrow
+        resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.SOUL_HEART_CONTAINER.get()),
+                new MaybeStack(ECItems.ROT_BRAIN.get(), 4),new MaybeStack(ECItems.HOLLOWED_SPINE.get(), 4));
+
 
         //
         //                         ,--. ,--.

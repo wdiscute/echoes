@@ -59,6 +59,11 @@ public class DGECBlockLootTableProvider extends BlockLootSubProvider
         dropSelf(ECBlocks.SCULKED_DEEPSLATE_SLAB.get());
         dropSelf(ECBlocks.SCULKED_DEEPSLATE_WALL.get());
 
+        dropSelf(ECBlocks.SCULKED_DEEPSLATE_BRICKS.get());
+        dropSelf(ECBlocks.SCULKED_DEEPSLATE_BRICKS_STAIRS.get());
+        dropSelf(ECBlocks.SCULKED_DEEPSLATE_BRICKS_SLAB.get());
+        dropSelf(ECBlocks.SCULKED_DEEPSLATE_BRICKS_WALL.get());
+
         dropSelf(ECBlocks.SCULK_SLAB.get());
         dropSelf(ECBlocks.SCULK_PILLAR.get());
     }

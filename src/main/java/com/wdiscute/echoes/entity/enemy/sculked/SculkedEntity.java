@@ -3,6 +3,7 @@ package com.wdiscute.echoes.entity.enemy.sculked;
 import com.wdiscute.echoes.SculkAura;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
@@ -16,6 +17,13 @@ public class SculkedEntity extends Zombie implements SculkAura
     {
         super(type, level);
         xpReward = 0;
+        setDropChance(EquipmentSlot.MAINHAND, 0);
+        setDropChance(EquipmentSlot.OFFHAND, 0);
+        setDropChance(EquipmentSlot.HEAD, 0);
+        setDropChance(EquipmentSlot.BODY, 0);
+        setDropChance(EquipmentSlot.LEGS, 0);
+        setDropChance(EquipmentSlot.FEET, 0);
+        setDropChance(EquipmentSlot.CHEST, 0);
     }
 
     public static AttributeSupplier.Builder createAttributes()

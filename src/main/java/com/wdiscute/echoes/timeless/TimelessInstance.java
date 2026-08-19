@@ -49,6 +49,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
@@ -148,7 +149,7 @@ public class TimelessInstance
         //if luck allows for the extra .X% to give an extra drop
         //example 5.3f will give 5 rolls + 30% chance of extra
         float extraDrop = lootCount % 1;
-        if(sl.getRandom().nextFloat() < extraDrop)
+        if (sl.getRandom().nextFloat() < extraDrop)
             lootCount++;
 
         for (int i = 0; i < lootCount; i++)
@@ -256,8 +257,9 @@ public class TimelessInstance
         STORED_STATES.put(spawnPoint, Blocks.AIR.defaultBlockState());
         FLIPPED_BLOCKS.remove(spawnPoint);
 
-        //set origin block for debug
-        sl.setBlockAndUpdate(origin, Blocks.EMERALD_BLOCK.defaultBlockState());
+        //set origin block for debug in dev
+        if (!FMLLoader.getCurrent().isProduction())
+            sl.setBlockAndUpdate(origin, Blocks.EMERALD_BLOCK.defaultBlockState());
     }
 
     public void onHeartHit(ServerLevel sl, SculkHeartEntity heartEntity)

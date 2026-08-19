@@ -1,0 +1,32 @@
+{
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "echoes:portal/portal_3",
+        "processors": []
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "echoes:portal/portal_2",
+        "processors": []
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "projection": "rigid",
+        "location": "echoes:portal/portal_1",
+        "processors": []
+      }
+    }
+  ],
+  "fallback": "minecraft:empty"
+}
