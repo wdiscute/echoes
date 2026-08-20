@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.entity.heart;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.wdiscute.echoes.entity.lantern.LanternModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -26,7 +27,9 @@ public class SculkHeartRenderer extends EntityRenderer<SculkHeartEntity, SculkHe
         super.submit(state, poseStack, node, camera);
 
         poseStack.translate(0, 1.3, 0);
-        poseStack.scale(1, -1, 1);
+        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+        poseStack.mulPose(Axis.YP.rotationDegrees(180));
+        poseStack.scale(1, 1, 1);
 
 
         node.submitModel(

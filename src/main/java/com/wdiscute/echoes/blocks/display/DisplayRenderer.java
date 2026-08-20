@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
@@ -35,6 +36,14 @@ public class DisplayRenderer implements BlockEntityRenderer<DisplayBlockEntity, 
     {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 
+        state.rotationOffset = switch (blockEntity.getBlockState().getValueOrElse(DisplayBlock.FACING, Direction.NORTH))
+        {
+            case NORTH -> 0;
+            case SOUTH -> 180;
+            case WEST -> 90;
+            case EAST -> 270;
+            default -> 0;
+        };
         state.stack = blockEntity.trade.stack().toStack();
         this.itemModelResolver.updateForNonLiving(state.item, state.stack, ItemDisplayContext.FIXED, Minecraft.getInstance().player);
     }
@@ -52,7 +61,7 @@ public class DisplayRenderer implements BlockEntityRenderer<DisplayBlockEntity, 
         float y = (float) (Math.sin(Util.getMillis() / 2000f) * 20f);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(x));
-        poseStack.mulPose(Axis.YP.rotationDegrees(y));
+        poseStack.mulPose(Axis.YP.rotationDegrees(y + state.rotationOffset));
         poseStack.mulPose(Axis.ZP.rotationDegrees((float) (Math.toRadians(Util.getMillis() % 360f) / 600f)));
 
         if (!state.stack.isEmpty())

@@ -35,7 +35,10 @@ public class SoulTraderRenderer extends EntityRenderer<SoulTraderEntity, SoulTra
         double y = Math.sin(t * 1.10);
         poseStack.translate(new Vec3(0, y/5, 0));
 
-        poseStack.scale(2, -2, 2);
+        poseStack.scale(2, 2, 2);
+
+        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+
 
 
 
