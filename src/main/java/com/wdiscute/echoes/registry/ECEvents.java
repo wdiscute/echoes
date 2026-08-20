@@ -5,6 +5,7 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
+import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.network.ECCBAddLootPayload;
 import com.wdiscute.echoes.network.ECCBSetLootPayload;
 import com.wdiscute.echoes.timeless.TimelessHearts;
@@ -189,8 +190,9 @@ public class ECEvents
     }
 
     @SubscribeEvent
-    public static void registerAttributed(EntityAttributeCreationEvent event)
+    public static void registerAttributes(EntityAttributeCreationEvent event)
     {
+        event.put(ECEntities.SOUL_TRADER.get(), SoulTraderEntity.createAttributes().build());
         event.put(ECEntities.SCULK_HEART.get(), SculkHeartEntity.createAttributes().build());
         event.put(ECEntities.SCULKED.get(), SculkedEntity.createAttributes().build());
         event.put(ECEntities.HOLLOWED.get(), AbstractSkeleton.createAttributes().build());
@@ -211,7 +213,7 @@ public class ECEvents
     }
 
     @SubscribeEvent
-    public static void registerAttributed(RegisterPayloadHandlersEvent event)
+    public static void registerPayloads(RegisterPayloadHandlersEvent event)
     {
         final PayloadRegistrar registrar = event.registrar("1");
 

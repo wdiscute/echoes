@@ -7,6 +7,7 @@ import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
+import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -31,9 +32,9 @@ public interface ECEntities
             register("lantern", LanternEntity::new, MobCategory.MISC,
                     b -> b.sized(1f, 1f));
 
-    DeferredHolder<EntityType<?>, EntityType<LanternEntity>> LANTERN =
-            register("lantern", LanternEntity::new, MobCategory.MISC,
-                    b -> b.sized(1f, 1f));
+    DeferredHolder<EntityType<?>, EntityType<SoulTraderEntity>> SOUL_TRADER =
+            register("soul_trader", SoulTraderEntity::new, MobCategory.MISC,
+                    b -> b.sized(1f, 2f));
 
     DeferredHolder<EntityType<?>, EntityType<SculkHeartEntity>> SCULK_HEART =
             register("sculk_heart", SculkHeartEntity::new, MobCategory.MONSTER,

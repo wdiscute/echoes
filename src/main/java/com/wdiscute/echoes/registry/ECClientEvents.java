@@ -19,6 +19,9 @@ import com.wdiscute.echoes.entity.lantern.LanternRenderer;
 import com.wdiscute.echoes.ECPostProcessing;
 import com.wdiscute.echoes.entity.soul.SoulModel;
 import com.wdiscute.echoes.entity.soul.SoulRenderer;
+import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
+import com.wdiscute.echoes.entity.trader.SoulTraderModel;
+import com.wdiscute.echoes.entity.trader.SoulTraderRenderer;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.particles.SculkParticle;
@@ -82,6 +85,7 @@ public class ECClientEvents
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event)
     {
+        EntityRenderers.register(ECEntities.SOUL_TRADER.get(), SoulTraderRenderer::new);
         EntityRenderers.register(ECEntities.LANTERN.get(), LanternRenderer::new);
         EntityRenderers.register(ECEntities.SCULK_HEART.get(), SculkHeartRenderer::new);
         EntityRenderers.register(ECEntities.TIMELESS_CORPSE.get(), TimelessCorpseRenderer::new);
@@ -94,6 +98,7 @@ public class ECClientEvents
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
+        event.registerLayerDefinition(SoulTraderModel.LAYER_LOCATION, SoulTraderModel::createBodyLayer);
         event.registerLayerDefinition(HeartModel.LAYER_LOCATION, HeartModel::createBodyLayer);
         event.registerLayerDefinition(LanternModel.LAYER_LOCATION, LanternModel::createBodyLayer);
         event.registerLayerDefinition(SoulModel.LAYER_LOCATION, SoulModel::createBodyLayer);

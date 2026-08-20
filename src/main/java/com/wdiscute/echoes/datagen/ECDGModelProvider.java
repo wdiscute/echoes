@@ -44,9 +44,6 @@ public class ECDGModelProvider extends ModelProvider
         list.add(ECBlocks.GLEEMSLATE_PILLAR.asItem().builtInRegistryHolder());
         list.add(ECBlocks.TRIMMED_GLEEMSLATE.asItem().builtInRegistryHolder());
 
-        list.add(ECBlocks.PRISMA_PANE.asItem().builtInRegistryHolder());
-
-
         list.add(ECBlocks.SCULK_PILLAR.asItem().builtInRegistryHolder());
         list.add(ECBlocks.TIMELESS_MARKER.asItem().builtInRegistryHolder());
         list.add(ECBlocks.SCULKED_DEEPSLATE.asItem().builtInRegistryHolder());

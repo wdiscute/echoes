@@ -7,6 +7,7 @@ import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
+import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataEntries;
@@ -144,11 +145,8 @@ public class TimelessProcessor
             //spawn blacksmith npc
             if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_NPC))
             {
-                Villager entity = EntityType.VILLAGER.spawn(sl, bp, EntitySpawnReason.TRIGGERED);
+                SoulTraderEntity entity = ECEntities.SOUL_TRADER.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
                 entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
-                entity.setCustomName(Component.literal("souls-themed blacksmith npc (not a villager)"));
-                entity.setCustomNameVisible(true);
-                sl.addFreshEntityWithPassengers(entity);
             }
 
             //spawn blacksmith stand

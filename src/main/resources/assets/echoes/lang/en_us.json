@@ -11,7 +11,7 @@
   "block.echoes.portal" : "Timeless Portal",
   "block.echoes.display" : "Blacksmith Display",
   "block.echoes.timeless_marker" : "Timeless Marker",
-  "block.echoes.soul_heart_container" : "Soul Heart Container",
+  "item.echoes.soul_heart_container" : "Soul Heart Container",
 
 
 
@@ -42,6 +42,8 @@
 
 
   "section.echoes.prisma" : "Prisma",
+
+  "block.echoes.prisma_pane" : "Prisma Pane",
 
   "block.echoes.gleemslate_grass" : "Gleemslate Grass",
   "block.echoes.chiseled_gleemslate" : "Chiseled Gleemslate",

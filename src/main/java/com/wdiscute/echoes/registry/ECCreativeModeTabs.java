@@ -103,7 +103,7 @@ public class ECCreativeModeTabs
         );
 
         FancyTabSections.addSection(echoes,
-                new SectionColored(Echoes.rl("gleemslate"))
+                new SectionColored(Echoes.rl("prisma"))
                         .setBannerColor(0xff344545)
 
                         .add(ECBlocks.GLEEMSLATE)

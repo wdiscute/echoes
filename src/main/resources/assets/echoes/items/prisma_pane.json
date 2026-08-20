@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "echoes:block/prisma_pane"
+    "model": "echoes:item/prisma_pane"
   }
 }
