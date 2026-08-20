@@ -2,11 +2,11 @@
   "cost": [
     {
       "count": 15,
-      "identifier": "echoes:lattice"
+      "identifier": "echoes:prisma_shard"
     },
     {
       "count": 8,
-      "identifier": "echoes:prisma_shard"
+      "identifier": "echoes:lattice"
     }
   ],
   "rarity": "rare",

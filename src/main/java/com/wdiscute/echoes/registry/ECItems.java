@@ -36,6 +36,7 @@ public interface ECItems
     DeferredItem<Item> SCULK_SPAWN = ITEMS.registerItem("sculk_spawn", BasicItem::new);
     DeferredItem<Item> HOLLOWED_SPINE = ITEMS.registerItem("hollowed_spine", BasicItem::new);
     DeferredItem<Item> SCULKED_TEETH = ITEMS.registerItem("sculked_teeth", BasicItem::new);
+    //it's a block so cant be here -> DeferredItem<Item> SCULKED_TENDRIL
     DeferredItem<Item> ECHOING_MARROW = ITEMS.registerItem("echoing_marrow", BasicItem::new);
     DeferredItem<Item> ROT_BRAIN = ITEMS.registerItem("rot_brain", BasicItem::new); // rare drop from sculked
 

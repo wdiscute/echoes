@@ -55,6 +55,7 @@ public class ECDGModelProvider extends ModelProvider
         //items
         list.add(ECItems.SCULK_SPAWN.getDelegate());
         list.add(ECItems.ECHO_BLADE.getDelegate());
+        list.add(ECItems.SOUL_HEART_CONTAINER.getDelegate());
 
         return list.stream();
     }
@@ -191,6 +192,8 @@ public class ECDGModelProvider extends ModelProvider
             blockModels.familyWithExistingFullBlock(family.getBaseBlock()).generateFor(family);
         }
 
+
+        itemModels.generateFlatItem(ECItems.SOUL_HEART_CONTAINER.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
         //weapons
         //sculk

@@ -206,7 +206,7 @@ public class ECEvents
     @SubscribeEvent
     public static void onEntityPlace(BlockEvent.EntityPlaceEvent event)
     {
-        if (event.getEntity().level().dimension().equals(Echoes.TIMELESS))
+        if (event.getEntity().level().dimension().equals(Echoes.TIMELESS) && event.getEntity() instanceof Player player && !player.hasInfiniteMaterials())
             event.setCanceled(true);
     }
 

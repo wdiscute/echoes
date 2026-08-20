@@ -18,16 +18,16 @@
       "echoes:perks": [
         {
           "amplifiers": [
+            15.0
+          ],
+          "perk": "echoes:extra_damage"
+        },
+        {
+          "amplifiers": [
             20.0,
             4.0
           ],
           "perk": "echoes:extra_damage_consumes_time"
-        },
-        {
-          "amplifiers": [
-            15.0
-          ],
-          "perk": "echoes:extra_damage"
         }
       ],
       "echoes:rarity": "epic"

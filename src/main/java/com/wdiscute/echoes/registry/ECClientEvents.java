@@ -12,6 +12,7 @@ import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
 import com.wdiscute.echoes.entity.enemy.hollowed.HollowedRenderer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedRenderer;
+import com.wdiscute.echoes.entity.heart.HeartModel;
 import com.wdiscute.echoes.entity.heart.SculkHeartRenderer;
 import com.wdiscute.echoes.entity.lantern.LanternModel;
 import com.wdiscute.echoes.entity.lantern.LanternRenderer;
@@ -93,6 +94,7 @@ public class ECClientEvents
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
+        event.registerLayerDefinition(HeartModel.LAYER_LOCATION, HeartModel::createBodyLayer);
         event.registerLayerDefinition(LanternModel.LAYER_LOCATION, LanternModel::createBodyLayer);
         event.registerLayerDefinition(SoulModel.LAYER_LOCATION, SoulModel::createBodyLayer);
         event.registerLayerDefinition(UnleashedSoulModel.LAYER_LOCATION, UnleashedSoulModel::createBodyLayer);

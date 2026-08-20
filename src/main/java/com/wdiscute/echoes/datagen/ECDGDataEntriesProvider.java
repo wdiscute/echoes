@@ -91,8 +91,12 @@ public class ECDGDataEntriesProvider
                 new DataEntryProvider<>(output, lookup, ECDataEntries.TIMELESS_LOOT,
                         List.of(
                                 new TimelessLootEntry(new MaybeStack(Items.DIAMOND), 0, 2, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.EMERALD), 0, 2, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.ECHO_SHARD), 0, 2, 0),
                                 new TimelessLootEntry(new MaybeStack(Items.GOLD_INGOT), 0, 10, 0),
                                 new TimelessLootEntry(new MaybeStack(Items.IRON_INGOT), 0, 10, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.LAPIS_LAZULI), 0, 15, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.REDSTONE, 3), 0, 15, 0),
                                 new TimelessLootEntry(new MaybeStack(ECItems.PRISMA_SHARD), 0, 20, 0)
                         )
                 )

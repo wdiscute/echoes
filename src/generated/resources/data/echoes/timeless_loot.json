@@ -7,6 +7,18 @@
   },
   {
     "stack": {
+      "identifier": "minecraft:emerald"
+    },
+    "weight": 2
+  },
+  {
+    "stack": {
+      "identifier": "minecraft:echo_shard"
+    },
+    "weight": 2
+  },
+  {
+    "stack": {
       "identifier": "minecraft:gold_ingot"
     },
     "weight": 10
@@ -16,6 +28,19 @@
       "identifier": "minecraft:iron_ingot"
     },
     "weight": 10
+  },
+  {
+    "stack": {
+      "identifier": "minecraft:lapis_lazuli"
+    },
+    "weight": 15
+  },
+  {
+    "stack": {
+      "count": 3,
+      "identifier": "minecraft:redstone"
+    },
+    "weight": 15
   },
   {
     "stack": {

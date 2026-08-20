@@ -162,14 +162,14 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 level.playSound(null, bp.above(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 0.3f, 0.3f);
             }
 
-            //drop item twice per second
+            //drop item
             if (lootCooldown == 0)
             {
                 Vec3 itemPos = Vec3.atLowerCornerWithOffset(pos, 0.5, 2, 0.5).add(0, level.getRandom().nextFloat() / 2, 0);
                 ItemEntity entity = new ItemEntity(level, itemPos.x(), itemPos.y(), itemPos.z(), loot.getFirst().toStack());
                 entity.setDefaultPickUpDelay();
                 level.addFreshEntity(entity);
-                lootCooldown = 10;
+                lootCooldown = Math.max(1, (int) Math.round(10.0 / Math.sqrt(loot.size())));
                 loot.removeFirst();
             }
         }

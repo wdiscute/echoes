@@ -62,7 +62,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.ROT_BRAIN.get()),
                 new MaybeStack(ECItems.SCULKED_TEETH.get(), 10));
 
-        //10 spine > echoing marrow
+        //4 rot brains, 4 hollowed spine > soul heart container
         resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.SOUL_HEART_CONTAINER.get()),
                 new MaybeStack(ECItems.ROT_BRAIN.get(), 4),new MaybeStack(ECItems.HOLLOWED_SPINE.get(), 4));
 
@@ -110,11 +110,11 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.ROT_BRAIN.get(), new RarityValues(1, 1, 1, 1, 1))
                 ),
 
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(6, 8, 10, 15, 20)),
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_TIME,
                         new RarityValues(20, 20, 20, 20, 20),
                         new RarityValues(1, 2, 3, 4, 5)
-                ),
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(6, 8, 10, 15, 20))
+                )
         );
 
         //gloombringer
@@ -143,8 +143,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         //prisma sword
         allRarities(context, ECItems.PRISMA_SWORD.get(),
                 List.of(
-                        new RaritifiedCost(ECItems.LATTICE.get(), new RarityValues(1, 5, 15, 32, 64)),
-                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(0, 4, 8, 16, 32))
+                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(1, 5, 15, 32, 64)),
+                        new RaritifiedCost(ECItems.LATTICE.get(), new RarityValues(0, 4, 8, 16, 32))
                 ),
 
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(4, 5, 6, 7, 8)),

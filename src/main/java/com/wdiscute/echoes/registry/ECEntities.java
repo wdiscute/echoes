@@ -31,6 +31,10 @@ public interface ECEntities
             register("lantern", LanternEntity::new, MobCategory.MISC,
                     b -> b.sized(1f, 1f));
 
+    DeferredHolder<EntityType<?>, EntityType<LanternEntity>> LANTERN =
+            register("lantern", LanternEntity::new, MobCategory.MISC,
+                    b -> b.sized(1f, 1f));
+
     DeferredHolder<EntityType<?>, EntityType<SculkHeartEntity>> SCULK_HEART =
             register("sculk_heart", SculkHeartEntity::new, MobCategory.MONSTER,
                     b -> b.sized(3f, 3f));
