@@ -7,6 +7,8 @@ import com.wdiscute.utils.MaybeStack;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -65,6 +67,8 @@ public class TimelessCorpse extends Entity implements SculkAura
 
         if (player.level().isClientSide())
             return stack.isEmpty() ? InteractionResult.FAIL : InteractionResult.SUCCESS;
+
+        player.level().playSound(null, xo, yo, zOld, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.AMBIENT);
 
         player.addItem(stack);
 
