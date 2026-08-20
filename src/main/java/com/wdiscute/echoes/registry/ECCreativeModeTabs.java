@@ -28,7 +28,6 @@ public class ECCreativeModeTabs
                         .setBannerColor(0xff344545)
 
                         .add(ECBlocks.PORTAL)
-                        .add(Items.ECHO_SHARD)
                         .add(ECBlocks.TIMELESS_MARKER)
                         .add(ECBlocks.DISPLAY)
                         .add(ECItems.SOUL_HEART_CONTAINER)

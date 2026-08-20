@@ -22,6 +22,7 @@ public interface ECBlocks
     DeferredBlock<Block> PORTAL = register("portal", PortalBlock::new);
     DeferredBlock<Block> TIMELESS_MARKER = register("timeless_marker", TimelessMarkerBlock::new);
     DeferredBlock<Block> DISPLAY = register("display", DisplayBlock::new);
+    DeferredBlock<Block> CASKET = register("casket", CasketBlock::new);
 
 
     //prisma

@@ -179,7 +179,7 @@ public class TimelessProcessor
             if (type.equals(TimelessMarkerBlock.Type.CHEST))
             {
                 sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
-                BlockState blockState = Blocks.CHEST.defaultBlockState();
+                BlockState blockState = ECBlocks.CASKET.get().defaultBlockState();
                 sl.setBlockAndUpdate(bp, blockState);
             }
 
