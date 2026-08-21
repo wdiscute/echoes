@@ -8,9 +8,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 
-public class EchoWeaponItem extends Item
+public class TimelessWeaponItem extends Item
 {
-    public EchoWeaponItem(Properties properties, float speed)
+    public TimelessWeaponItem(Properties properties, float speed)
     {
         super(properties
                 .attributes(createAttributes(speed))

@@ -16,6 +16,9 @@ import java.util.List;
 
 public class ExtraDamageConsumesSoulsPerk extends SimplePerk
 {
+    //first value = damage added
+    //second value = souls consumed
+
     @Override
     public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, List<Float> value)
     {
@@ -28,19 +31,18 @@ public class ExtraDamageConsumesSoulsPerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
     {
         return List.of(Component.literal("Soulrend").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     @Override
-    public List<MutableComponent> getShopExtendedTooltip(List<Float> value)
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> value)
     {
         List<MutableComponent> list = new ArrayList<>();
 
         list.add(Component.literal("Soulrend").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
-        list.add(Component.literal("Consumes " + Echoes.FORMAT.format(value.get(1)) + " souls"));
-        list.add(Component.literal("to do " + Echoes.FORMAT.format(value.getFirst()) + " damage"));
+        list.add(Component.literal("Consumes " + Echoes.FORMAT.format(value.get(1)) + " souls to do " + Echoes.FORMAT.format(value.getFirst()) + " damage"));
 
         return list;
     }

@@ -5,7 +5,7 @@ import com.wdiscute.echoes.blocks.display.DisplayBlock;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
-import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
+import com.wdiscute.echoes.entity.corpse.TimelessCorpseEntity;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
@@ -17,18 +17,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -70,7 +67,7 @@ public class TimelessProcessor
             //spawn timeless corpse
             if (type.equals(TimelessMarkerBlock.Type.TIMELESS_CORPSE))
             {
-                TimelessCorpse corpse = ECEntities.TIMELESS_CORPSE.get().create(sl, EntitySpawnReason.TRIGGERED);
+                TimelessCorpseEntity corpse = ECEntities.TIMELESS_CORPSE.get().create(sl, EntitySpawnReason.TRIGGERED);
                 corpse.snapTo(bp.getCenter().x, bp.getCenter().y - 0.7, bp.getCenter().z);
 
                 if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.NORTH))

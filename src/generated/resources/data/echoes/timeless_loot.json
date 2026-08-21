@@ -1,41 +1,55 @@
 [
   {
+    "rarity": "legendary",
     "stack": {
       "identifier": "minecraft:diamond"
     },
     "weight": 2
   },
   {
+    "rarity": "epic",
     "stack": {
       "identifier": "minecraft:emerald"
     },
     "weight": 2
   },
   {
+    "rarity": "epic",
     "stack": {
       "identifier": "minecraft:echo_shard"
     },
     "weight": 2
   },
   {
+    "rarity": "rare",
     "stack": {
       "identifier": "minecraft:gold_ingot"
     },
     "weight": 10
   },
   {
+    "rarity": "uncommon",
     "stack": {
       "identifier": "minecraft:iron_ingot"
     },
     "weight": 10
   },
   {
+    "rarity": "uncommon",
+    "stack": {
+      "identifier": "minecraft:copper_ingot"
+    },
+    "weight": 10
+  },
+  {
+    "rarity": "common",
     "stack": {
       "identifier": "minecraft:lapis_lazuli"
     },
     "weight": 15
   },
   {
+    "rarity": "common",
     "stack": {
       "count": 3,
       "identifier": "minecraft:redstone"
@@ -43,6 +57,7 @@
     "weight": 15
   },
   {
+    "rarity": "common",
     "stack": {
       "identifier": "echoes:prisma_shard"
     },

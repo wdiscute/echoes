@@ -1,7 +1,8 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.item.EchoWeaponItem;
+import com.wdiscute.echoes.item.EchoBladeItem;
+import com.wdiscute.echoes.item.TimelessWeaponItem;
 import com.wdiscute.echoes.item.RamattraItem;
 import com.wdiscute.echoes.item.SoulHeartContainer;
 import com.wdiscute.utils.item.BasicItem;
@@ -19,16 +20,16 @@ public interface ECItems
 
 
     //weapons
+    DeferredItem<Item> ECHO_BLADE = ITEMS.registerItem("echo_blade", (p) -> new EchoBladeItem(p, -2.4f));
+
     //sculk
-    DeferredItem<Item> ECHO_BLADE = ITEMS.registerItem("echo_blade", (p) -> new EchoWeaponItem(p, -2.4f));
     DeferredItem<Item> RAMATTRA = ITEMS.registerItem("ramattra", RamattraItem::new);
-    DeferredItem<Item> TIME_REAPER = ITEMS.registerItem("time_reaper", (p) -> new EchoWeaponItem(p, -2.4f));
-    DeferredItem<Item> GLOOMBRINGER = ITEMS.registerItem("gloombringer", (p) -> new EchoWeaponItem(p, -3.4F));
+    DeferredItem<Item> TIME_REAPER = ITEMS.registerItem("time_reaper", (p) -> new TimelessWeaponItem(p, -2.4f));
+    DeferredItem<Item> GLOOMBRINGER = ITEMS.registerItem("gloombringer", (p) -> new TimelessWeaponItem(p, -3.4F));
 
     //prisma
-    DeferredItem<Item> PRISMA_SWORD = ITEMS.registerItem("prisma_sword", (p) -> new EchoWeaponItem(p, -2.4f));
-    DeferredItem<Item> LUCENT_WILL = ITEMS.registerItem("lucent_will", (p) -> new EchoWeaponItem(p, -2.4f));
-    DeferredItem<Item> TIME_KEEPER = ITEMS.registerItem("time_keeper", (p) -> new EchoWeaponItem(p, -2.4f));
+    DeferredItem<Item> LUCENT_WILL = ITEMS.registerItem("lucent_will", (p) -> new TimelessWeaponItem(p, -2.4f));
+    DeferredItem<Item> TIME_KEEPER = ITEMS.registerItem("time_keeper", (p) -> new TimelessWeaponItem(p, -2.4f));
 
 
     //materials

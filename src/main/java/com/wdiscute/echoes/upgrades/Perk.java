@@ -53,11 +53,11 @@ public abstract class Perk
     }
 
 
-    public abstract List<MutableComponent> getItemTooltip(List<Float> value);
+    public abstract List<MutableComponent> getItemTooltip(ItemStack stack, List<Float> value);
 
-    public abstract List<MutableComponent> getShopTooltip(List<Float> value);
+    public abstract List<MutableComponent> getShopTooltip(ItemStack stack, List<Float> value);
 
-    public List<MutableComponent> getShopExtendedTooltip(List<Float> value)
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> value)
     {
         return List.of();
     }

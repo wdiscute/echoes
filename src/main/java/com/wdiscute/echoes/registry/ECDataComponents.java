@@ -27,6 +27,10 @@ public interface ECDataComponents
     DeferredHolder<DataComponentType<?>, DataComponentType<BlacksmithTrade.Rarity>> RARITY = register(
             "rarity", builder -> builder.persistent(BlacksmithTrade.Rarity.CODEC));
 
+
+    DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> IS_PRISMA_BLADE = register(
+            "is_prisma_blade", builder -> builder.persistent(Codec.BOOL));
+
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                            UnaryOperator<DataComponentType.Builder<T>> builderOperator)
     {

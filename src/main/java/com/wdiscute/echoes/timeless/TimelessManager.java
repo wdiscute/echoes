@@ -105,14 +105,17 @@ public class TimelessManager extends SavedData
 
     public void tick(ServerLevel sl)
     {
-        if (sl.getWeatherData().isRaining() || sl.getWeatherData().isThundering())
-            sl.getWeatherData().setClearWeatherTime(Integer.MAX_VALUE);
+        sl.setRainLevel(sl.getRainLevel(0) - 0.01f);
+
+        sl.getWeatherData().setDirty();
 
         //attempt close instance
         instances.forEach(o -> o.attemptClose(sl));
 
         instances.stream().filter(o -> o.shouldTick(sl)).forEach(o -> o.tick(sl));
+
         instances.removeIf(o -> o.phase.equals(TimelessInstance.Phase.CLOSED));
+
         this.setDirty();
     }
 }

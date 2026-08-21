@@ -3,6 +3,7 @@ package com.wdiscute.echoes.timeless;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.echoes.registry.ECDataEntries;
+import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.utils.MaybeStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -10,11 +11,12 @@ import net.minecraft.util.RandomSource;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record TimelessLootEntry(MaybeStack stack, int preferredLevel, int weight, int levelRange)
+public record TimelessLootEntry(MaybeStack stack, BlacksmithTrade.Rarity rarity, int preferredLevel, int weight, int levelRange)
 {
     public static final Codec<TimelessLootEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     MaybeStack.CODEC.fieldOf("stack").forGetter(TimelessLootEntry::stack),
+                    BlacksmithTrade.Rarity.CODEC.fieldOf("rarity").forGetter(TimelessLootEntry::rarity),
                     Codec.INT.optionalFieldOf("preferred_level", 0).forGetter(TimelessLootEntry::preferredLevel),
                     Codec.INT.fieldOf("weight").forGetter(TimelessLootEntry::weight),
                     Codec.INT.optionalFieldOf("level_range", 0).forGetter(TimelessLootEntry::levelRange)

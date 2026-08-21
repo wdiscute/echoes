@@ -19,18 +19,16 @@ import com.wdiscute.echoes.entity.lantern.LanternRenderer;
 import com.wdiscute.echoes.ECPostProcessing;
 import com.wdiscute.echoes.entity.soul.SoulModel;
 import com.wdiscute.echoes.entity.soul.SoulRenderer;
-import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderModel;
 import com.wdiscute.echoes.entity.trader.SoulTraderRenderer;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
+import com.wdiscute.echoes.item.IsPrismaItemProperty;
 import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintSources;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.api.distmarker.Dist;
@@ -43,7 +41,6 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @EventBusSubscriber(modid = Echoes.MOD_ID, value = Dist.CLIENT)
 public class ECClientEvents
@@ -66,12 +63,12 @@ public class ECClientEvents
     public static void renderTooltip(ItemTooltipEvent event)
     {
         List<MutableComponent> perkComps = new ArrayList<>();
-        for (var perk : event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()))
+        for (var perk : event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()).reversed())
         {
-            List<MutableComponent> shopExtendedTooltip = perk.perk().getShopExtendedTooltip(perk.amplifiers());
+            List<MutableComponent> shopExtendedTooltip = perk.perk().getShopExtendedTooltip(event.getItemStack(), perk.amplifiers());
 
             if (shopExtendedTooltip.isEmpty())
-                perkComps.addAll(perk.perk().getItemTooltip(perk.amplifiers()));
+                perkComps.addAll(perk.perk().getItemTooltip(event.getItemStack(), perk.amplifiers()));
 
             perkComps.addAll(shopExtendedTooltip.reversed());
         }
@@ -132,6 +129,18 @@ public class ECClientEvents
 
         if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.FOOD_LEVEL))
             event.setCanceled(true);
+
+        if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.EXPERIENCE_LEVEL))
+            event.setCanceled(true);
+
+        if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.CONTEXTUAL_INFO_BAR))
+            event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void registerItemModelProperties(RegisterConditionalItemModelPropertyEvent event)
+    {
+        event.register(Echoes.rl("is_prisma"), new IsPrismaItemProperty(false).type());
     }
 
     @SubscribeEvent

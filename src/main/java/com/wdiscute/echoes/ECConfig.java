@@ -26,5 +26,10 @@ public class ECConfig
             .translation("echoes.configuration.global_extra_timeless_duration")
             .defineInRange("global_extra_timeless_loot_drops", 0.1f, 0, Float.MAX_VALUE);
 
+    public static final ModConfigSpec.IntValue LEVEL_PENALTY_FOR_DYING = BUILDER_SERVER
+            .comment("How many levels should be decreased on death")
+            .translation("echoes.configuration.level_penalty_for_dying")
+            .defineInRange("level_penalty_for_dying", 0, 0, Integer.MAX_VALUE);
+
     static final ModConfigSpec SPEC_SERVER = BUILDER_SERVER.build();
 }

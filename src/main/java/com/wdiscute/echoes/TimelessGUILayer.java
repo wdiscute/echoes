@@ -30,6 +30,7 @@ public class TimelessGUILayer implements GuiLayer
     public float smoothSouls = 0;
     private static final List<TimedItemStack> loot = new ArrayList<>();
     public static final int DEFAULT_LOOT_TIME = 70;
+
     public static void addLoot(MaybeStack stack, boolean showNotif)
     {
         ItemStack itemStack = stack.toStack();
@@ -166,6 +167,13 @@ public class TimelessGUILayer implements GuiLayer
         if (timelessHearts.soulHP() % 2 == 1)
             SOUL_HEART_HALF.render(guiGraphics, x + 206 - 8 * fullHearts, y - 2);
 
+        //
+        //   ,--.   ,--.
+        // ,-'  '-. `--' ,--,--,--.  ,---.  ,--.--.
+        // '-.  .-' ,--. |        | | .-. : |  .--'
+        //   |  |   |  | |  |  |  | \   --. |  |
+        //   `--'   `--' `--`--`--'  `----' `--'
+        //
 
         //display time remaining if not Long.MAX_VALUE (isHub)
         if (timelessData.timeToExit() != Long.MAX_VALUE)
@@ -182,7 +190,8 @@ public class TimelessGUILayer implements GuiLayer
             ScreenUtils.centeredText(guiGraphics, font, Component.literal(time), width / 2, 10, 0xffffffff, true);
         }
 
-        ScreenUtils.centeredText(guiGraphics, font, Component.literal("level: " + timelessData.currentStage()), width / 2, 20, 0xffffffff, true);
+        if (timelessData.currentStage() > 0)
+            ScreenUtils.centeredText(guiGraphics, font, Component.literal(timelessData.currentStage() + ""), width / 2, height - 39, 0xff5798c4, true);
     }
 }
 

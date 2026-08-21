@@ -20,7 +20,7 @@ public class ExtraDamagePerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
     {
         return List.of(Component.literal("+" + Echoes.FORMAT.format(value.getFirst()) + " damage"));
     }

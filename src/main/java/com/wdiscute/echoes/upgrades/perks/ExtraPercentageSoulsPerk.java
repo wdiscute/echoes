@@ -20,7 +20,7 @@ public class ExtraPercentageSoulsPerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
     {
         //if value is 1.5 => +50% souls gathered
         //if value is 0.7 => -30% souls gathered

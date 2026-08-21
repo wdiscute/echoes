@@ -24,8 +24,12 @@ public interface ECPerks
     DeferredHolder<Perk, Perk> EXTRA_DAMAGE_CONSUMES_SOULS = register("extra_damage_consumes_souls", ExtraDamageConsumesSoulsPerk::new);
     DeferredHolder<Perk, Perk> EXTRA_DAMAGE_CONSUMES_TIME = register("extra_damage_consumes_time", ExtraDamageConsumesTimePerk::new);
 
+
+
     //fake perks
     DeferredHolder<Perk, Perk> RAMATTRA = register("ramattra", RamattraPerk::new);
+    DeferredHolder<Perk, Perk> ECHO_BLADE = register("echo_blade", EchoBladePerk::new);
+
 
     static DeferredHolder<Perk, Perk> register(String name, Supplier<Perk> perk)
     {

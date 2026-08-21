@@ -27,14 +27,14 @@ public class ExtraTicksPerKillPerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
     {
         return List.of(Component.literal("Timeless Souls").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
 
     @Override
-    public List<MutableComponent> getShopExtendedTooltip(List<Float> value)
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> value)
     {
         List<MutableComponent> list = new ArrayList<>();
 

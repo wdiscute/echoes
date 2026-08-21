@@ -31,7 +31,6 @@ public class DisplayGuiLayer implements GuiLayer
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
-
         if(Minecraft.getInstance().options.hideGui) return;
 
         if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult)
@@ -56,7 +55,7 @@ public class DisplayGuiLayer implements GuiLayer
                 List<MutableComponent> perkComps = new ArrayList<>();
                 List<PerkInstance> perks = stack.getOrDefault(ECDataComponents.PERKS, List.of());
                 for (PerkInstance perkInstance : perks)
-                    perkComps.addAll(Objects.requireNonNull(perkInstance.perk().getShopTooltip(perkInstance.amplifiers())));
+                    perkComps.addAll(Objects.requireNonNull(perkInstance.perk().getShopTooltip(stack, perkInstance.amplifiers())));
 
                 int yPerkOffset = perkComps.size() * 11;
                 int yCostOffset = dbe.trade.cost().size() * 16;
@@ -156,7 +155,7 @@ public class DisplayGuiLayer implements GuiLayer
                 for (PerkInstance perk : perks)
                 {
                     List<MutableComponent> tooltip =
-                            new ArrayList<>(perk.perk().getShopExtendedTooltip(perk.amplifiers()));
+                            new ArrayList<>(perk.perk().getShopExtendedTooltip(stack, perk.amplifiers()));
 
                     if (tooltip.isEmpty())
                         continue;

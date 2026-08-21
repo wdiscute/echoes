@@ -18,7 +18,7 @@ public class ExtraFlatSoulsPerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
     {
         return List.of(Component.literal((value.getFirst() > 0 ? "+" : "-") + Echoes.FORMAT.format(value.getFirst()) + " souls per kill"));
     }

@@ -2,6 +2,7 @@ package com.wdiscute.echoes.blocks.portal;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECParticles;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
@@ -10,6 +11,7 @@ import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -175,78 +177,74 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         }
 
         //if portal is open
-        if (state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
+        if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN)) return;
+
+        for (ServerPlayer player : level.getEntitiesOfClass(Player.class, new AABB(pos.above().above())).stream().map(o -> ((ServerPlayer) o)).toList())
         {
-            for (ServerPlayer player : level.getEntitiesOfClass(Player.class, new AABB(pos.above().above())).stream().map(o -> ((ServerPlayer) o)).toList())
+            int maxStage = player.getData(ECDataAttachments.TIMELESS_DATA).maxStage();
+
+            //if player on timeless
+            MinecraftServer server = level.getServer();
+            if (player.level().dimension().equals(Echoes.TIMELESS))
             {
-                //if player on timeless
-                if (player.level().dimension().equals(Echoes.TIMELESS))
+                TimelessInstance currentInstance = TimelessManager.getClosest(server, player.blockPosition());
+                if (currentInstance == null)
+                    throw new IllegalStateException("player in timeless tried to use a portal but there's no instances active at all. player should not be in timeless.");
+
+                //if on hub
+                if(currentInstance.isHub())
                 {
-                    TimelessInstance currentInstance = TimelessManager.getClosest(level.getServer(), player.blockPosition());
-                    if (currentInstance == null)
-                        throw new IllegalStateException("player in timeless tried to use a portal but there's no instances active at all. player should not be in timeless.");
-
-                    //if currently in a isHub
-                    if (currentInstance.isHub())
-                    {
-                        //get new dungeon
-                        TimelessInstance newDungeon = TimelessManager.getOrCreate(level.getServer(), currentInstance.linkedInstance);
-
-                        //set linked in new dungeon to the isHub
-                        newDungeon.linkedInstance = currentInstance.uuid;
-
-                        //set new dungeon stage to isHub + 1
-                        newDungeon.setStage(Math.max(currentInstance.stage + 1, newDungeon.stage));
-
-                        //add player + generate dungeon
-                        newDungeon.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
-                    }
-                    //if not in a isHub
-                    else
-                    {
-                        //get hub
-                        TimelessInstance hub = TimelessManager.getOrNull(level.getServer(), currentInstance.linkedInstance);
-                        TimelessInstance newDungeon;
-
-                        //if isHub linked instance is the one you're already in, make new one and increase stage
-
-                        //if isHub is not linked, make new dungeon from random uuid
-                        if (hub == null)
-                            newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
-                            //if isHub is linked, teleport to linked instance
-                        else
-                        {
-                            //if player is already on the isHub linked instance, make new one
-                            if (hub.linkedInstance.equals(currentInstance.uuid))
-                            {
-                                newDungeon = TimelessManager.getOrCreate(level.getServer(), UUID.randomUUID());
-                                hub.linkedInstance = newDungeon.uuid;
-                            }
-                            else
-                                newDungeon = TimelessManager.getOrCreate(level.getServer(), hub.linkedInstance);
-                        }
-
-                        //set stage
-                        newDungeon.setStage(Math.max(currentInstance.stage + 1, newDungeon.stage));
-
-                        //if new dungeon is not isHub
-                        if (!newDungeon.isHub())
-                            //set linked to the isHub (currentInstance.linkedInstance holds the isHub)
-                            newDungeon.linkedInstance = currentInstance.linkedInstance;
-
-                        //add player
-                        newDungeon.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
-                    }
-
-                    //set current instance to finished
+                    //end hub
+                    currentInstance.stage = 0;
                     currentInstance.phase = TimelessInstance.Phase.FINISHED;
+
+                    //get linked
+                    TimelessInstance linked = TimelessManager.getOrCreate(server, currentInstance.linkedInstance);
+
+                    //if linked has no stage
+                    if(linked.stage == Integer.MIN_VALUE)
+                        linked.stage = maxStage;
+
+                    //linked instance (non-hub) should link with hub
+                    linked.linkedInstance = currentInstance.uuid;
+
+                    linked.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
                 }
-                //if player not on timeless
+                //if not on hub
                 else
                 {
-                    //add player to either current ongoing instance or make a new one
-                    TimelessManager.getOrCreate(level.getServer(), instanceUUID).addPlayer(player, pos, level.dimension().identifier());
+                    TimelessInstance hub = TimelessManager.getOrCreate(server, currentInstance.linkedInstance);
+
+                    TimelessInstance nextInstance;
+                    //get next instance
+                    {
+                        //if hub is linked and hub's link is not where you're already at, set nextInstance to hub's link
+                        //this only happens if 2 players are in the same "ground" and one player jumps 2 levels ahead
+                        if(hub.isHub() && hub.linkedInstance != currentInstance.uuid)
+                            nextInstance = TimelessManager.getOrCreate(server, hub.linkedInstance);
+                        else
+                            nextInstance = TimelessManager.getOrCreate(server, UUID.randomUUID());
+                    }
+
+                    //if nextInstance has no stage
+                    if(nextInstance.stage == Integer.MIN_VALUE)
+                        nextInstance.stage = maxStage + 1;
+
+                    hub.linkedInstance = nextInstance.uuid;
+                    nextInstance.linkedInstance = hub.uuid;
+
+                    //add player to next instance
+                    nextInstance.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
                 }
+            }
+            //if player not on timeless, teleport to either ongoing hub, new hub, or tutorial level
+            else
+            {
+                TimelessInstance hub = TimelessManager.getOrCreate(server, instanceUUID);
+                //set stage to either 0 (hub) or -1 if player never reached hub
+                hub.stage = Math.min(0, player.getData(ECDataAttachments.TIMELESS_DATA).maxStage());
+                //add player to either current ongoing instance or make a new one
+                hub.addPlayer(player, pos, level.dimension().identifier());
             }
         }
     }

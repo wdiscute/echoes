@@ -31,7 +31,8 @@ public class ECDGDataEntriesProvider
                                 DataComponentPatch.builder()
                                         .set(ECDataComponents.PERKS.get(), List.of(
                                                 new PerkInstance(ECPerks.EXTRA_DAMAGE, 4f),
-                                                new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS, 1.6F)
+                                                new PerkInstance(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS, 4F, 2f),
+                                                new PerkInstance(ECPerks.ECHO_BLADE, 4F, 4f, 4f, 2f, 1.6f, 0.5f)
                                         ))
                                         .set(ECDataComponents.RARITY.get(), BlacksmithTrade.Rarity.COMMON)
                                         .build()
@@ -90,14 +91,15 @@ public class ECDGDataEntriesProvider
         gen.addProvider(true,
                 new DataEntryProvider<>(output, lookup, ECDataEntries.TIMELESS_LOOT,
                         List.of(
-                                new TimelessLootEntry(new MaybeStack(Items.DIAMOND), 0, 2, 0),
-                                new TimelessLootEntry(new MaybeStack(Items.EMERALD), 0, 2, 0),
-                                new TimelessLootEntry(new MaybeStack(Items.ECHO_SHARD), 0, 2, 0),
-                                new TimelessLootEntry(new MaybeStack(Items.GOLD_INGOT), 0, 10, 0),
-                                new TimelessLootEntry(new MaybeStack(Items.IRON_INGOT), 0, 10, 0),
-                                new TimelessLootEntry(new MaybeStack(Items.LAPIS_LAZULI), 0, 15, 0),
-                                new TimelessLootEntry(new MaybeStack(Items.REDSTONE, 3), 0, 15, 0),
-                                new TimelessLootEntry(new MaybeStack(ECItems.PRISMA_SHARD), 0, 20, 0)
+                                new TimelessLootEntry(new MaybeStack(Items.DIAMOND), BlacksmithTrade.Rarity.LEGENDARY, 0, 2, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.EMERALD), BlacksmithTrade.Rarity.EPIC, 0, 2, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.ECHO_SHARD), BlacksmithTrade.Rarity.EPIC, 0, 2, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.GOLD_INGOT), BlacksmithTrade.Rarity.RARE, 0, 10, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.IRON_INGOT), BlacksmithTrade.Rarity.UNCOMMON, 0, 10, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.COPPER_INGOT), BlacksmithTrade.Rarity.UNCOMMON, 0, 10, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.LAPIS_LAZULI), BlacksmithTrade.Rarity.COMMON, 0, 15, 0),
+                                new TimelessLootEntry(new MaybeStack(Items.REDSTONE, 3), BlacksmithTrade.Rarity.COMMON, 0, 15, 0),
+                                new TimelessLootEntry(new MaybeStack(ECItems.PRISMA_SHARD), BlacksmithTrade.Rarity.COMMON, 0, 20, 0)
                         )
                 )
         );

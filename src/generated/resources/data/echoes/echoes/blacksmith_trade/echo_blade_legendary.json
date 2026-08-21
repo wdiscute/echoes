@@ -21,9 +21,21 @@
         },
         {
           "amplifiers": [
-            2.5
+            12.0,
+            6.0
           ],
-          "perk": "echoes:extra_percentage_souls"
+          "perk": "echoes:extra_damage_consumes_souls"
+        },
+        {
+          "amplifiers": [
+            8.0,
+            8.0,
+            12.0,
+            6.0,
+            3.0,
+            5.0
+          ],
+          "perk": "echoes:echo_blade"
         }
       ],
       "echoes:rarity": "legendary"

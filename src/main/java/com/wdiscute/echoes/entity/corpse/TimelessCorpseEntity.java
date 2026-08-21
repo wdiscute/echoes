@@ -1,7 +1,6 @@
 package com.wdiscute.echoes.entity.corpse;
 
 import com.wdiscute.echoes.SculkAura;
-import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import com.wdiscute.echoes.registry.ECEntityDataSerializers;
 import com.wdiscute.utils.MaybeStack;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,13 +21,11 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-import java.util.UUID;
-
-public class TimelessCorpse extends Entity implements SculkAura
+public class TimelessCorpseEntity extends Entity implements SculkAura
 {
-    public static final EntityDataAccessor<MaybeStack> STACK = SynchedEntityData.defineId(TimelessCorpse.class, ECEntityDataSerializers.STACK_HOLDER.get());
+    public static final EntityDataAccessor<MaybeStack> STACK = SynchedEntityData.defineId(TimelessCorpseEntity.class, ECEntityDataSerializers.STACK_HOLDER.get());
 
-    public TimelessCorpse(EntityType<?> type, Level level)
+    public TimelessCorpseEntity(EntityType<?> type, Level level)
     {
         super(type, level);
     }
@@ -67,6 +64,9 @@ public class TimelessCorpse extends Entity implements SculkAura
 
         if (player.level().isClientSide())
             return stack.isEmpty() ? InteractionResult.FAIL : InteractionResult.SUCCESS;
+
+        if(stack.isEmpty())
+            return InteractionResult.FAIL;
 
         player.level().playSound(null, xo, yo, zOld, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.AMBIENT);
 

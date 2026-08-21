@@ -92,15 +92,19 @@ public record TimelessData(long timeToExit,
         player.setData(ECDataAttachments.TIMELESS_DATA, data.withCurrentStage(currentStage));
     }
 
-    //currentStage
-    public static void attemptToSetMaxStage(Player player, int currentStage)
+    //max stage
+    public static void setMaxStage(Player player, int currentStage)
     {
         //do not set if tutorial level
         if (currentStage == -1) return;
 
+        //set to 1 if died on hub (lol)
+        if (currentStage == 0)
+            currentStage = 1;
+
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
-        if (currentStage / 5 * 5 > data.maxStage)
-            player.setData(ECDataAttachments.TIMELESS_DATA, data.withMaxStage(currentStage / 5 * 5));
+        if (currentStage > data.maxStage())
+            player.setData(ECDataAttachments.TIMELESS_DATA, data.withMaxStage(currentStage));
     }
 
     //inventory
@@ -151,8 +155,6 @@ public record TimelessData(long timeToExit,
 
         return data.souls >= souls;
     }
-
-
 
 
 }

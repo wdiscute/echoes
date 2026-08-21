@@ -14,13 +14,13 @@
       "echoes:perks": [
         {
           "amplifiers": [
-            2.0
+            3.0
           ],
           "perk": "echoes:extra_damage"
         },
         {
           "amplifiers": [
-            40.0
+            200.0
           ],
           "perk": "echoes:extra_ticks_per_kill"
         }

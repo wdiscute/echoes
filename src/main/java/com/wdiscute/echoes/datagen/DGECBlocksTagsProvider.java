@@ -27,7 +27,9 @@ public class DGECBlocksTagsProvider extends BlockTagsProvider
     protected void addTags(HolderLookup.Provider provider)
     {
         tag(ECTags.SKIPS_SCULK_TRANSFORMATION)
-                .add(ECBlocks.PORTAL.get());
+                .add(ECBlocks.PORTAL.get())
+                .add(ECBlocks.CASKET.get())
+        ;
 
         tag(ECTags.SUPPORTS_SCULK_TENDRIL)
                 .add(Blocks.SCULK)

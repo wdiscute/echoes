@@ -27,7 +27,7 @@ sourceSets.main.resources {
 }
 
 repositories {
-    mavenLocal()
+    //mavenLocal()
 
     //modrinth
     maven {
@@ -37,6 +37,11 @@ repositories {
     //jei
     maven {
         url = "https://dvs1.progwml6.com/files/maven/"
+    }
+
+    //jei
+    maven {
+        url = "https://wdiscute.github.io/"
     }
 
     //jei

@@ -16,9 +16,21 @@
         },
         {
           "amplifiers": [
-            1.6
+            4.0,
+            2.0
           ],
-          "perk": "echoes:extra_percentage_souls"
+          "perk": "echoes:extra_damage_consumes_souls"
+        },
+        {
+          "amplifiers": [
+            4.0,
+            4.0,
+            4.0,
+            2.0,
+            1.6,
+            0.5
+          ],
+          "perk": "echoes:echo_blade"
         }
       ],
       "echoes:rarity": "common"

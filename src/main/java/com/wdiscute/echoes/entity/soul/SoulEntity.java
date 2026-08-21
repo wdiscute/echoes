@@ -147,7 +147,7 @@ public class SoulEntity extends Entity
 
             positionToRender = positionToRender.add(velocity);
 
-            if (positionToRender.distanceTo(player.getEyePosition().add(0, -0.7, 0)) < 0.2f)
+            if (positionToRender.distanceTo(player.getEyePosition().add(0, -0.7, 0)) < 0.5f)
                 remove(RemovalReason.DISCARDED);
 
             return;

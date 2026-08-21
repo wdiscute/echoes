@@ -55,16 +55,49 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         //
 
         //10 spine > echoing marrow
-        resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.HOLLOWED_SPINE.get()),
+        resourceTrade(context, BlacksmithTrade.Rarity.COMMON, 10, new MaybeStack(ECItems.HOLLOWED_SPINE.get()),
                 new MaybeStack(ECItems.ECHOING_MARROW.get(), 10));
 
         //10 teeth > 1 brain
-        resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.ROT_BRAIN.get()),
+        resourceTrade(context, BlacksmithTrade.Rarity.COMMON, 10, new MaybeStack(ECItems.ROT_BRAIN.get()),
                 new MaybeStack(ECItems.SCULKED_TEETH.get(), 10));
 
         //4 rot brains, 4 hollowed spine > soul heart container
-        resourceTrade(context, BlacksmithTrade.Rarity.COMMON,  10, new MaybeStack(ECItems.SOUL_HEART_CONTAINER.get()),
-                new MaybeStack(ECItems.ROT_BRAIN.get(), 4),new MaybeStack(ECItems.HOLLOWED_SPINE.get(), 4));
+        resourceTrade(context, BlacksmithTrade.Rarity.COMMON, 10, new MaybeStack(ECItems.SOUL_HEART_CONTAINER.get()),
+                new MaybeStack(ECItems.ROT_BRAIN.get(), 4), new MaybeStack(ECItems.HOLLOWED_SPINE.get(), 4));
+
+
+        //echo/prisma blade
+        allRarities(context, ECItems.ECHO_BLADE.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.SCULKED_TEETH.get(), new RarityValues(1, 5, 15, 32, 64)),
+                        new RaritifiedCost(ECItems.HOLLOWED_SPINE.get(), new RarityValues(0, 2, 5, 10, 25))
+                ),
+
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE,
+                        new RarityValues(4F, 5F, 6F, 7F, 8F)),
+
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS,
+                        new RarityValues(4F, 6F, 8F, 10F, 12F),
+                        new RarityValues(2F, 3F, 4F, 5F, 6F)),
+
+                new RaritifiedPerk(ECPerks.ECHO_BLADE,
+                        //flat damage echo
+                        new RarityValues(4F, 5F, 6F, 7F, 8F),
+                        //flat damage prisma
+                        new RarityValues(4F, 5F, 6F, 7F, 8F),
+
+                        //echo extra damage when consuming soul
+                        new RarityValues(4F, 6F, 8F, 10F, 12F),
+                        //echo souls consumed
+                        new RarityValues(2F, 3F, 4F, 5F, 6F),
+
+                        //extra souls gathered percentage
+                        new RarityValues(1.6F, 1.8F, 2F, 2.2F, 3F),
+                        //extra souls gathered flat
+                        new RarityValues(0.5F, 1F, 1.5F, 2F, 5F)
+                )
+        );
 
 
         //
@@ -79,16 +112,6 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         // '--'   '--'  `----'  `--`--' |  |-'   `---'  `--''--' `----'
         //                              `--'
 
-        //echo blade
-        allRarities(context, ECItems.ECHO_BLADE.get(),
-                List.of(
-                        new RaritifiedCost(ECItems.SCULKED_TEETH.get(), new RarityValues(1, 5, 15, 32, 64)),
-                        new RaritifiedCost(ECItems.HOLLOWED_SPINE.get(), new RarityValues(0, 2, 5, 10, 25))
-                ),
-
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(4, 5, 6, 7, 8)),
-                new RaritifiedPerk(ECPerks.EXTRA_PERCENTAGE_SOULS, new RarityValues(1.6F, 1.8F, 2F, 2.2F, 2.5F))
-        );
 
         //ramatra
         allRarities(context, ECItems.RAMATTRA.get(),
@@ -140,17 +163,6 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         // '--'   '--'  `----'  `--`--' |  |-'   `---'  `--''--' `----'
         //                              `--'
 
-        //prisma sword
-        allRarities(context, ECItems.PRISMA_SWORD.get(),
-                List.of(
-                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(1, 5, 15, 32, 64)),
-                        new RaritifiedCost(ECItems.LATTICE.get(), new RarityValues(0, 4, 8, 16, 32))
-                ),
-
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(4, 5, 6, 7, 8)),
-                new RaritifiedPerk(ECPerks.EXTRA_FLAT_SOULS, new RarityValues(0.3f, 0.8f, 1.3f, 2f, 4f))
-        );
-
         //lucent will
         allRarities(context, ECItems.LUCENT_WILL.get(),
                 List.of(
@@ -174,8 +186,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(2, 3, 4, 5, 6)),
-                new RaritifiedPerk(ECPerks.EXTRA_TICKS_PER_KILL, new RarityValues(40, 50, 60, 70, 80))
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(3, 4, 5, 6, 7)),
+                new RaritifiedPerk(ECPerks.EXTRA_TICKS_PER_KILL, new RarityValues(200, 300, 400, 500, 600))
         );
 
 

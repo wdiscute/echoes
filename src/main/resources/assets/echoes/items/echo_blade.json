@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "echoes:is_prisma",
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "echoes:item/prisma_blade"
+    },
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "echoes:item/echo_blade"
+    }
+  }
+}

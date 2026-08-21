@@ -11,12 +11,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
-import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.ItemDisplayContext;
 
-public class TimelessCorpseRenderer extends EntityRenderer<TimelessCorpse, TimelessCorpseRenderState>
+public class TimelessCorpseRenderer extends EntityRenderer<TimelessCorpseEntity, TimelessCorpseRenderState>
 {
     final TimelessCorpseModel model;
     final TimelessCorpseModelSlim modelSlim;
@@ -83,7 +81,7 @@ public class TimelessCorpseRenderer extends EntityRenderer<TimelessCorpse, Timel
     }
 
     @Override
-    public void extractRenderState(TimelessCorpse entity, TimelessCorpseRenderState state, float partialTicks)
+    public void extractRenderState(TimelessCorpseEntity entity, TimelessCorpseRenderState state, float partialTicks)
     {
         super.extractRenderState(entity, state, partialTicks);
         if (Minecraft.getInstance().player != null)

@@ -18,7 +18,7 @@ public class ExtraSculkDamagePerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
     {
         return List.of(Component.literal("+" + value.getFirst() + " sculk-aligned damage"));
     }

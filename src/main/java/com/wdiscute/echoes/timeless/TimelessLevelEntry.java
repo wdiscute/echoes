@@ -22,7 +22,7 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
             ).apply(instance, TimelessLevelEntry::new)
     );
 
-    public static @Nullable TimelessLevelEntry getRandomLoot(ServerLevel sl, int level)
+    public static @Nullable TimelessLevelEntry getRandomLevel(ServerLevel sl, int level)
     {
         List<TimelessLevelEntry> entries = ECDataEntries.TIMELESS_LEVELS.get();
 
@@ -60,7 +60,7 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
     {
         //return false if current level is hub but entry is NOT hub
         //return false if current level is NOT hub but entry is hub
-        return (level % 5 == 0 && this.isHub) || (level % 5 != 0 && !this.isHub);
+        return (level == 0 && this.isHub) || (level != 0 && !this.isHub);
     }
 
     private static float getWeight(TimelessLevelEntry entry, int level)

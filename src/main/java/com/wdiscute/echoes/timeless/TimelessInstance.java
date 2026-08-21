@@ -141,7 +141,7 @@ public class TimelessInstance
 
     public boolean isHub()
     {
-        return stage % 5 == 0;
+        return stage == 0;
     }
 
     public void addLoot(ServerLevel sl, float lootCount)
@@ -212,7 +212,7 @@ public class TimelessInstance
 
         phase = Phase.ONGOING;
 
-        if (stage == -1)
+        if (stage == Integer.MIN_VALUE)
             stage = timelessData.maxStage();
 
         this.portalDimension = portalDimension;
@@ -220,18 +220,8 @@ public class TimelessInstance
 
         TimelessLevelEntry entry = spawnStructure(sl);
 
-        int ticks;
-        if (entry == null)
-            ticks = 1200;
-        else
-            ticks = entry.ticks();
-
-        //if player was already in an instance, add next level ticks + current
-        if (timelessData.timeToExit() != Long.MAX_VALUE)
-            this.timeToExit = timelessData.timeToExit() + ticks + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
-            //otherwise set to base duration
-        else
-            this.timeToExit = sl.getGameTime() + ticks + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
+        //set time to exit to ticks from json + config
+        this.timeToExit = sl.getGameTime() + (entry == null ? 1200 : entry.ticks()) + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
 
         //if first level, no time limit
         if (stage == -1)
@@ -264,7 +254,15 @@ public class TimelessInstance
 
     public void onHeartHit(ServerLevel sl, SculkHeartEntity heartEntity)
     {
+        //play sound
         sl.playSound(null, heartEntity.blockPosition(), SoundEvents.SCULK_BLOCK_PLACE, SoundSource.HOSTILE, 1f, 1f);
+
+        //set to rain
+        sl.setRainLevel(1);
+
+        //remove timer
+        setTime(sl, Long.MAX_VALUE);
+
         if (closingSequence == -1)
             closingSequence = 0;
     }
@@ -296,13 +294,12 @@ public class TimelessInstance
         {
             if (o instanceof SculkAura sculkAura)
             {
-                if (sculkAura.getSculkAura(sl) == 0) return;
+                if (o instanceof SculkHeartEntity)
+                    submitAura(o.position(), sculkAura.getSculkAura(sl) + heartAuraBoost);
 
-                //if (o instanceof SculkHeartEntity)
-                //    submitAura(o.position(), sculkAura.getSculkAura(sl));
-                //else
-
-                submitAura(o.position(), sculkAura.getSculkAura(sl) + heartAuraBoost);
+                int aura = (int) (sculkAura.getSculkAura(sl) + (heartAuraBoost < 0 ? heartAuraBoost : 0));
+                if (aura != 0)
+                    submitAura(o.position(), aura);
             }
         });
 
@@ -315,6 +312,8 @@ public class TimelessInstance
         //closing sequence logic
         if (closingSequence != -1)
         {
+            sl.setRainLevel(sl.getRainLevel(0) + 0.02f);
+
             //increase closing sequence
             closingSequence++;
 
@@ -402,6 +401,9 @@ public class TimelessInstance
                     heart.remove(Entity.RemovalReason.DISCARDED);
                 }
             }
+
+            if(closingSequence > 160)
+                closingSequence = -1;
         }
     }
 
@@ -509,9 +511,9 @@ public class TimelessInstance
         //set time to exit so it doesn't render on gui
         TimelessData.setTimeToExit(player, Long.MAX_VALUE);
 
-        //set currentStage to last isHub (every 5 levels)
+        //set currentStage to
         TimelessData.setCurrentStage(player, stage);
-        TimelessData.attemptToSetMaxStage(player, stage);
+        TimelessData.setMaxStage(player, stage);
 
         //teleport player to timeless
         player.teleport(trans);
@@ -524,7 +526,6 @@ public class TimelessInstance
 
         //load dimension + structures
         attemptLoad(player, sl, portalPos, portalDimension);
-
 
         //if player is not on timeless, swap inventory
         if (!player.level().dimension().equals(Echoes.TIMELESS))
@@ -567,7 +568,7 @@ public class TimelessInstance
         TimelessData.setCurrentStage(player, stage);
 
         //set maxStage
-        TimelessData.attemptToSetMaxStage(player, stage);
+        TimelessData.setMaxStage(player, stage);
 
         //remove has_lantern just in case
         player.removeData(ECDataAttachments.HAS_LANTERN);
@@ -714,7 +715,7 @@ public class TimelessInstance
     private TimelessLevelEntry spawnStructure(ServerLevel sl)
     {
         //get template structure path
-        TimelessLevelEntry randomLevel = TimelessLevelEntry.getRandomLoot(sl, stage);
+        TimelessLevelEntry randomLevel = TimelessLevelEntry.getRandomLevel(sl, stage);
 
         if (randomLevel == null)
             return null;
@@ -903,7 +904,7 @@ public class TimelessInstance
                 Long.MAX_VALUE,
                 Echoes.MISSINGNO,
                 BlockPos.ZERO,
-                -1,
+                Integer.MIN_VALUE,
                 UUID.randomUUID(),
                 List.of()
         );

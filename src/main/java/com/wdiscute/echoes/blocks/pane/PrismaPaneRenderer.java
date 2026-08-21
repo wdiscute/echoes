@@ -51,35 +51,38 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
 
     private static float[] rotateAroundBlockCenter(float x, float z, PrismaPaneBlock.Facing facing)
     {
-        float cx = x - 0.5F;
-        float cz = z - 0.5F;
+        float centerX = x - 0.5F;
+        float centerZ = z - 0.5F;
 
-        float rx, rz;
+        float rotationX, rotationZ;
         switch (facing)
         {
             case SOUTH ->
             {
-                rx = -cx;
-                rz = -cz;
+                rotationX = -centerX;
+                rotationZ = -centerZ;
             }  // 180°
+
             case WEST ->
             {
-                rx = cz;
-                rz = -cx;
+                rotationX = centerZ;
+                rotationZ = -centerX;
             }  // 90°
+
             case EAST ->
             {
-                rx = -cz;
-                rz = cx;
+                rotationX = -centerZ;
+                rotationZ = centerX;
             }  // -90°
+
             default ->
             {
-                rx = cx;
-                rz = cz;
+                rotationX = centerX;
+                rotationZ = centerZ;
             }  // NORTH, 0°
         }
 
-        return new float[]{rx + 0.5F, rz + 0.5F};
+        return new float[]{rotationX + 0.5F, rotationZ + 0.5F};
     }
 
     private static int[] getVertexColor(double worldX, double worldY, double worldZ, int color1, int color2)
@@ -161,6 +164,8 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
 
 
         int[] color = getVertexColor(vertexWorldX, vertexWorldY, vertexWorldZ, color1, color2);
+
+
 
 
         float textureX = switch (facing)

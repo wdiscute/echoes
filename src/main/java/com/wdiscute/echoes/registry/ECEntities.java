@@ -1,7 +1,7 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.entity.corpse.TimelessCorpse;
+import com.wdiscute.echoes.entity.corpse.TimelessCorpseEntity;
 import com.wdiscute.echoes.entity.enemy.hollowed.HollowedEntity;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
@@ -15,8 +15,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.monster.skeleton.Stray;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,8 +38,8 @@ public interface ECEntities
             register("sculk_heart", SculkHeartEntity::new, MobCategory.MONSTER,
                     b -> b.sized(3f, 3f));
 
-    DeferredHolder<EntityType<?>, EntityType<TimelessCorpse>> TIMELESS_CORPSE =
-            register("timeless_corpse", TimelessCorpse::new, MobCategory.MISC,
+    DeferredHolder<EntityType<?>, EntityType<TimelessCorpseEntity>> TIMELESS_CORPSE =
+            register("timeless_corpse", TimelessCorpseEntity::new, MobCategory.MISC,
                     b -> b.sized(2f, 2f));
 
     DeferredHolder<EntityType<?>, EntityType<SoulEntity>> SOUL =
