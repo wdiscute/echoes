@@ -19,7 +19,7 @@ public class CasketBlock extends Block
 {
     public CasketBlock(Properties properties)
     {
-        super(properties);
+        super(properties.noOcclusion());
     }
 
     @Override

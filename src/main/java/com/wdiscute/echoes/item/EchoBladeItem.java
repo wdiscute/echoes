@@ -4,6 +4,7 @@ import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.echoes.upgrades.perks.EchoBladePerk;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +27,7 @@ public class EchoBladeItem extends TimelessWeaponItem
     @Override
     public ItemUseAnimation getUseAnimation(ItemStack itemStack)
     {
-        return ItemUseAnimation.BLOCK;
+        return ItemUseAnimation.BOW;
     }
 
     @Override
@@ -54,6 +55,7 @@ public class EchoBladeItem extends TimelessWeaponItem
 
             if (!isPrisma)
             {
+                entity.playSound(SoundEvents.BEACON_ACTIVATE, 1, 2);
                 newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE, values.get(1)));
                 newPerks.add(new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS, values.get(4)));
                 newPerks.add(new PerkInstance(ECPerks.EXTRA_FLAT_SOULS, values.get(5)));
@@ -61,6 +63,7 @@ public class EchoBladeItem extends TimelessWeaponItem
             }
             else
             {
+                entity.playSound(SoundEvents.BEACON_DEACTIVATE, 1, 2);
                 newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE, values.get(0)));
                 newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS, values.get(2), values.get(3)));
                 newPerks.add(perk);
