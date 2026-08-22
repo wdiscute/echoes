@@ -31,6 +31,7 @@ public class ECCreativeModeTabs
                         .add(ECBlocks.TIMELESS_MARKER)
                         .add(ECBlocks.DISPLAY)
                         .add(ECItems.SOUL_HEART_CONTAINER)
+                        .add(ECBlocks.CASKET)
 
         );
 

@@ -4,6 +4,9 @@ import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.echoes.upgrades.perks.EchoBladePerk;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,6 +37,16 @@ public class EchoBladeItem extends TimelessWeaponItem
     public int getUseDuration(ItemStack itemStack, LivingEntity user)
     {
         return 20;
+    }
+
+    @Override
+    public Component getName(ItemStack itemStack)
+    {
+        Component prisma = Component.translatable("item.echoes.prisma_blade");
+        if (itemStack.getOrDefault(ECDataComponents.IS_PRISMA_BLADE, false))
+            return prisma;
+        else
+            return itemStack.getComponents().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY);
     }
 
     @Override
