@@ -402,7 +402,7 @@ public class TimelessInstance
                 }
             }
 
-            if(closingSequence > 160)
+            if (closingSequence > 160)
                 closingSequence = -1;
         }
     }
@@ -733,28 +733,35 @@ public class TimelessInstance
         StructureTemplateManager manager = sl.getStructureManager();
         StructurePlaceSettings placeSettings = new StructurePlaceSettings().setKnownShape(false);
 
-        for (int i = 0; i < 24; i++)
+        for (int i = 0; i < 26; i++)
         {
             String letter = String.valueOf((char) ('a' + i));
 
-            for (int j = 0; j < 24; j++)
+            for (int j = 0; j < 9; j++)
             {
-                Identifier id = template.withSuffix(letter + (j + 1));
-                Optional<StructureTemplate> st = manager.get(id);
+                for (int k = 0; k < 9; k++)
+                {
+                    //from a00 to k99
+                    Identifier id = template.withSuffix(letter + (j + 1) + (k + 1));
 
-                //if "structure_`letter``i`" doesn't exist, skip to next
-                if (st.isEmpty())
-                    continue;
+                    System.out.println(id);
 
-                BlockPos placementBP = origin.offset(j * 48, 0, i * 48);
-                st.get().placeInWorld(sl, placementBP, origin,
-                        placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+                    Optional<StructureTemplate> st = manager.get(id);
 
-                //run processors for each block in structure bounds
-                for (int x = placementBP.getX(); x < placementBP.getX() + 48; x++)
-                    for (int y = placementBP.getY(); y < placementBP.getY() + 48; y++)
-                        for (int z = placementBP.getZ(); z < placementBP.getZ() + 48; z++)
-                            TimelessProcessor.process(this, sl, sl.getBlockState(new BlockPos(x, y, z)), new BlockPos(x, y, z), sculk);
+                    //if "structure_`letter``i`" doesn't exist, skip to next
+                    if (st.isEmpty())
+                        continue;
+
+                    BlockPos placementBP = origin.offset(j * 48, k * 48, i * 48);
+                    st.get().placeInWorld(sl, placementBP, origin,
+                            placeSettings, StructureBlockEntity.createRandom(0), 2 | (0));
+
+                    //run processors for each block in structure bounds
+                    for (int x = placementBP.getX(); x < placementBP.getX() + 48; x++)
+                        for (int y = placementBP.getY(); y < placementBP.getY() + 48; y++)
+                            for (int z = placementBP.getZ(); z < placementBP.getZ() + 48; z++)
+                                TimelessProcessor.process(this, sl, sl.getBlockState(new BlockPos(x, y, z)), new BlockPos(x, y, z), sculk);
+                }
             }
         }
     }

@@ -156,7 +156,7 @@ public class TimelessGUILayer implements GuiLayer
 
         //render empty hearts overlay
         for (int i = 0; i < timelessHearts.soulHearts(); i++)
-            SOUL_HEART_EMPTY.render(guiGraphics, x + 206 - 8 * i, y - 2);
+            SOUL_HEART_EMPTY.render(guiGraphics, x + 206 - 8 * (i % 10), y - 2 - (i / 10 * 10));
 
         //render full hearts
         int fullHearts = timelessHearts.soulHP() / 2;
