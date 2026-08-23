@@ -743,14 +743,11 @@ public class TimelessInstance
                 {
                     //from a00 to k99
                     Identifier id = template.withSuffix(letter + (j + 1) + (k + 1));
-
-                    System.out.println(id);
-
                     Optional<StructureTemplate> st = manager.get(id);
 
                     //if "structure_`letter``i`" doesn't exist, skip to next
                     if (st.isEmpty())
-                        continue;
+                        break;
 
                     BlockPos placementBP = origin.offset(j * 48, k * 48, i * 48);
                     st.get().placeInWorld(sl, placementBP, origin,
