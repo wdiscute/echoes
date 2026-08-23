@@ -35,7 +35,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
 {
     public static final SculkSpreader SCULK_SPREADER = SculkSpreader.createLevelSpreader();
 
-    List<MaybeStack> loot;
+    List<MaybeStack> loot = new ArrayList<>();
     int lootCooldown = 0;
 
     public PortalBlockEntity(BlockPos worldPosition, BlockState blockState)
@@ -74,7 +74,6 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
             portals.add(pos);
         else
             portals.remove(pos);
-
 
         //if not closed, do portal particles and sound
         if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.CLOSED))
@@ -176,7 +175,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
             }
         }
 
-        //if portal is open
+        //if portal is not open
         if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN)) return;
 
         for (ServerPlayer player : level.getEntitiesOfClass(Player.class, new AABB(pos.above().above())).stream().map(o -> ((ServerPlayer) o)).toList())
@@ -189,7 +188,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
             {
                 TimelessInstance currentInstance = TimelessManager.getClosest(server, player.blockPosition());
                 if (currentInstance == null)
-                    throw new IllegalStateException("player in timeless tried to use a portal but there's no instances active at all. player should not be in timeless.");
+                    throw new IllegalStateException("player in timeless tried to use    a portal but there's no instances active at all. player should not be in timeless.");
 
                 //if on hub
                 if(currentInstance.isHub())
@@ -213,28 +212,47 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 //if not on hub
                 else
                 {
-                    TimelessInstance hub = TimelessManager.getOrCreate(server, currentInstance.linkedInstance);
-
-                    TimelessInstance nextInstance;
-                    //get next instance
+                    //if is in tutorial
+                    if(currentInstance.stage == -1)
                     {
-                        //if hub is linked and hub's link is not where you're already at, set nextInstance to hub's link
-                        //this only happens if 2 players are in the same "ground" and one player jumps 2 levels ahead
-                        if(hub.isHub() && hub.linkedInstance != currentInstance.uuid)
-                            nextInstance = TimelessManager.getOrCreate(server, hub.linkedInstance);
-                        else
-                            nextInstance = TimelessManager.getOrCreate(server, UUID.randomUUID());
+                        TimelessInstance hub = TimelessManager.getOrCreate(server, currentInstance.linkedInstance);
+                        hub.setStage(0);
+                        hub.portalDimension = currentInstance.portalDimension;
+                        hub.portalPos = currentInstance.portalPos;
+                        hub.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
                     }
+                    //not in tutorial
+                    else
+                    {
+                        TimelessInstance hub = TimelessManager.getOrNull(server, currentInstance.linkedInstance);
 
-                    //if nextInstance has no stage
-                    if(nextInstance.stage == Integer.MIN_VALUE)
-                        nextInstance.stage = maxStage + 1;
+                        if(hub == null)
+                        {
+                            currentInstance.removePlayer(player);
+                            return;
+                        }
 
-                    hub.linkedInstance = nextInstance.uuid;
-                    nextInstance.linkedInstance = hub.uuid;
+                        TimelessInstance nextInstance;
+                        //get next instance
+                        {
+                            //if hub is linked and hub's link is not where you're already at, set nextInstance to hub's link
+                            //this only happens if 2 players are in the same "ground" and one player jumps 2 levels ahead
+                            if(hub.isHub() && hub.linkedInstance != currentInstance.uuid)
+                                nextInstance = TimelessManager.getOrCreate(server, hub.linkedInstance);
+                            else
+                                nextInstance = TimelessManager.getOrCreate(server, UUID.randomUUID());
+                        }
 
-                    //add player to next instance
-                    nextInstance.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
+                        //if nextInstance has no stage
+                        if(nextInstance.stage == Integer.MIN_VALUE)
+                            nextInstance.stage = maxStage + 1;
+
+                        hub.linkedInstance = nextInstance.uuid;
+                        nextInstance.linkedInstance = hub.uuid;
+
+                        //add player to next instance
+                        nextInstance.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
+                    }
                 }
             }
             //if player not on timeless, teleport to either ongoing hub, new hub, or tutorial level

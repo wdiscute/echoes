@@ -43,8 +43,13 @@ public class TimelessManager extends SavedData
 
     public static TimelessInstance getClosest(MinecraftServer server, BlockPos pos)
     {
+        return getClosest(server, pos, Integer.MAX_VALUE);
+    }
+
+    public static TimelessInstance getClosest(MinecraftServer server, BlockPos pos, int range)
+    {
         TimelessInstance instanceToReturn = null;
-        int dist = Integer.MAX_VALUE;
+        int shortestDistanceFound = Integer.MAX_VALUE;
 
         for (TimelessInstance instance : getSavedData(server).instances)
         {
@@ -52,9 +57,9 @@ public class TimelessManager extends SavedData
                               Math.abs(instance.origin.getY() - pos.getY()) +
                               Math.abs(instance.origin.getZ() - pos.getZ());
 
-            if (dist > currentDist)
+            if (currentDist < shortestDistanceFound && currentDist < range)
             {
-                dist = currentDist;
+                shortestDistanceFound = currentDist;
                 instanceToReturn = instance;
             }
         }

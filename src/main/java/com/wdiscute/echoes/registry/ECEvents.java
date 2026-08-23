@@ -8,6 +8,7 @@ import com.wdiscute.echoes.entity.soul.SoulEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.network.ECCBAddLootPayload;
 import com.wdiscute.echoes.network.ECCBSetLootPayload;
+import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
@@ -26,9 +27,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -70,6 +74,23 @@ public class ECEvents
     }
 
     @SubscribeEvent
+    public static void timelessTick(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        //if server player in timeless
+        if (event.getEntity() instanceof ServerPlayer sp
+            && sp.level() instanceof ServerLevel sl
+            && sl.dimension().equals(Echoes.TIMELESS))
+        {
+            //if no instance found
+            if (TimelessManager.getClosest(sl.getServer(), sp.blockPosition(), 10000) == null)
+            {
+                TeleportTransition respawnInfo = sp.findRespawnPositionAndUseSpawnBlock(false, TeleportTransition.DO_NOTHING);
+                sp.teleport(respawnInfo);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Pre event)
     {
         if (!event.getEntity().level().dimension().equals(Echoes.TIMELESS)) return;
@@ -95,6 +116,12 @@ public class ECEvents
                 event.setNewDamage(event.getNewDamage() + damageToAdd * player.getAttackStrengthScale(0));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void addCommand(RegisterCommandsEvent event)
+    {
+        ECCommands.register(event.getDispatcher(), event.getBuildContext());
     }
 
     @SubscribeEvent

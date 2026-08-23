@@ -178,7 +178,7 @@ public class TimelessGUILayer implements GuiLayer
         //display time remaining if not Long.MAX_VALUE (isHub)
         if (timelessData.timeToExit() != Long.MAX_VALUE)
         {
-            int ticksRemaining = Math.toIntExact(timelessData.timeToExit() - player.level().getGameTime());
+            long ticksRemaining = timelessData.timeToExit() - player.level().getGameTime();
 
             if (ticksRemaining < 0) return;
 

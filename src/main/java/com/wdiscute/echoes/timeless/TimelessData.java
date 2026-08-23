@@ -7,6 +7,7 @@ import com.wdiscute.utils.MaybeStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -114,6 +115,12 @@ public record TimelessData(long timeToExit,
         player.setData(ECDataAttachments.TIMELESS_DATA, data.withInventory(inventory));
     }
 
+    public static void resetProgress(ServerPlayer player)
+    {
+        TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
+        player.setData(ECDataAttachments.TIMELESS_DATA, data.withMaxStage(-1));
+    }
+
     //
     //                         ,--.
     // ,---.   ,---.  ,--.,--. |  |  ,---.
@@ -155,6 +162,4 @@ public record TimelessData(long timeToExit,
 
         return data.souls >= souls;
     }
-
-
 }
