@@ -44,15 +44,13 @@ public class ECDGDataEntriesProvider
                 new DataEntryProvider<>(output, lookup, ECDataEntries.TIMELESS_LEVELS,
                         List.of(
                                 //starter
-                                new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, 12000, false),
-
-                                //hub
-                                new TimelessLevelEntry(Echoes.rl("timeless/hub"), 0, 10, 0, 0, true),
-
+                                new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, 12000, Integer.MAX_VALUE),
+                                
                                 //arenas
-                                new TimelessLevelEntry(Echoes.rl("timeless/first"), 0, 10, 0, 6000, false),
-                                new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, 6000, false),
-                                new TimelessLevelEntry(Echoes.rl("timeless/third"), 0, 10, 0, 6000, false)
+                                new TimelessLevelEntry(Echoes.rl("timeless/first"), 0, 10, 0, 3000, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, 3000, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/third"), 0, 10, 0, 6000, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/forth"), 0, 10, 0, 9000, Integer.MAX_VALUE)
                         )
                 )
         );
@@ -103,7 +101,5 @@ public class ECDGDataEntriesProvider
                         )
                 )
         );
-
-
     }
 }

@@ -2,25 +2,30 @@ package com.wdiscute.echoes.timeless;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataAttachments;
+import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.MaybeStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
+import java.util.Map;
 
 public record TimelessData(long timeToExit,
                            int currentStage,
                            int maxStage,
                            List<MaybeStack> inventory,
                            float souls,
-                           float maxSouls
+                           float maxSouls,
+                           Counter<Identifier> levelsCompleted
 )
 {
-    public static final TimelessData EMPTY = new TimelessData(Long.MAX_VALUE, -1, -1, List.of(), 0, 100);
+    public static final TimelessData EMPTY = new TimelessData(Long.MAX_VALUE, -1, -1, List.of(), 0, 100, new Counter<>());
 
     public static final Codec<TimelessData> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -29,7 +34,8 @@ public record TimelessData(long timeToExit,
                     Codec.INT.fieldOf("max_stage").forGetter(t -> t.maxStage),
                     MaybeStack.CODEC.listOf().fieldOf("inventory").forGetter(t -> t.inventory),
                     Codec.FLOAT.fieldOf("souls").forGetter(t -> t.souls),
-                    Codec.FLOAT.fieldOf("max_souls").forGetter(t -> t.maxSouls)
+                    Codec.FLOAT.fieldOf("max_souls").forGetter(t -> t.maxSouls),
+                    Counter.codec(Identifier.CODEC).fieldOf("levels_played").forGetter(o -> o.levelsCompleted)
             ).apply(instance, TimelessData::new)
     );
 
@@ -40,6 +46,7 @@ public record TimelessData(long timeToExit,
             MaybeStack.STREAM_CODEC.apply(ByteBufCodecs.list()), data -> data.inventory,
             ByteBufCodecs.FLOAT, data -> data.souls,
             ByteBufCodecs.FLOAT, data -> data.maxSouls,
+            Counter.streamCodec(Identifier.STREAM_CODEC), data -> data.levelsCompleted,
             TimelessData::new
     );
 
@@ -50,32 +57,37 @@ public record TimelessData(long timeToExit,
 
     private TimelessData withTimeToExit(long timeToExit)
     {
-        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls);
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
     }
 
     private TimelessData withInventory(List<MaybeStack> inventory)
     {
-        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls);
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
     }
 
     private TimelessData withCurrentStage(int currentStage)
     {
-        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls);
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
     }
 
     private TimelessData withMaxStage(int maxStage)
     {
-        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls);
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
     }
 
     private TimelessData withSouls(float souls)
     {
-        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls);
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
     }
 
     private TimelessData withMaxSouls(int maxSouls)
     {
-        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls);
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
+    }
+
+    private TimelessData withStageCount(Counter<Identifier> stageCount)
+    {
+        return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, stageCount);
     }
 
     //setters helpers
@@ -156,10 +168,9 @@ public record TimelessData(long timeToExit,
         player.setData(ECDataAttachments.TIMELESS_DATA, data.withSouls(Math.min(data.souls + souls, data.maxSouls)));
     }
 
-    public static boolean increaseMaxSouls(Player player, float souls)
+    public static void increaseStageCount(Player player, Identifier stage)
     {
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
-
-        return data.souls >= souls;
+        player.setData(ECDataAttachments.TIMELESS_DATA, data.withStageCount(data.levelsCompleted.add(stage)));
     }
 }

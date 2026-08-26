@@ -4,4 +4,5 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 
 public class SculkHeartRenderState extends EntityRenderState
 {
+    float rot = 0;
 }

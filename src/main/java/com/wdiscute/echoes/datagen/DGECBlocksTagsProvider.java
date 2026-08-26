@@ -48,6 +48,7 @@ public class DGECBlocksTagsProvider extends BlockTagsProvider
                 .add(ECBlocks.SCULKED_DEEPSLATE_WALL.get())
                 .add(ECBlocks.GLEEMSLATE_BRICKS_WALL.get())
                 .add(ECBlocks.GLEEMSLATE_TILES_WALL.get())
+                .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_WALL.get())
         ;
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -90,6 +91,11 @@ public class DGECBlocksTagsProvider extends BlockTagsProvider
                 .add(ECBlocks.SCULKED_DEEPSLATE_SLAB.get())
                 .add(ECBlocks.SCULKED_DEEPSLATE_STAIRS.get())
                 .add(ECBlocks.SCULKED_DEEPSLATE_WALL.get())
+
+                .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS.get())
+                .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_SLAB.get())
+                .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_STAIRS.get())
+                .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS_WALL.get())
         ;
     }
 }

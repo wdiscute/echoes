@@ -27,6 +27,7 @@ public class SculkHeartRenderer extends EntityRenderer<SculkHeartEntity, SculkHe
         super.submit(state, poseStack, node, camera);
 
         poseStack.translate(0, 1.3, 0);
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.rot));
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
         poseStack.scale(1, 1, 1);
@@ -49,5 +50,6 @@ public class SculkHeartRenderer extends EntityRenderer<SculkHeartEntity, SculkHe
     public void extractRenderState(SculkHeartEntity entity, SculkHeartRenderState state, float partialTicks)
     {
         super.extractRenderState(entity, state, partialTicks);
+        state.rot = entity.getYRot();
     }
 }

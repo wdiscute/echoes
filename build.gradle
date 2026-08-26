@@ -27,7 +27,7 @@ sourceSets.main.resources {
 }
 
 repositories {
-    //mavenLocal()
+    mavenLocal()
 
     //modrinth
     maven {
@@ -39,7 +39,7 @@ repositories {
         url = "https://dvs1.progwml6.com/files/maven/"
     }
 
-    //jei
+    //github
     maven {
         url = "https://wdiscute.github.io/"
     }
@@ -52,8 +52,8 @@ repositories {
 
 dependencies {
     //wdUtils
-    jarJar(implementation("com.wdiscute:wdUtils:1.6-NEOFORGE-26.1.2"))
-    //implementation files(".lib/wdutils-1.6-NEOFORGE-26.1.2.jar")
+    //jarJar(implementation("com.wdiscute:wdUtils:1.6-NEOFORGE-26.1.2"))
+    jarJar(implementation("com.wdiscute:wdUtils:1.7-NEOFORGE-26.1.2"))
 
     //FTS
     jarJar(implementation("maven.modrinth:fancytabsections:6.1-NEOFORGE-26.1.2"))
@@ -63,7 +63,7 @@ dependencies {
 
     //iris
     compileOnly "maven.modrinth:YL57xq9U:BO8hxvMR"
-    runtimeOnly "maven.modrinth:YL57xq9U:BO8hxvMR"
+    //runtimeOnly "maven.modrinth:YL57xq9U:BO8hxvMR"
 
     //sodium
     runtimeOnly "maven.modrinth:AANobbMI:UETw0GTI"

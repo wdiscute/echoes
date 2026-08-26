@@ -9,15 +9,15 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public class ECParticles
+public interface ECParticles
 {
-    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
+    DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
             DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, Echoes.MOD_ID);
 
-    public static final Supplier<SimpleParticleType> SCULK =
+    Supplier<SimpleParticleType> SCULK =
             PARTICLE_TYPES.register("sculk", () -> new SimpleParticleType(true));
 
-    public static void register(IEventBus eventBus)
+     static void register(IEventBus eventBus)
     {
         PARTICLE_TYPES.register(eventBus);
     }

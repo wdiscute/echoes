@@ -1,28 +1,33 @@
 [
   {
     "id": "echoes:timeless/starter",
+    "max_uses_per_player": 12000,
     "preferred_level": -1,
     "ticks": 12000,
     "weight": 10
   },
   {
-    "id": "echoes:timeless/hub",
-    "is_hub": true,
-    "weight": 10
-  },
-  {
     "id": "echoes:timeless/first",
-    "ticks": 6000,
+    "max_uses_per_player": 3000,
+    "ticks": 3000,
     "weight": 10
   },
   {
     "id": "echoes:timeless/second",
-    "ticks": 6000,
+    "max_uses_per_player": 3000,
+    "ticks": 3000,
     "weight": 10
   },
   {
     "id": "echoes:timeless/third",
+    "max_uses_per_player": 6000,
     "ticks": 6000,
+    "weight": 10
+  },
+  {
+    "id": "echoes:timeless/forth",
+    "max_uses_per_player": 9000,
+    "ticks": 9000,
     "weight": 10
   }
 ]

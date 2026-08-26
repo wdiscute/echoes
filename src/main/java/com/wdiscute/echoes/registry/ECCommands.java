@@ -14,13 +14,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-public class ECCommands
+public interface ECCommands
 {
-    private static final DynamicCommandExceptionType ERROR_ROD = new DynamicCommandExceptionType(
+    DynamicCommandExceptionType ERROR_ROD = new DynamicCommandExceptionType(
             o -> Component.literal("No Timeless Instance found close-by")
     );
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context)
+    static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context)
     {
         dispatcher.register(Commands.literal("timeless")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))

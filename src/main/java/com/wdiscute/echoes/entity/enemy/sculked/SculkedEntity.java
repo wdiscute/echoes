@@ -40,6 +40,6 @@ public class SculkedEntity extends Zombie implements SculkAura
     @Override
     public float getSculkAura(@Nullable ServerLevel sl)
     {
-        return 3;
+        return 4;
     }
 }

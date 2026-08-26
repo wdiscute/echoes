@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class ECCreativeModeTabs
+public interface ECCreativeModeTabs
 {
-    public static void register(IEventBus bus)
+    static void register(IEventBus bus)
     {
         Identifier echoes = Echoes.rl("echoes");
         FancyTabSections.registerCreativeModeTab(bus, echoes, ECItems.ECHO_BLADE);
-
 
         //general stuff
         FancyTabSections.addSection(echoes,
@@ -136,7 +135,5 @@ public class ECCreativeModeTabs
                         .add(ECBlocks.TRIMMED_GLEEMSLATE)
                         .add(Items.AIR)
         );
-
-
     }
 }

@@ -9,9 +9,9 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wdiscute.echoes.Echoes;
 import net.minecraft.client.renderer.RenderPipelines;
 
-public class ECRenderPipelines
+public interface ECRenderPipelines
 {
-    public static final RenderPipeline.Snippet PORTAL_SNIPPET =
+    RenderPipeline.Snippet PORTAL_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
                     .withVertexShader(Echoes.rl("core/rendertype_end_portal"))
                     .withFragmentShader(Echoes.rl("core/rendertype_end_portal"))
@@ -23,7 +23,7 @@ public class ECRenderPipelines
                     .buildSnippet();
 
 
-    public static final RenderPipeline PORTAL =
+    RenderPipeline PORTAL =
             RenderPipeline.builder(PORTAL_SNIPPET)
                     .withLocation(Echoes.rl("pipeline/end_portal"))
                     .withShaderDefine("PORTAL_LAYERS", 15)

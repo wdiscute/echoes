@@ -2,15 +2,29 @@ package com.wdiscute.echoes.timeless;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataEntries;
+import com.wdiscute.utils.Counter;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
-public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, int levelRange, int ticks, boolean isHub)
+public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, int levelRange, int ticks, int maxUses)
 {
+    public static final TimelessLevelEntry HUB = new TimelessLevelEntry(Echoes.rl("timeless/hub"), 0, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final TimelessLevelEntry TUTORIAL = new TimelessLevelEntry(Echoes.rl("timeless/starter"), 0, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+
     public static final Codec<TimelessLevelEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(TimelessLevelEntry::id),
@@ -18,13 +32,16 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
                     Codec.INT.fieldOf("weight").forGetter(TimelessLevelEntry::weight),
                     Codec.INT.optionalFieldOf("level_range", 0).forGetter(TimelessLevelEntry::levelRange),
                     Codec.INT.optionalFieldOf("ticks", 0).forGetter(TimelessLevelEntry::ticks),
-                    Codec.BOOL.optionalFieldOf("is_hub", false).forGetter(TimelessLevelEntry::isHub)
+                    Codec.INT.optionalFieldOf("max_uses_per_player", Integer.MAX_VALUE).forGetter(TimelessLevelEntry::ticks)
             ).apply(instance, TimelessLevelEntry::new)
     );
 
-    public static @Nullable TimelessLevelEntry getRandomLevel(ServerLevel sl, int level)
+    public static @Nullable TimelessLevelEntry getRandomLevel(ServerLevel sl, Counter<Identifier> levelsCompleted, int level)
     {
-        List<TimelessLevelEntry> entries = ECDataEntries.TIMELESS_LEVELS.get();
+        List<TimelessLevelEntry> entries = ECDataEntries.TIMELESS_LEVELS.get()
+                .stream()
+                .filter(o -> o.maxUses > levelsCompleted.get(o.id))
+                .toList();
 
         if (entries.isEmpty())
             return null;
@@ -34,7 +51,7 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
         for (TimelessLevelEntry entry : entries)
         {
             //if current level is entry's preferred level and has no range
-            if (entry.preferredLevel == level && entry.levelRange == 0 && entry.canUse(level))
+            if (entry.preferredLevel == level && entry.levelRange == 0)
                 return entry;
 
             totalWeight += getWeight(entry, level);
@@ -56,18 +73,8 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
         return entries.getLast();
     }
 
-    private boolean canUse(int level)
-    {
-        //return false if current level is hub but entry is NOT hub
-        //return false if current level is NOT hub but entry is hub
-        return (level == 0 && this.isHub) || (level != 0 && !this.isHub);
-    }
-
     private static float getWeight(TimelessLevelEntry entry, int level)
     {
-        //hub check
-        if(!entry.canUse(level)) return 0;
-
         int preferredLevel = entry.preferredLevel();
         int range = entry.levelRange();
 

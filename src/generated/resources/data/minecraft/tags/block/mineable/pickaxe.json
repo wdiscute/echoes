@@ -29,6 +29,10 @@
     "echoes:sculked_deepslate",
     "echoes:sculked_deepslate_slab",
     "echoes:sculked_deepslate_stairs",
-    "echoes:sculked_deepslate_wall"
+    "echoes:sculked_deepslate_wall",
+    "echoes:sculked_deepslate_bricks",
+    "echoes:sculked_deepslate_bricks_slab",
+    "echoes:sculked_deepslate_bricks_stairs",
+    "echoes:sculked_deepslate_bricks_wall"
   ]
 }

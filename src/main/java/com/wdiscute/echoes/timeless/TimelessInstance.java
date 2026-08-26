@@ -17,6 +17,7 @@ import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.registry.ECParticles;
+import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
 import com.wdiscute.utils.Utils;
@@ -72,9 +73,9 @@ public class TimelessInstance
         return FLIPPED_BLOCKS.stream().toList();
     }
 
-    public void setStage(int stage)
+    public void setDepth(int depth)
     {
-        this.stage = stage;
+        this.depth = depth;
     }
 
     public boolean shouldTick(ServerLevel sl)
@@ -141,7 +142,7 @@ public class TimelessInstance
 
     public boolean isHub()
     {
-        return stage == 0;
+        return depth == 0;
     }
 
     public void addLoot(ServerLevel sl, float lootCount)
@@ -156,7 +157,7 @@ public class TimelessInstance
         {
             loot = new ArrayList<>(loot);
 
-            TimelessLootEntry randomLoot = TimelessLootEntry.getRandomLoot(sl.getRandom(), stage);
+            TimelessLootEntry randomLoot = TimelessLootEntry.getRandomLoot(sl.getRandom(), depth);
 
             if (randomLoot != null)
             {
@@ -189,9 +190,10 @@ public class TimelessInstance
     public long timeToExit;
     public BlockPos portalPos;
     public Identifier portalDimension;
-    public int stage;
+    public int depth;
     public UUID linkedInstance;
     public List<MaybeStack> loot;
+    public Identifier structure;
 
     //converted to list for saving
     public final Map<BlockPos, BlockState> STORED_STATES = new HashMap<>();
@@ -212,19 +214,19 @@ public class TimelessInstance
 
         phase = Phase.ONGOING;
 
-        if (stage == Integer.MIN_VALUE)
-            stage = timelessData.maxStage();
+        if (depth == Integer.MIN_VALUE)
+            depth = timelessData.maxStage();
 
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;
 
-        TimelessLevelEntry entry = spawnStructure(sl);
+        TimelessLevelEntry entry = spawnStructure(sl, TimelessData.get(player).levelsCompleted());
 
         //set time to exit to ticks from json + config
         this.timeToExit = sl.getGameTime() + (entry == null ? 1200 : entry.ticks()) + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
 
         //if first level, no time limit
-        if (stage == -1)
+        if (depth == -1)
             this.timeToExit = Long.MAX_VALUE;
 
         //if hub apply hub linking logic
@@ -512,8 +514,8 @@ public class TimelessInstance
         TimelessData.setTimeToExit(player, Long.MAX_VALUE);
 
         //set currentStage to
-        TimelessData.setCurrentStage(player, stage);
-        TimelessData.setMaxStage(player, stage);
+        TimelessData.setCurrentStage(player, depth);
+        TimelessData.setMaxStage(player, depth);
 
         //teleport player to timeless
         player.teleport(trans);
@@ -565,10 +567,10 @@ public class TimelessInstance
         TimelessData.setTimeToExit(player, getTimeToExit(sl));
 
         //set currentStage
-        TimelessData.setCurrentStage(player, stage);
+        TimelessData.setCurrentStage(player, depth);
 
         //set maxStage
-        TimelessData.setMaxStage(player, stage);
+        TimelessData.setMaxStage(player, depth);
 
         //remove has_lantern just in case
         player.removeData(ECDataAttachments.HAS_LANTERN);
@@ -712,15 +714,20 @@ public class TimelessInstance
         auras.add(Pair.of(pos, radius));
     }
 
-    private TimelessLevelEntry spawnStructure(ServerLevel sl)
+    private TimelessLevelEntry spawnStructure(ServerLevel sl, Counter<Identifier> levelsCompleted)
     {
         //get template structure path
-        TimelessLevelEntry randomLevel = TimelessLevelEntry.getRandomLevel(sl, stage);
+        TimelessLevelEntry randomLevel = TimelessLevelEntry.HUB;
+        if(!isHub())
+        {
+            randomLevel = TimelessLevelEntry.getRandomLevel(sl, levelsCompleted, depth);
 
-        if (randomLevel == null)
-            return null;
+            if (randomLevel == null)
+                return null;
+        }
 
         Identifier template = randomLevel.id();
+        structure = template;
 
         //actually spawn structure
         doSpawnStructure(sl, template.withSuffix("/sculk_"), true);
@@ -876,7 +883,8 @@ public class TimelessInstance
                             BlockPos portalPos,
                             int stage,
                             UUID nextInstance,
-                            List<MaybeStack> loot
+                            List<MaybeStack> loot,
+                            Identifier structure
     )
     {
         this.uuid = uuid;
@@ -887,11 +895,12 @@ public class TimelessInstance
         this.timeToExit = lastsUntil;
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;
-        this.stage = stage;
+        this.depth = stage;
         this.linkedInstance = nextInstance;
         storedStates.forEach(o -> STORED_STATES.put(o.first(), o.second()));
         FLIPPED_BLOCKS.addAll(flippedStates);
         this.loot = loot;
+        this.structure = structure;
     }
 
     public static TimelessInstance create(UUID uuid)
@@ -910,7 +919,8 @@ public class TimelessInstance
                 BlockPos.ZERO,
                 Integer.MIN_VALUE,
                 UUID.randomUUID(),
-                List.of()
+                List.of(),
+                Echoes.MISSINGNO
         );
     }
 
@@ -926,8 +936,9 @@ public class TimelessInstance
                     Codec.LONG.optionalFieldOf("lasts_until", Long.MAX_VALUE).forGetter(o -> o.timeToExit),
                     Identifier.CODEC.fieldOf("portal_dim").forGetter(o -> o.portalDimension),
                     BlockPos.CODEC.optionalFieldOf("portal_pos", BlockPos.ZERO).forGetter(o -> o.portalPos),
-                    Codec.INT.fieldOf("currentStage").forGetter(o -> o.stage),
+                    Codec.INT.fieldOf("currentStage").forGetter(o -> o.depth),
                     UUIDUtil.CODEC.fieldOf("next_instance").forGetter(o -> o.linkedInstance),
-                    MaybeStack.CODEC.listOf().fieldOf("loot").forGetter(o -> o.loot)
+                    MaybeStack.CODEC.listOf().fieldOf("loot").forGetter(o -> o.loot),
+                    Identifier.CODEC.fieldOf("structure").forGetter(o -> o.structure)
             ).apply(instance, TimelessInstance::new));
 }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECParticles;
+import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.registry.ECBlockEntities;
@@ -17,7 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -194,15 +194,15 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 if(currentInstance.isHub())
                 {
                     //end hub
-                    currentInstance.stage = 0;
+                    currentInstance.depth = 0;
                     currentInstance.phase = TimelessInstance.Phase.FINISHED;
 
                     //get linked
                     TimelessInstance linked = TimelessManager.getOrCreate(server, currentInstance.linkedInstance);
 
                     //if linked has no stage
-                    if(linked.stage == Integer.MIN_VALUE)
-                        linked.stage = maxStage;
+                    if(linked.depth == Integer.MIN_VALUE)
+                        linked.depth = maxStage;
 
                     //linked instance (non-hub) should link with hub
                     linked.linkedInstance = currentInstance.uuid;
@@ -213,10 +213,10 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 else
                 {
                     //if is in tutorial
-                    if(currentInstance.stage == -1)
+                    if(currentInstance.depth == -1)
                     {
                         TimelessInstance hub = TimelessManager.getOrCreate(server, currentInstance.linkedInstance);
-                        hub.setStage(0);
+                        hub.setDepth(0);
                         hub.portalDimension = currentInstance.portalDimension;
                         hub.portalPos = currentInstance.portalPos;
                         hub.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
@@ -226,6 +226,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                     {
                         TimelessInstance hub = TimelessManager.getOrNull(server, currentInstance.linkedInstance);
 
+                        //if hub not linked (something went wrong!)
                         if(hub == null)
                         {
                             currentInstance.removePlayer(player);
@@ -244,11 +245,13 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         }
 
                         //if nextInstance has no stage
-                        if(nextInstance.stage == Integer.MIN_VALUE)
-                            nextInstance.stage = maxStage + 1;
+                        if(nextInstance.depth == Integer.MIN_VALUE)
+                            nextInstance.depth = maxStage + 1;
 
                         hub.linkedInstance = nextInstance.uuid;
                         nextInstance.linkedInstance = hub.uuid;
+
+                        TimelessData.increaseStageCount(player, currentInstance.structure);
 
                         //add player to next instance
                         nextInstance.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
@@ -260,7 +263,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
             {
                 TimelessInstance hub = TimelessManager.getOrCreate(server, instanceUUID);
                 //set stage to either 0 (hub) or -1 if player never reached hub
-                hub.stage = Math.min(0, player.getData(ECDataAttachments.TIMELESS_DATA).maxStage());
+                hub.depth = Math.min(0, player.getData(ECDataAttachments.TIMELESS_DATA).maxStage());
                 //add player to either current ongoing instance or make a new one
                 hub.addPlayer(player, pos, level.dimension().identifier());
             }
