@@ -29,5 +29,11 @@
     "max_uses_per_player": 9000,
     "ticks": 9000,
     "weight": 10
+  },
+  {
+    "id": "echoes:timeless/fifth",
+    "max_uses_per_player": 4000,
+    "ticks": 4000,
+    "weight": 10
   }
 ]

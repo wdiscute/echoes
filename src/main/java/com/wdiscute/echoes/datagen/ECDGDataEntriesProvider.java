@@ -45,12 +45,13 @@ public class ECDGDataEntriesProvider
                         List.of(
                                 //starter
                                 new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, 12000, Integer.MAX_VALUE),
-                                
+
                                 //arenas
                                 new TimelessLevelEntry(Echoes.rl("timeless/first"), 0, 10, 0, 3000, Integer.MAX_VALUE),
                                 new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, 3000, Integer.MAX_VALUE),
                                 new TimelessLevelEntry(Echoes.rl("timeless/third"), 0, 10, 0, 6000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/forth"), 0, 10, 0, 9000, Integer.MAX_VALUE)
+                                new TimelessLevelEntry(Echoes.rl("timeless/forth"), 0, 10, 0, 9000, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/fifth"), 0, 10, 0, 4000, Integer.MAX_VALUE)
                         )
                 )
         );

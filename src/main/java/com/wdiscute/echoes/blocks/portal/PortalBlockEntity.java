@@ -243,7 +243,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         {
                             //if hub is linked and hub's link is not where you're already at, set nextInstance to hub's link
                             //this only happens if 2 players are in the same "ground" and one player jumps 2 levels ahead
-                            if(hub.isHub() && hub.linkedInstance != currentInstance.uuid)
+                            if(hub.isHub() && !hub.linkedInstance.equals(currentInstance.uuid))
                                 nextInstance = TimelessManager.getOrCreate(server, hub.linkedInstance);
                             else
                                 nextInstance = TimelessManager.getOrCreate(server, UUID.randomUUID());
