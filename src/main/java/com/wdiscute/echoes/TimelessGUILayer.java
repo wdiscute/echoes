@@ -90,6 +90,8 @@ public class TimelessGUILayer implements GuiLayer
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         Font font = Minecraft.getInstance().font;
+        int x = width / 2 - 125;
+        int y = height - 37;
 
         //
         //                         ,--.     ,--.
@@ -99,18 +101,19 @@ public class TimelessGUILayer implements GuiLayer
         //`----'   `---'   `----'  `--'      `---'   `--`--' `--'
         //
 
-        int x = width / 2 - 125;
-        int y = height - 37;
-        float smoothingTime = 0.2f;
-        long now = System.nanoTime();
-        float t = Math.min((now - lastFrame) / 1000000f / smoothingTime, 1.0f);
-        smoothSouls = smoothSouls + (timelessData.souls() - smoothSouls) * t;
-        lastFrame = now;
+        if(!player.isSpectator() && !player.isCreative())
+        {
+            float smoothingTime = 0.2f;
+            long now = System.nanoTime();
+            float t = Math.min((now - lastFrame) / 1000000f / smoothingTime, 1.0f);
+            smoothSouls = smoothSouls + (timelessData.souls() - smoothSouls) * t;
+            lastFrame = now;
 
-        double percentageOfBar = timelessData.maxSouls() / smoothSouls;
-        int barWidth = (int) (180 / percentageOfBar);
-        SOUL_BAR_BACKGROUND.render(guiGraphics, x, y);
-        SOUL_BAR_PROGRESS.render(guiGraphics, x + 35, y, 35, 0, barWidth, 20);
+            double percentageOfBar = timelessData.maxSouls() / smoothSouls;
+            int barWidth = (int) (180 / percentageOfBar);
+            SOUL_BAR_BACKGROUND.render(guiGraphics, x, y);
+            SOUL_BAR_PROGRESS.render(guiGraphics, x + 35, y, 35, 0, barWidth, 20);
+        }
 
         //
         // ,--.                   ,--.
@@ -142,9 +145,7 @@ public class TimelessGUILayer implements GuiLayer
                     cornerOffset + 20, height - cornerOffset - 12 - i * 24, 0xffffffff, true);
 
             ScreenUtils.item(guiGraphics, stack, cornerOffset, height - cornerOffset - 16 - i * 24);
-
         }
-
 
         //
         //                          ,--.     ,--.                                 ,--.
@@ -154,18 +155,21 @@ public class TimelessGUILayer implements GuiLayer
         // `----'   `---'   `----'  `--'     `--' `--'  `----'  `--`--' `--'      `--'   `----'
         //
 
-        //render empty hearts overlay
-        for (int i = 0; i < timelessHearts.soulHearts(); i++)
-            SOUL_HEART_EMPTY.render(guiGraphics, x + 206 - 8 * (i % 10), y - 2 - (i / 10 * 10));
+        if(!player.isSpectator() && !player.isCreative())
+        {
+            //render empty hearts overlay
+            for (int i = 0; i < timelessHearts.soulHearts(); i++)
+                SOUL_HEART_EMPTY.render(guiGraphics, x + 206 - 8 * (i % 10), y - 2 - (i / 10 * 10));
 
-        //render full hearts
-        int fullHearts = timelessHearts.soulHP() / 2;
-        for (int i = 0; i < fullHearts; i++)
-            SOUL_HEART_FULL.render(guiGraphics, x + 206 - 8 * i, y - 2);
+            //render full hearts
+            int fullHearts = timelessHearts.soulHP() / 2;
+            for (int i = 0; i < fullHearts; i++)
+                SOUL_HEART_FULL.render(guiGraphics, x + 206 - 8 * i, y - 2);
 
-        //render last heart
-        if (timelessHearts.soulHP() % 2 == 1)
-            SOUL_HEART_HALF.render(guiGraphics, x + 206 - 8 * fullHearts, y - 2);
+            //render last heart
+            if (timelessHearts.soulHP() % 2 == 1)
+                SOUL_HEART_HALF.render(guiGraphics, x + 206 - 8 * fullHearts, y - 2);
+        }
 
         //
         //   ,--.   ,--.

@@ -5,10 +5,10 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
+import com.wdiscute.echoes.entity.specter.SpecterEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.network.ECCBAddLootPayload;
 import com.wdiscute.echoes.network.ECCBSetLootPayload;
-import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
@@ -27,7 +27,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -74,7 +73,7 @@ public class ECEvents
     }
 
     @SubscribeEvent
-    public static void timelessTick(PlayerEvent.PlayerLoggedInEvent event)
+    public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
     {
         //if server player in timeless
         if (event.getEntity() instanceof ServerPlayer sp
@@ -86,6 +85,11 @@ public class ECEvents
             {
                 TeleportTransition respawnInfo = sp.findRespawnPositionAndUseSpawnBlock(false, TeleportTransition.DO_NOTHING);
                 sp.teleport(respawnInfo);
+            }
+            else
+            {
+                SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), EntitySpawnReason.TRIGGERED);
+                specter.setPlayer(sp);
             }
         }
     }
@@ -151,7 +155,7 @@ public class ECEvents
                 TimelessInstance closest = TimelessManager.getClosest(sp.level().getServer(), sp.blockPosition());
 
                 //remove player
-                if (closest != null) closest.removePlayer(sp);
+                if (closest != null) closest.killPlayer(sp);
             }
             return;
         }

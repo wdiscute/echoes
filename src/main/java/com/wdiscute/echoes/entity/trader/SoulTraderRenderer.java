@@ -38,15 +38,15 @@ public class SoulTraderRenderer extends EntityRenderer<SoulTraderEntity, SoulTra
         poseStack.scale(2, 2, 2);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
-
-
-
-
-
-
         poseStack.mulPose(Axis.YP.rotationDegrees(90));
 
 
+
+
+
+
+
+        //todo fix light coords so it doesn't darken when entity is inside a block
         node.submitModel(
                 soulTraderModel, state, poseStack, RenderTypes.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION),
                 state.lightCoords, OverlayTexture.NO_OVERLAY,

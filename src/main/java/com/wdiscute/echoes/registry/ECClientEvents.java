@@ -19,6 +19,8 @@ import com.wdiscute.echoes.entity.lantern.LanternRenderer;
 import com.wdiscute.echoes.ECPostProcessing;
 import com.wdiscute.echoes.entity.soul.SoulModel;
 import com.wdiscute.echoes.entity.soul.SoulRenderer;
+import com.wdiscute.echoes.entity.specter.SpecterModel;
+import com.wdiscute.echoes.entity.specter.SpecterRenderer;
 import com.wdiscute.echoes.entity.trader.SoulTraderModel;
 import com.wdiscute.echoes.entity.trader.SoulTraderRenderer;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
@@ -87,6 +89,7 @@ public class ECClientEvents
         EntityRenderers.register(ECEntities.SCULK_HEART.get(), SculkHeartRenderer::new);
         EntityRenderers.register(ECEntities.TIMELESS_CORPSE.get(), TimelessCorpseRenderer::new);
         EntityRenderers.register(ECEntities.SOUL.get(), SoulRenderer::new);
+        EntityRenderers.register(ECEntities.SPECTER.get(), SpecterRenderer::new);
         EntityRenderers.register(ECEntities.UNLEASHED_SOUL.get(), UnleashedSoulRenderer::new);
         EntityRenderers.register(ECEntities.SCULKED.get(), SculkedRenderer::new);
         EntityRenderers.register(ECEntities.HOLLOWED.get(), HollowedRenderer::new);
@@ -99,6 +102,7 @@ public class ECClientEvents
         event.registerLayerDefinition(HeartModel.LAYER_LOCATION, HeartModel::createBodyLayer);
         event.registerLayerDefinition(LanternModel.LAYER_LOCATION, LanternModel::createBodyLayer);
         event.registerLayerDefinition(SoulModel.LAYER_LOCATION, SoulModel::createBodyLayer);
+        event.registerLayerDefinition(SpecterModel.LAYER_LOCATION, SpecterModel::createBodyLayer);
         event.registerLayerDefinition(UnleashedSoulModel.LAYER_LOCATION, UnleashedSoulModel::createBodyLayer);
         event.registerLayerDefinition(TimelessCorpseModel.LAYER_LOCATION, TimelessCorpseModel::createBodyLayer);
         event.registerLayerDefinition(TimelessCorpseModelSlim.LAYER_LOCATION, TimelessCorpseModelSlim::createBodyLayer);

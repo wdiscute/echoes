@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -136,40 +137,40 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
     }
 
     @Override
-    public void tickServer(ServerLevel level, BlockPos pos, BlockState state)
+    public void tickServer(ServerLevel sl, BlockPos pos, BlockState state)
     {
-        TickableBlockEntity.super.tickServer(level, pos, state);
+        TickableBlockEntity.super.tickServer(sl, pos, state);
 
-        SCULK_SPREADER.updateCursors(level, pos, level.getRandom(), true);
+        SCULK_SPREADER.updateCursors(sl, pos, sl.getRandom(), true);
 
         if (state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.LOOTING))
         {
             BlockPos bp = getBlockPos();
             if (loot == null || loot.isEmpty())
             {
-                level.setBlockAndUpdate(bp, getBlockState().trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN));
-                level.playSound(null, bp, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS);
+                sl.setBlockAndUpdate(bp, getBlockState().trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN));
+                sl.playSound(null, bp, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS);
                 return;
             }
 
             lootCooldown--;
 
-            if (lootCooldown > 10 && level.getRandom().nextFloat() > 0.9)
+            if (lootCooldown > 10 && sl.getRandom().nextFloat() > 0.9)
             {
                 Vec3 center = bp.above().getCenter();
-                level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z,
+                sl.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z,
                         1, 0, 0, 0, 0);
 
-                level.playSound(null, bp.above(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 0.3f, 0.3f);
+                sl.playSound(null, bp.above(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 0.3f, 0.3f);
             }
 
             //drop item
             if (lootCooldown == 0)
             {
-                Vec3 itemPos = Vec3.atLowerCornerWithOffset(pos, 0.5, 2, 0.5).add(0, level.getRandom().nextFloat() / 2, 0);
-                ItemEntity entity = new ItemEntity(level, itemPos.x(), itemPos.y(), itemPos.z(), loot.getFirst().toStack());
+                Vec3 itemPos = Vec3.atLowerCornerWithOffset(pos, 0.5, 2, 0.5).add(0, sl.getRandom().nextFloat() / 2, 0);
+                ItemEntity entity = new ItemEntity(sl, itemPos.x(), itemPos.y(), itemPos.z(), loot.getFirst().toStack());
                 entity.setDefaultPickUpDelay();
-                level.addFreshEntity(entity);
+                sl.addFreshEntity(entity);
                 lootCooldown = Math.max(1, (int) Math.round(10.0 / Math.sqrt(loot.size())));
                 loot.removeFirst();
             }
@@ -178,12 +179,16 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         //if portal is not open
         if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN)) return;
 
-        for (ServerPlayer player : level.getEntitiesOfClass(Player.class, new AABB(pos.above().above())).stream().map(o -> ((ServerPlayer) o)).toList())
+        for (ServerPlayer player : sl.getEntitiesOfClass(Player.class, new AABB(pos.above().above()))
+                .stream()
+                .filter(o -> !o.isSpectator())
+                .map(o -> ((ServerPlayer) o))
+                .toList())
         {
             int maxStage = player.getData(ECDataAttachments.TIMELESS_DATA).maxStage();
 
             //if player on timeless
-            MinecraftServer server = level.getServer();
+            MinecraftServer server = sl.getServer();
             if (player.level().dimension().equals(Echoes.TIMELESS))
             {
                 TimelessInstance currentInstance = TimelessManager.getClosest(server, player.blockPosition());
@@ -255,6 +260,17 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
 
                         //add player to next instance
                         nextInstance.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);
+
+                        //add spectators to new instance
+                        currentInstance.getPlayers(sl)
+                                .stream()
+                                .filter(Player::isSpectator)
+                                .forEach(o ->
+                                {
+                                    //set to survival
+                                    o.setGameMode(GameType.SURVIVAL);
+                                    nextInstance.addPlayer(o, currentInstance.portalPos, currentInstance.portalDimension);
+                                });
                     }
                 }
             }
@@ -265,7 +281,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 //set stage to either 0 (hub) or -1 if player never reached hub
                 hub.depth = Math.min(0, player.getData(ECDataAttachments.TIMELESS_DATA).maxStage());
                 //add player to either current ongoing instance or make a new one
-                hub.addPlayer(player, pos, level.dimension().identifier());
+                hub.addPlayer(player, pos, sl.dimension().identifier());
             }
         }
     }

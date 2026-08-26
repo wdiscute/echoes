@@ -10,12 +10,14 @@ import com.wdiscute.echoes.SculkAura;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
+import com.wdiscute.echoes.entity.specter.SpecterEntity;
 import com.wdiscute.echoes.network.ECCBAddLootPayload;
 import com.wdiscute.echoes.network.ECCBSetLootPayload;
 import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
+import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.registry.ECParticles;
 import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.MaybeStack;
@@ -37,8 +39,10 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -436,7 +440,7 @@ public class TimelessInstance
 
     public List<ServerPlayer> getPlayers(ServerLevel sl)
     {
-        //get all players within 1000 blocks from origin
+        //get all non-spectator players within 1000 blocks from origin
         return sl.getPlayers(o -> origin.distManhattan(o.blockPosition()) < 1000);
     }
 
@@ -466,11 +470,42 @@ public class TimelessInstance
         rings.add(new Utils.Trio<>(position, startSize, increase));
     }
 
+    public void killPlayer(ServerPlayer sp)
+    {
+        ServerLevel sl = sp.level();
+        //get non-spectator players
+        List<ServerPlayer> players = getPlayers(sl).stream().filter(o -> !o.isSpectator() && o != sp).toList();
+
+        //if on hub on tutorial, kick out
+        if (isHub() || depth == -1)
+        {
+            removePlayer(sp);
+            return;
+        }
+
+        //if there's another player still alive, set to spectator
+        if (!players.isEmpty())
+        {
+            sp.teleportTo(sp.getX(), -64, sp.getZ());
+            SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), EntitySpawnReason.TRIGGERED);
+            specter.setPlayer(sp);
+            specter.setPos(sp.position());
+            sp.setGameMode(GameType.SPECTATOR);
+        }
+        //otherwise remove all players
+        else
+            getPlayers(sl).forEach(this::removePlayer);
+    }
+
     public void removePlayer(ServerPlayer player)
     {
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
 
         ServerLevel sl = player.level();
+
+        //set to survival
+        if (player.isSpectator())
+            player.setGameMode(GameType.SURVIVAL);
 
         //add regen
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 5));
@@ -525,6 +560,8 @@ public class TimelessInstance
     {
         //get timeless server level
         ServerLevel sl = player.level().getServer().getLevel(Echoes.TIMELESS);
+
+        player.heal(3425);
 
         //load dimension + structures
         attemptLoad(player, sl, portalPos, portalDimension);
@@ -718,7 +755,7 @@ public class TimelessInstance
     {
         //get template structure path
         TimelessLevelEntry randomLevel = TimelessLevelEntry.HUB;
-        if(!isHub())
+        if (!isHub())
         {
             randomLevel = TimelessLevelEntry.getRandomLevel(sl, levelsCompleted, depth);
 
@@ -905,7 +942,7 @@ public class TimelessInstance
 
     public static TimelessInstance create(UUID uuid)
     {
-        BlockPos origin = new BlockPos(Utils.r.nextInt(50000000 / 2), 100, Utils.r.nextInt(50000000 / 2));
+        BlockPos origin = new BlockPos(Utils.r.nextInt(50000000 / 2), -50, Utils.r.nextInt(50000000 / 2));
         return new TimelessInstance(
                 uuid,
                 origin,
