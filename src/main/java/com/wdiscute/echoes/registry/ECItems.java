@@ -17,6 +17,7 @@ public interface ECItems
     DeferredRegister.Items ITEMS = DeferredRegister.createItems(Echoes.MOD_ID);
 
     DeferredItem<Item> SOUL_HEART_CONTAINER = ITEMS.registerItem("soul_heart_container", SoulHeartContainer::new);
+    DeferredItem<Item> SOUL = ITEMS.registerItem("soul", BasicItem::new);
 
 
     //weapons

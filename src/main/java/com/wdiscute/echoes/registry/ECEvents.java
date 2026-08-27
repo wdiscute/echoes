@@ -112,7 +112,7 @@ public class ECEvents
         {
             ItemStack weaponItem = event.getSource().getWeaponItem() == null ? ItemStack.EMPTY : event.getSource().getWeaponItem();
 
-            List<PerkInstance> perks = Perk.getPerks(player, weaponItem);
+            List<PerkInstance> perks = Perk.getActivePerks(player, weaponItem);
 
             for (PerkInstance perk : perks)
             {
@@ -182,7 +182,7 @@ public class ECEvents
         if (player == null)
             perks = List.of();
         else
-            perks = Perk.getPerks(player, weapon);
+            perks = Perk.getActivePerks(player, weapon);
 
         //add souls from perks
         for (PerkInstance perk : perks)

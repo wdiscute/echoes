@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.blocks.display;
 
 import com.mojang.serialization.MapCodec;
+import com.wdiscute.echoes.Rarity;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 public class DisplayBlock extends HorizontalDirectionalBlock implements EntityBlock
 {
-    public static final EnumProperty<BlacksmithTrade.Rarity> RARITY = EnumProperty.create("rarity", BlacksmithTrade.Rarity.class);
+    public static final EnumProperty<Rarity> RARITY = EnumProperty.create("rarity", Rarity.class);
 
     public DisplayBlock(Properties properties)
     {

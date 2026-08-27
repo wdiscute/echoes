@@ -10,13 +10,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Perk
 {
-    public static List<PerkInstance> getPerks(@NotNull Player player, @NotNull ItemStack weaponItem)
+    public static List<PerkInstance> getActivePerks(@NotNull Player player, @NotNull ItemStack weaponItem)
     {
         List<PerkInstance> perks = new ArrayList<>();
 
@@ -52,6 +51,10 @@ public abstract class Perk
         return 0;
     }
 
+    public float addChestRolls(Player player, List<Float> amplifiers)
+    {
+        return 0;
+    }
 
     public abstract List<MutableComponent> getItemTooltip(ItemStack stack, List<Float> value);
 

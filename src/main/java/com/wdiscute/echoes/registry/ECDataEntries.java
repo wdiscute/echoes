@@ -23,6 +23,10 @@ public interface ECDataEntries
             TimelessLootEntry.CODEC.listOf(),
             List.of());
 
+    DataEntry<List<TimelessLootEntry>> CHEST_LOOT = DataEntry.register(Echoes.rl("chest_loot"),
+            TimelessLootEntry.CODEC.listOf(),
+            List.of());
+
     DataEntry<Map<Identifier, Float>> SOULS = DataEntry.register(Echoes.rl("souls_per_entity"),
             Codec.unboundedMap(Identifier.CODEC, Codec.FLOAT),
             Map.of());

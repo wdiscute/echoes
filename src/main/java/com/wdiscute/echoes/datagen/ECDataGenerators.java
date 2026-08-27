@@ -40,7 +40,7 @@ public class ECDataGenerators
         event.createProvider(DGECBlocksTagsProvider::new);
 
         //item tags
-        //event.createProvider(DGECBlocksTagsProvider::new);
+        event.createProvider(DGECItemTagsProvider::new);
 
         //loot table
         gen.addProvider(true, new LootTableProvider(output, Collections.emptySet(),

@@ -1,6 +1,7 @@
 package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.Rarity;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECItems;
@@ -55,15 +56,15 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         //
 
         //10 spine > echoing marrow
-        resourceTrade(context, BlacksmithTrade.Rarity.COMMON, 10, new MaybeStack(ECItems.HOLLOWED_SPINE.get()),
+        resourceTrade(context, Rarity.COMMON, 10, new MaybeStack(ECItems.HOLLOWED_SPINE.get()),
                 new MaybeStack(ECItems.ECHOING_MARROW.get(), 10));
 
         //10 teeth > 1 brain
-        resourceTrade(context, BlacksmithTrade.Rarity.COMMON, 10, new MaybeStack(ECItems.ROT_BRAIN.get()),
+        resourceTrade(context, Rarity.COMMON, 10, new MaybeStack(ECItems.ROT_BRAIN.get()),
                 new MaybeStack(ECItems.SCULKED_TEETH.get(), 10));
 
         //4 rot brains, 4 hollowed spine > soul heart container
-        resourceTrade(context, BlacksmithTrade.Rarity.COMMON, 10, new MaybeStack(ECItems.SOUL_HEART_CONTAINER.get()),
+        resourceTrade(context, Rarity.COMMON, 10, new MaybeStack(ECItems.SOUL_HEART_CONTAINER.get()),
                 new MaybeStack(ECItems.ROT_BRAIN.get(), 4), new MaybeStack(ECItems.HOLLOWED_SPINE.get(), 4));
 
 
@@ -206,7 +207,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
     //list must have 5 entries
     private record RaritifiedCost(Item item, RarityValues rarityValues)
     {
-        public MaybeStack makeMaybeStack(BlacksmithTrade.Rarity rarity)
+        public MaybeStack makeMaybeStack(Rarity rarity)
         {
             return new MaybeStack(item, (int) rarityValues.getForRarity(rarity));
         }
@@ -214,7 +215,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     private record RaritifiedPerk(Holder<Perk> perk, RarityValues... rarityValues)
     {
-        public PerkInstance makePerkInstance(BlacksmithTrade.Rarity rarity)
+        public PerkInstance makePerkInstance(Rarity rarity)
         {
             List<Float> valuesForRarity = new ArrayList<>();
 
@@ -234,7 +235,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
             return new RarityValues(common, uncommon, rare, epic, legendary);
         }
 
-        float getForRarity(BlacksmithTrade.Rarity rarity)
+        float getForRarity(Rarity rarity)
         {
             return switch (rarity)
             {
@@ -247,7 +248,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
         }
     }
 
-    static void resourceTrade(BootstrapContext<BlacksmithTrade> context, BlacksmithTrade.Rarity rarity, int weight, MaybeStack stack, MaybeStack... cost)
+    static void resourceTrade(BootstrapContext<BlacksmithTrade> context, Rarity rarity, int weight, MaybeStack stack, MaybeStack... cost)
     {
         //register trade
         register(context, new BlacksmithTrade(stack, rarity, Arrays.stream(cost).toList(), weight));
@@ -256,7 +257,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
     static void allRarities(BootstrapContext<BlacksmithTrade> context, Item item, List<RaritifiedCost> cost, RaritifiedPerk... perks)
     {
         //for each rarity
-        for (BlacksmithTrade.Rarity rarity : BlacksmithTrade.Rarity.values())
+        for (Rarity rarity : Rarity.values())
         {
             int weight = switch (rarity)
             {

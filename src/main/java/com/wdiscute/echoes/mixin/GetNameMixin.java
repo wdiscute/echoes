@@ -1,5 +1,6 @@
 package com.wdiscute.echoes.mixin;
 
+import com.wdiscute.echoes.Rarity;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.libtooltips.Tooltips;
@@ -48,7 +49,7 @@ public class GetNameMixin
             }
             else baseName = item.value().getName(item.value().getDefaultInstance());
 
-            BlacksmithTrade.Rarity rarity = stack.getOrDefault(ECDataComponents.RARITY, BlacksmithTrade.Rarity.COMMON);
+            Rarity rarity = stack.getOrDefault(ECDataComponents.RARITY, Rarity.COMMON);
 
             //decode name string and return value
             MutableComponent returnValue = Tooltips.resolveTagsToComponent(rarity.wrapWithRarityMarkdownAsString(baseName.getString()));

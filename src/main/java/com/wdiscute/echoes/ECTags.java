@@ -9,7 +9,10 @@ import net.minecraft.world.level.block.Block;
 public interface ECTags
 {
     TagKey<Block> SKIPS_SCULK_TRANSFORMATION = createBlock("skips_sculk_transformation");
+
     TagKey<Block> SUPPORTS_SCULK_TENDRIL = createBlock("supports_sculk_tendril");
+
+    TagKey<Item> REMOVED_ON_TIMELESS_EXIT = createItem("removed_on_timeless_exit");
 
 
 

@@ -14,11 +14,8 @@ import com.wdiscute.echoes.entity.specter.SpecterEntity;
 import com.wdiscute.echoes.network.ECCBAddLootPayload;
 import com.wdiscute.echoes.network.ECCBSetLootPayload;
 import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
-import com.wdiscute.echoes.registry.ECBlocks;
-import com.wdiscute.echoes.registry.ECDataAttachments;
+import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.registry.ECEntities;
-import com.wdiscute.echoes.registry.ECParticles;
 import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
@@ -161,7 +158,7 @@ public class TimelessInstance
         {
             loot = new ArrayList<>(loot);
 
-            TimelessLootEntry randomLoot = TimelessLootEntry.getRandomLoot(sl.getRandom(), depth);
+            TimelessLootEntry randomLoot = TimelessLootEntry.getRandomLoot(sl.getRandom(), depth, false);
 
             if (randomLoot != null)
             {
@@ -514,14 +511,19 @@ public class TimelessInstance
         PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(List.of()));
 
         //save overworld inventory and swap to timeless inventory
-        List<MaybeStack> inventory = data.inventory();
-        List<MaybeStack> list = new ArrayList<>();
+        List<MaybeStack> currentInventory = data.inventory();
+        List<MaybeStack> inventoryToStore = new ArrayList<>();
         for (int i = 0; i < 100; i++)
         {
-            list.add(new MaybeStack(player.getInventory().getItem(i)));
+            ItemStack item = player.getInventory().getItem(i);
 
-            if (inventory.size() > i)
-                player.getInventory().setItem(i, inventory.get(i).toStack());
+            //if item should be removed, set item to empty
+            if (item.is(ECTags.REMOVED_ON_TIMELESS_EXIT)) item = ItemStack.EMPTY;
+
+            inventoryToStore.add(new MaybeStack(item));
+
+            if (currentInventory.size() > i)
+                player.getInventory().setItem(i, currentInventory.get(i).toStack());
         }
 
         //make transition or use respawn point if no pos/dim is set
@@ -543,7 +545,7 @@ public class TimelessInstance
         );
 
         //store overworld inventory
-        TimelessData.setInventory(player, list);
+        TimelessData.setInventory(player, inventoryToStore);
 
         //set time to exit so it doesn't render on gui
         TimelessData.setTimeToExit(player, Long.MAX_VALUE);
