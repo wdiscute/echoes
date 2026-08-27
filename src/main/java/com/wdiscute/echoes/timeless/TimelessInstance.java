@@ -554,7 +554,7 @@ public class TimelessInstance
 
         //set currentStage to
         TimelessData.setCurrentStage(player, depth);
-        TimelessData.setMaxStage(player, depth);
+        TimelessData.setMaxStage(player, Math.max(0, depth - ECConfig.LEVEL_PENALTY_FOR_DYING.get()));
 
         //teleport player to timeless
         player.teleport(trans);

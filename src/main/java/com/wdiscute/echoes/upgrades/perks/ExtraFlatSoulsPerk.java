@@ -12,7 +12,7 @@ import java.util.List;
 public class ExtraFlatSoulsPerk extends SimplePerk
 {
     @Override
-    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
+    public float addFlatSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
     {
         return amplifier.getFirst();
     }

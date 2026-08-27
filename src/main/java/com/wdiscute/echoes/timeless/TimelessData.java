@@ -2,6 +2,7 @@ package com.wdiscute.echoes.timeless;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wdiscute.echoes.ECConfig;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.utils.Counter;

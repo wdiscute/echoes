@@ -34,7 +34,7 @@ public class ECConfig
     public static final ModConfigSpec.IntValue BASE_CHEST_ROLLS = BUILDER_SERVER
             .comment("How many base rolls to do per chest")
             .translation("echoes.configuration.base_chest_rolls")
-            .defineInRange("base_chest_rolls", 2, 0, Integer.MAX_VALUE);
+            .defineInRange("base_chest_rolls", 5, 0, Integer.MAX_VALUE);
 
     static final ModConfigSpec SPEC_SERVER = BUILDER_SERVER.build();
 }

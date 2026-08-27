@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,12 @@ public abstract class Perk
         return 0;
     }
 
-    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
+    public float addFlatSouls(Player player, ItemStack weapon, @Nullable LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
+    {
+        return 0;
+    }
+
+    public float addPercentSouls(Player player, ItemStack weapon, @Nullable LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
     {
         return 0;
     }

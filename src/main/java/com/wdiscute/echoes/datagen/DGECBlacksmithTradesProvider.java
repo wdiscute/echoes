@@ -94,7 +94,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RarityValues(2F, 3F, 4F, 5F, 6F),
 
                         //extra souls gathered percentage
-                        new RarityValues(1.6F, 1.8F, 2F, 2.2F, 3F),
+                        new RarityValues(0.6F, 0.8F, 1F, 1.2F, 2F),
                         //extra souls gathered flat
                         new RarityValues(0.5F, 1F, 1.5F, 2F, 5F)
                 )

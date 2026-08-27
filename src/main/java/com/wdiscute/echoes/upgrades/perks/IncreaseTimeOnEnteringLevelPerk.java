@@ -13,12 +13,6 @@ import java.util.List;
 public class IncreaseTimeOnEnteringLevelPerk extends SimplePerk
 {
     @Override
-    public float reduceDamage(Player player, List<Float> amplifiers)
-    {
-        return amplifiers.getFirst();
-    }
-
-    @Override
     public void onNewInstanceEntered(ServerPlayer player, List<Float> amplifiers, TimelessInstance instance)
     {
         instance.addTime(player.level(), amplifiers.getFirst().longValue());

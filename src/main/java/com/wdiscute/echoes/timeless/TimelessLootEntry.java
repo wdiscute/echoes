@@ -41,7 +41,7 @@ public record TimelessLootEntry(MaybeStack stack, Rarity rarity, int preferredLe
         List<ItemStack> loot = new ArrayList<>();
 
         //add +1 based on extra float as a chance
-        if(randomSource.nextFloat() > rolls % 1)
+        if(randomSource.nextFloat() < rolls % 1)
             rolls++;
 
         for (int i = 0; i < rolls; i++)
@@ -104,17 +104,17 @@ public record TimelessLootEntry(MaybeStack stack, Rarity rarity, int preferredLe
 
         //if no preferred level, return 1
         if (preferredLevel == 0)
-            return 1.0f;
+            return entry.weight;
 
         //if no range but does have a preferred level, return 1 if matching level
         if (range <= 0)
-            return level == preferredLevel ? 1.0f : 0.0f;
+            return level == preferredLevel ? entry.weight : 0.0f;
 
         float distance = Math.abs(level - preferredLevel);
 
         if (distance >= range)
             return 0.0f;
 
-        return 1.0f - (distance / range);
+        return entry.weight - (distance / range);
     }
 }

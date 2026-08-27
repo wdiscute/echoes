@@ -14,9 +14,9 @@ import java.util.List;
 public class ExtraPercentageSoulsPerk extends SimplePerk
 {
     @Override
-    public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
+    public float addPercentSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
     {
-        return currentSouls * amplifier.getFirst();
+        return amplifier.getFirst();
     }
 
     @Override

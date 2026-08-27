@@ -214,5 +214,11 @@ public class ECDGModelProvider extends ModelProvider
         itemModels.generateFlatItem(ECItems.LUCENT_SHARD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.CRYSTAL_CORE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ECItems.LUCENT_DIE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        //armor
+        itemModels.generateFlatItem(ECItems.TIMELOST_HELMET.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.TIMELOST_CHESTPLATE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.TIMELOST_LEGGINGS.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ECItems.TIMELOST_BOOTS.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
     }
 }

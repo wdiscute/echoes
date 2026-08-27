@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "echoes:timelost"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "echoes:timelost"
+      }
+    ]
+  }
+}

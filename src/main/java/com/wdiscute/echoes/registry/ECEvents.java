@@ -9,6 +9,7 @@ import com.wdiscute.echoes.entity.specter.SpecterEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.network.ECCBAddLootPayload;
 import com.wdiscute.echoes.network.ECCBSetLootPayload;
+import com.wdiscute.echoes.timeless.SoulsApi;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -113,7 +115,9 @@ public class ECEvents
 
             for (PerkInstance perk : perks)
             {
-                event.setNewDamage(event.getNewDamage() - perk.perk().reduceDamage(player, perk.amplifiers()));
+                float reduceDamage = perk.perk().reduceDamage(player, perk.amplifiers());
+                float newDamage = Math.max(0, event.getNewDamage() - reduceDamage);
+                event.setNewDamage(newDamage);
             }
         }
 
@@ -177,7 +181,6 @@ public class ECEvents
                 closest.addLoot(sl, (float) (entityKilled.getData(ECDataAttachments.LOOT_COUNT) * ECConfig.GLOBAL_EXTRA_TIMELESS_LOOT_DROPS.getAsDouble()));
         }
 
-        float souls = ECDataEntries.SOULS.get().getOrDefault(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType()), 0f);
         Player player = sl.getNearestPlayer(entityKilled, 1000);
         ItemStack weapon = ItemStack.EMPTY;
         List<PerkInstance> perks;
@@ -195,10 +198,6 @@ public class ECEvents
         else
             perks = Perk.getActivePerks(player, weapon);
 
-        //add souls from perks
-        for (PerkInstance perk : perks)
-            souls += perk.perk().addSouls(player, weapon, entityKilled, perk.amplifiers(), souls);
-
         //trigger perks
         for (PerkInstance perk : perks)
             perk.perk().onEntityKilled(player, weapon, entityKilled, perk.amplifiers());
@@ -206,27 +205,17 @@ public class ECEvents
         //spawn souls
         if (player != null)
         {
-            float chance = souls % 1;
-            //spawn extra soul based on chance
-            // e.g.: if souls count is 1.7
-            //spawns 1 soul, with a 70% chance of spawning a second one
-            if (sl.getRandom().nextFloat() < chance)
-            {
-                SoulEntity soul = ECEntities.SOUL.get().create(sl, EntitySpawnReason.TRIGGERED);
-                Vec3 pos = entityKilled.getEyePosition();
-                soul.snapTo(pos.x, pos.y, pos.z);
-                soul.getEntityData().set(SoulEntity.UUID, player.getUUID());
-                sl.addFreshEntityWithPassengers(soul);
-            }
+            int souls = SoulsApi.calculateSouls(player, ItemStack.EMPTY,
+                    ECDataEntries.SOULS.get().getOrDefault(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType()), 0f));
 
-            if (souls >= 1)
+            if (souls > 1)
             {
-                SoulEntity soul = ECEntities.SOUL.get().create(sl, EntitySpawnReason.TRIGGERED);
-                soul.getEntityData().set(SoulEntity.UUID, player.getUUID());
-                soul.extraSoulsToSpawn = (int) (Math.floor(souls));
-                Vec3 pos = entityKilled.getEyePosition();
-                soul.snapTo(pos.x, pos.y, pos.z);
-                sl.addFreshEntityWithPassengers(soul);
+                SoulEntity soulEntity = ECEntities.SOUL.get().spawn(sl, player.blockPosition(), EntitySpawnReason.TRIGGERED);
+                if (soulEntity != null)
+                {
+                    soulEntity.extraSoulsToSpawn = souls - 1;
+                    soulEntity.getEntityData().set(SoulEntity.UUID, player.getUUID());
+                }
             }
         }
     }
