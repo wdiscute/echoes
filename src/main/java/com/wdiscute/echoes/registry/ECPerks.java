@@ -24,6 +24,8 @@ public interface ECPerks
     DeferredHolder<Perk, Perk> EXTRA_DAMAGE_CONSUMES_SOULS = register("extra_damage_consumes_souls", ExtraDamageConsumesSoulsPerk::new);
     DeferredHolder<Perk, Perk> EXTRA_DAMAGE_CONSUMES_TIME = register("extra_damage_consumes_time", ExtraDamageConsumesTimePerk::new);
 
+    DeferredHolder<Perk, Perk> FLAT_REDUCE_DAMAGE_TAKEN = register("flat_reduce_damage_taken", FlatReduceDamageTakenPerk::new);
+    DeferredHolder<Perk, Perk> INCREASE_TIME_ON_ENTERING_LEVEL = register("increase_time_on_entering_level", IncreaseTimeOnEnteringLevelPerk::new);
 
 
     //fake perks

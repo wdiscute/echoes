@@ -114,6 +114,14 @@
   "item.echoes.lucent_die" : "Lucent Die",
 
 
+  "item.echoes.timelost_helmet" : "Timelost Helmet",
+  "item.echoes.timelost_chestplate" : "Timelost Chestplate",
+  "item.echoes.timelost_leggings" : "Timelost Leggings",
+  "item.echoes.timelost_boots" : "Timelost Boots",
+
+
+
+
 
 
   "echoes.rarity.common" : "<eccommon>§lCOMMON</eccommon>",

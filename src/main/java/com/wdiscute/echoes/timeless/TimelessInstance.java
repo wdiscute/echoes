@@ -16,6 +16,8 @@ import com.wdiscute.echoes.network.ECCBSetLootPayload;
 import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
+import com.wdiscute.echoes.upgrades.Perk;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
@@ -598,6 +600,10 @@ public class TimelessInstance
                 closest.loot = List.of();
             }
         }
+
+        //trigger perks
+        for (PerkInstance activePerk : Perk.getActivePerks(player, ItemStack.EMPTY))
+            activePerk.perk().onNewInstanceEntered(player, activePerk.amplifiers(), this);
 
         //set client loot to instance loot
         PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(loot));

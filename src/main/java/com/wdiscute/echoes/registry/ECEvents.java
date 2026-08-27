@@ -104,7 +104,18 @@ public class ECEvents
 
         //decrease damage based on soul hearts
         if (entityDamaged instanceof Player player)
+        {
             event.setNewDamage(event.getNewDamage() - TimelessHearts.getAbsorbedDamage(player, (int) event.getNewDamage()));
+
+            ItemStack weaponItem = event.getSource().getWeaponItem() == null ? ItemStack.EMPTY : event.getSource().getWeaponItem();
+
+            List<PerkInstance> perks = Perk.getActivePerks(player, weaponItem);
+
+            for (PerkInstance perk : perks)
+            {
+                event.setNewDamage(event.getNewDamage() - perk.perk().reduceDamage(player, perk.amplifiers()));
+            }
+        }
 
 
         //trigger perks

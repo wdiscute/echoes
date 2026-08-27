@@ -2,7 +2,9 @@ package com.wdiscute.echoes.upgrades;
 
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataComponents;
+import com.wdiscute.echoes.timeless.TimelessInstance;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,6 +51,15 @@ public abstract class Perk
     public float addSouls(Player player, ItemStack weapon, LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
     {
         return 0;
+    }
+
+    public float reduceDamage(Player player, List<Float> amplifiers)
+    {
+        return 0;
+    }
+
+    public void onNewInstanceEntered(ServerPlayer player, List<Float> amplifiers, TimelessInstance instance)
+    {
     }
 
     public float addChestRolls(Player player, List<Float> amplifiers)

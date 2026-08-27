@@ -1,0 +1,34 @@
+{
+  "cost": [
+    {
+      "count": 64,
+      "identifier": "echoes:prisma_shard"
+    },
+    {
+      "count": 32,
+      "identifier": "echoes:crystal_core"
+    }
+  ],
+  "rarity": "epic",
+  "stack": {
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            0.8
+          ],
+          "perk": "echoes:flat_reduce_damage_taken"
+        },
+        {
+          "amplifiers": [
+            1400.0
+          ],
+          "perk": "echoes:increase_time_on_entering_level"
+        }
+      ],
+      "echoes:rarity": "epic"
+    },
+    "identifier": "echoes:timelost_leggings"
+  },
+  "weight": 5
+}

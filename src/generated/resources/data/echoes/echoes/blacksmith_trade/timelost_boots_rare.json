@@ -1,0 +1,34 @@
+{
+  "cost": [
+    {
+      "count": 32,
+      "identifier": "echoes:prisma_shard"
+    },
+    {
+      "count": 15,
+      "identifier": "echoes:crystal_core"
+    }
+  ],
+  "rarity": "rare",
+  "stack": {
+    "data_components_patch": {
+      "echoes:perks": [
+        {
+          "amplifiers": [
+            0.6
+          ],
+          "perk": "echoes:flat_reduce_damage_taken"
+        },
+        {
+          "amplifiers": [
+            1100.0
+          ],
+          "perk": "echoes:increase_time_on_entering_level"
+        }
+      ],
+      "echoes:rarity": "rare"
+    },
+    "identifier": "echoes:timelost_boots"
+  },
+  "weight": 10
+}

@@ -191,6 +191,53 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 new RaritifiedPerk(ECPerks.EXTRA_TICKS_PER_KILL, new RarityValues(200, 300, 400, 500, 600))
         );
 
+        //
+        //
+        // ,--,--. ,--.--. ,--,--,--.  ,---.  ,--.--.
+        //' ,-.  | |  .--' |        | | .-. | |  .--'
+        //\ '-'  | |  |    |  |  |  | ' '-' ' |  |
+        // `--`--' `--'    `--`--`--'  `---'  `--'
+        //
+
+        allRarities(context, ECItems.TIMELOST_HELMET.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(5, 15, 32, 64, 128)),
+                        new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
+                ),
+
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+        );
+
+        allRarities(context, ECItems.TIMELOST_CHESTPLATE.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(5, 15, 32, 64, 128)),
+                        new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
+                ),
+
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+        );
+
+        allRarities(context, ECItems.TIMELOST_LEGGINGS.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(5, 15, 32, 64, 128)),
+                        new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
+                ),
+
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+        );
+
+        allRarities(context, ECItems.TIMELOST_BOOTS.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(5, 15, 32, 64, 128)),
+                        new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
+                ),
+
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+        );
 
     }
 
