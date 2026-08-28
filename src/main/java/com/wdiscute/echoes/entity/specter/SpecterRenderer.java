@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRenderState>
@@ -50,7 +49,7 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
 
         poseStack.translate(0, y / 5 - 1.1, 0);
 
-        //poseStack.scale(2, 2, 2);
+        poseStack.scale(state.scale, state.scale, state.scale);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
 
@@ -88,6 +87,8 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
             state.shouldRender = false;
             return;
         }
+
+        state.scale = (float) Math.min(entity.tickCount / 20.0, 1.0);
 
         state.renderPosition = entity.getRenderPosition(partialTicks);
         state.networkPosition = entity.getNetworkPosition(partialTicks);

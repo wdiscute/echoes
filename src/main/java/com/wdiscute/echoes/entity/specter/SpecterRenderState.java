@@ -7,6 +7,7 @@ public class SpecterRenderState extends EntityRenderState
 {
     public Vec3 renderPosition;
     public Vec3 networkPosition;
+    float scale;
 
     public float yrot;
     public float xrot;

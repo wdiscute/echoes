@@ -485,7 +485,8 @@ public class TimelessInstance
         //if there's another player still alive, set to spectator
         if (!players.isEmpty())
         {
-            sp.teleportTo(sp.getX(), -64, sp.getZ());
+            if (sp.getY() < -64)
+                sp.teleportTo(sp.getX(), -64, sp.getZ());
             SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), EntitySpawnReason.TRIGGERED);
             specter.setPlayer(sp);
             specter.setPos(sp.position());
