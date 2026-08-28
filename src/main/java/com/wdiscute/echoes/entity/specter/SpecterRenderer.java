@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRenderState>
@@ -20,30 +21,50 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
     public SpecterRenderer(EntityRendererProvider.Context context)
     {
         super(context);
-        soulTraderModel = new SpecterModel(context.getModelSet().bakeLayer(SpecterModel.LAYER_LOCATION));
+
+        soulTraderModel = new SpecterModel(
+                context.getModelSet().bakeLayer(SpecterModel.LAYER_LOCATION)
+        );
     }
 
     @Override
-    public void submit(SpecterRenderState state, PoseStack poseStack, SubmitNodeCollector node, CameraRenderState camera)
+    public void submit(
+            SpecterRenderState state,
+            PoseStack poseStack,
+            SubmitNodeCollector node,
+            CameraRenderState camera)
     {
         super.submit(state, poseStack, node, camera);
-        if (!state.shouldRender) return;
+
+        if (!state.shouldRender)
+            return;
+
+        Vec3 offset = state.renderPosition.subtract(state.networkPosition);
+
+        poseStack.translate(offset.x, offset.y, offset.z);
+
         poseStack.translate(0, 3.5, 0);
 
-        double t = (System.nanoTime()) / 1_000_000_000.0;
+        double t = System.nanoTime() / 1_000_000_000.0;
         double y = Math.sin(t * 1.10);
-        poseStack.translate(new Vec3(0, y / 5, 0));
 
-        poseStack.scale(2, 2, 2);
+        poseStack.translate(0, y / 5 - 1.1, 0);
+
+        //poseStack.scale(2, 2, 2);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.yrot));
-
         node.submitModel(
-                soulTraderModel, state, poseStack, RenderTypes.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION),
-                state.lightCoords, OverlayTexture.NO_OVERLAY,
-                -1, null, state.outlineColor, null
+                soulTraderModel,
+                state,
+                poseStack,
+                RenderTypes.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION),
+                state.lightCoords,
+                OverlayTexture.NO_OVERLAY,
+                -1,
+                null,
+                state.outlineColor,
+                null
         );
     }
 
@@ -60,12 +81,18 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
 
         LocalPlayer player = Minecraft.getInstance().player;
 
-        state.yrot = entity.yRotO;
+        state.shouldRender = true;
 
-        if (player != null)
+        if (player != null && entity.getEntityData().get(SpecterEntity.PLAYER_UUID).equals(player.getUUID()))
         {
-            if (entity.getEntityData().get(SpecterEntity.PLAYER_UUID).equals(player.getUUID()))
-                state.shouldRender = false;
+            state.shouldRender = false;
+            return;
         }
+
+        state.renderPosition = entity.getRenderPosition(partialTicks);
+        state.networkPosition = entity.getNetworkPosition(partialTicks);
+
+        state.yrot = entity.getRenderYRot(partialTicks);
+        state.xrot = entity.getRenderXRot(partialTicks);
     }
 }

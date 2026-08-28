@@ -34,6 +34,17 @@ public interface ECCommands
                         )
                 )
 
+                .then(Commands.literal("add_time")
+                        .then(Commands.argument("ticks", IntegerArgumentType.integer())
+                                .executes(c ->
+                                        addTime(
+                                                c.getSource().getPlayerOrException(),
+                                                IntegerArgumentType.getInteger(c, "ticks")
+                                        )
+                                )
+                        )
+                )
+
                 //timeless advance_time
                 .then(Commands.literal("advance_time")
                         .then(Commands.argument("ticks", IntegerArgumentType.integer())
@@ -53,10 +64,22 @@ public interface ECCommands
         ServerLevel sl = player.level();
         TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), player.blockPosition());
 
-        if(closest == null)
+        if (closest == null)
             throw ERROR_ROD.create(null);
 
         closest.setTime(sl, closest.timeToExit - ticks);
+        return 1;
+    }
+
+    private static int addTime(ServerPlayer player, int ticks) throws CommandSyntaxException
+    {
+        ServerLevel sl = player.level();
+        TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), player.blockPosition());
+
+        if (closest == null)
+            throw ERROR_ROD.create(null);
+
+        closest.addTime(sl, ticks);
         return 1;
     }
 
