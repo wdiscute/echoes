@@ -483,7 +483,7 @@ public class TimelessInstance
         }
 
         //if there's another player still alive, set to spectator
-        if (!players.isEmpty())
+        if (!players.isEmpty() && !sp.isSpectator())
         {
             if (sp.getY() < -64)
                 sp.teleportTo(sp.getX(), -64, sp.getZ());

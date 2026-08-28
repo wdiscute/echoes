@@ -88,7 +88,12 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
             return;
         }
 
-        state.scale = (float) Math.min(entity.tickCount / 20.0, 1.0);
+        state.spinAnimationState.copyFrom(entity.spinAnimationState);
+        state.sixSevenAnimationState.copyFrom(entity.sixSevenAnimationState);
+        state.headExplodeAnimationState.copyFrom(entity.headExplodeAnimationState);
+        state.pointAnimationState.copyFrom(entity.pointAnimationState);
+
+        state.scale = (float) Math.min((entity.tickCount + partialTicks) / 20.0, 1.0);
 
         state.renderPosition = entity.getRenderPosition(partialTicks);
         state.networkPosition = entity.getNetworkPosition(partialTicks);

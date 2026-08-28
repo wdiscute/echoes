@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +22,12 @@ public class SpecterEntity extends Entity
 {
     public static final EntityDataAccessor<UUID> PLAYER_UUID = SynchedEntityData.defineId(SpecterEntity.class, ECEntityDataSerializers.UUID_HOLDER.get());
 
-    private Player player;
+    public final AnimationState spinAnimationState = new AnimationState();
+    public final AnimationState sixSevenAnimationState = new AnimationState();
+    public final AnimationState headExplodeAnimationState = new AnimationState();
+    public final AnimationState pointAnimationState = new AnimationState();
+
+    private ServerPlayer player;
 
     private float previousRenderYRot;
     private float renderYRot;
@@ -65,13 +71,17 @@ public class SpecterEntity extends Entity
 
         if (level().isClientSide())
         {
+            //todo make payloads for starting animations
+            //sixSevenAnimationState.startIfStopped(this.tickCount);
             updateRenderPosition();
             return;
         }
 
-        if (player == null || !player.isSpectator())
+        if (player == null
+            || level().getPlayerByUUID(player.getUUID()) == null
+            || !player.isSpectator())
         {
-            remove(RemovalReason.DISCARDED);
+            discard();
             return;
         }
 
