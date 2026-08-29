@@ -27,7 +27,7 @@ public class SpecterEntity extends Entity
     public final AnimationState headExplodeAnimationState = new AnimationState();
     public final AnimationState pointAnimationState = new AnimationState();
 
-    private ServerPlayer player;
+    public ServerPlayer player;
 
     private float previousRenderYRot;
     private float renderYRot;
@@ -150,5 +150,21 @@ public class SpecterEntity extends Entity
     {
         player = sp;
         entityData.set(PLAYER_UUID, sp.getUUID());
+    }
+
+    public void playEmote(SpecterEmote emote)
+    {
+        sixSevenAnimationState.stop();
+        spinAnimationState.stop();
+        headExplodeAnimationState.stop();
+        pointAnimationState.stop();
+
+        switch (emote)
+        {
+            case SPIN -> spinAnimationState.startIfStopped(tickCount);
+            case SIX_SEVEN -> sixSevenAnimationState.startIfStopped(tickCount);
+            case POINT -> pointAnimationState.startIfStopped(tickCount);
+            case HEAD_EXPLODE -> headExplodeAnimationState.startIfStopped(tickCount);
+        }
     }
 }

@@ -1,11 +1,16 @@
 package com.wdiscute.echoes;
 
+import com.mojang.blaze3d.platform.Window;
+import com.wdiscute.echoes.entity.specter.SpecterEmote;
+import com.wdiscute.echoes.network.ECSBSpecterAttemptEmotePayload;
+import com.wdiscute.echoes.registry.ECKeyMappings;
 import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.ScreenUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,6 +19,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.gui.GuiLayer;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +37,11 @@ public class TimelessGUILayer implements GuiLayer
     public float smoothSouls = 0;
     private static final List<TimedItemStack> loot = new ArrayList<>();
     public static final int DEFAULT_LOOT_TIME = 70;
+
+    public boolean isEmoteMenuOpen = false;
+    public boolean isEmoteMenuOpenOld = false;
+    public double lastMouseX = 0;
+    public double lastMouseY = 0;
 
     public static void addLoot(MaybeStack stack, boolean showNotif)
     {
@@ -90,8 +102,12 @@ public class TimelessGUILayer implements GuiLayer
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         Font font = Minecraft.getInstance().font;
+
         int x = width / 2 - 125;
         int y = height - 37;
+
+        int middleX = width / 2;
+        int middleY = height / 2;
 
         //
         //                         ,--.     ,--.
@@ -101,7 +117,7 @@ public class TimelessGUILayer implements GuiLayer
         //`----'   `---'   `----'  `--'      `---'   `--`--' `--'
         //
 
-        if(!player.isSpectator() && !player.isCreative())
+        if (!player.isSpectator() && !player.isCreative())
         {
             float smoothingTime = 0.2f;
             long now = System.nanoTime();
@@ -155,7 +171,7 @@ public class TimelessGUILayer implements GuiLayer
         // `----'   `---'   `----'  `--'     `--' `--'  `----'  `--`--' `--'      `--'   `----'
         //
 
-        if(!player.isSpectator() && !player.isCreative())
+        if (!player.isSpectator() && !player.isCreative())
         {
             //render empty hearts overlay
             for (int i = 0; i < timelessHearts.soulHearts(); i++)
@@ -196,6 +212,109 @@ public class TimelessGUILayer implements GuiLayer
 
         if (timelessData.currentStage() > 0)
             ScreenUtils.centeredText(guiGraphics, font, Component.literal(timelessData.currentStage() + ""), width / 2, height - 39, 0xff5798c4, true);
+
+        //
+        //                             ,--.
+        // ,---.  ,--,--,--.  ,---.  ,-'  '-.  ,---.      ,--,--,--.  ,---.  ,--,--,  ,--.,--.
+        //| .-. : |        | | .-. | '-.  .-' | .-. :     |        | | .-. : |      \ |  ||  |
+        //\   --. |  |  |  | ' '-' '   |  |   \   --.     |  |  |  | \   --. |  ||  | '  ''  '
+        // `----' `--`--`--'  `---'    `--'    `----'     `--`--`--'  `----' `--''--'  `----'
+        //
+
+        MouseHandler mouseHandler = Minecraft.getInstance().mouseHandler;
+        if (player.isSpectator() && !isEmoteMenuOpen && !isEmoteMenuOpenOld)
+        {
+            if (ECKeyMappings.EMOTE.isDown())
+            {
+                mouseHandler.releaseMouse();
+
+                GLFW.glfwSetCursorPos(
+                        Minecraft.getInstance().getWindow().handle(),
+                        Minecraft.getInstance().getWindow().getWidth() / 2.0,
+                        Minecraft.getInstance().getWindow().getHeight() / 2.0
+                );
+
+                isEmoteMenuOpen = true;
+
+                lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
+                lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+            }
+        }
+
+        if (!ECKeyMappings.EMOTE.isDown())
+        {
+            isEmoteMenuOpen = false;
+        }
+
+        if(isEmoteMenuOpen)
+            mouseHandler.releaseMouse();
+
+        //if closing menu
+        if (!isEmoteMenuOpen && isEmoteMenuOpenOld)
+        {
+            isEmoteMenuOpenOld = false;
+            mouseHandler.grabMouse();
+
+            if (lastMouseX < middleX && lastMouseY < middleY)
+                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SIX_SEVEN));
+
+            if (lastMouseX > middleX && lastMouseY < middleY)
+                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SPIN));
+
+            if (lastMouseX < middleX && lastMouseY > middleY)
+                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.HEAD_EXPLODE));
+
+            if (lastMouseX > middleX && lastMouseY > middleY)
+                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.POINT));
+        }
+
+        if (isEmoteMenuOpen)
+        {
+            if (lastMouseX < middleX && lastMouseY < middleY)
+                ScreenUtils.fill(guiGraphics, middleX - 80, middleY - 80, 80, 80, 0x66ffffff);
+
+            if (lastMouseX > middleX && lastMouseY < middleY)
+                ScreenUtils.fill(guiGraphics, middleX, middleY - 80, 80, 80, 0x66ffffff);
+
+            if (lastMouseX < middleX && lastMouseY > middleY)
+                ScreenUtils.fill(guiGraphics, middleX - 80, middleY, 80, 80, 0x66ffffff);
+
+            if (lastMouseX > middleX && lastMouseY > middleY)
+                ScreenUtils.fill(guiGraphics, middleX, middleY, 80, 80, 0x66ffffff);
+
+            ScreenUtils.outline(guiGraphics, middleX, middleY - 80, 1, 160, 0xff000000);
+            ScreenUtils.outline(guiGraphics, middleX - 80, middleY, 160, 1, 0xff000000);
+
+            ScreenUtils.fill(guiGraphics, middleX - 80, middleY - 80, 80, 80, 0x33000000);
+            ScreenUtils.fill(guiGraphics, middleX, middleY - 80, 80, 80, 0x33000000);
+            ScreenUtils.fill(guiGraphics, middleX, middleY, 80, 80, 0x33000000);
+            ScreenUtils.fill(guiGraphics, middleX - 80, middleY, 80, 80, 0x33000000);
+
+
+            ScreenUtils.centeredText(guiGraphics, font, "Six Seven",
+                    middleX - 40, middleY - 40, 0xffffffff, true);
+
+            ScreenUtils.centeredText(guiGraphics, font, "Spin",
+                    middleX + 40, middleY - 40, 0xffffffff, true);
+
+            ScreenUtils.centeredText(guiGraphics, font, "Surprised",
+                    middleX - 40, middleY + 40, 0xffffffff, true);
+
+            ScreenUtils.centeredText(guiGraphics, font, "Point",
+                    middleX + 40, middleY + 40, 0xffffffff, true);
+        }
+        else
+        {
+            ScreenUtils.centeredText(guiGraphics, font, "[" + ECKeyMappings.EMOTE.getKey().getDisplayName().getString() + "] to open emote wheel",
+                    middleX, height - 60, 0xffffffff, true);
+        }
+
+
+
+
+        lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
+        lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+        isEmoteMenuOpenOld = isEmoteMenuOpen;
     }
 }
 

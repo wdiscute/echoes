@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
 public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRenderState>
 {
@@ -68,13 +69,13 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
     }
 
     @Override
-    public SpecterRenderState createRenderState()
+    public @NonNull SpecterRenderState createRenderState()
     {
         return new SpecterRenderState();
     }
 
     @Override
-    public void extractRenderState(SpecterEntity entity, SpecterRenderState state, float partialTicks)
+    public void extractRenderState(@NonNull SpecterEntity entity, @NonNull SpecterRenderState state, float partialTicks)
     {
         super.extractRenderState(entity, state, partialTicks);
 
@@ -82,7 +83,10 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
 
         state.shouldRender = true;
 
-        if (player != null && entity.getEntityData().get(SpecterEntity.PLAYER_UUID).equals(player.getUUID()))
+        if (player != null
+            && entity.getEntityData().get(SpecterEntity.PLAYER_UUID).equals(player.getUUID())
+            && Minecraft.getInstance().options.getCameraType().isFirstPerson()
+        )
         {
             state.shouldRender = false;
             return;

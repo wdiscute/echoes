@@ -7,14 +7,12 @@ import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
 import com.wdiscute.echoes.entity.specter.SpecterEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
-import com.wdiscute.echoes.network.ECCBAddLootPayload;
-import com.wdiscute.echoes.network.ECCBSetLootPayload;
+import com.wdiscute.echoes.network.*;
 import com.wdiscute.echoes.timeless.SoulsApi;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
@@ -264,6 +262,18 @@ public class ECEvents
                 ECCBSetLootPayload.TYPE,
                 ECCBSetLootPayload.STREAM_CODEC,
                 ECCBSetLootPayload::handle
+        );
+
+        registrar.playToServer(
+                ECSBSpecterAttemptEmotePayload.TYPE,
+                ECSBSpecterAttemptEmotePayload.STREAM_CODEC,
+                ECSBSpecterAttemptEmotePayload::handle
+        );
+
+        registrar.playToClient(
+                ECCBSpecterEmotePayload.TYPE,
+                ECCBSpecterEmotePayload.STREAM_CODEC,
+                ECCBSpecterEmotePayload::handle
         );
     }
 
