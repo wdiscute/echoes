@@ -222,99 +222,100 @@ public class TimelessGUILayer implements GuiLayer
         //
 
         MouseHandler mouseHandler = Minecraft.getInstance().mouseHandler;
-        if (player.isSpectator() && !isEmoteMenuOpen && !isEmoteMenuOpenOld)
+        if (player.isSpectator())
         {
-            if (ECKeyMappings.EMOTE.isDown())
+            if (!isEmoteMenuOpen && !isEmoteMenuOpenOld)
             {
+                if (ECKeyMappings.EMOTE.isDown())
+                {
+                    mouseHandler.releaseMouse();
+
+                    GLFW.glfwSetCursorPos(
+                            Minecraft.getInstance().getWindow().handle(),
+                            Minecraft.getInstance().getWindow().getWidth() / 2.0,
+                            Minecraft.getInstance().getWindow().getHeight() / 2.0
+                    );
+
+                    isEmoteMenuOpen = true;
+
+                    lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
+                    lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+                }
+            }
+
+            if (!ECKeyMappings.EMOTE.isDown())
+            {
+                isEmoteMenuOpen = false;
+            }
+
+            if (isEmoteMenuOpen)
                 mouseHandler.releaseMouse();
 
-                GLFW.glfwSetCursorPos(
-                        Minecraft.getInstance().getWindow().handle(),
-                        Minecraft.getInstance().getWindow().getWidth() / 2.0,
-                        Minecraft.getInstance().getWindow().getHeight() / 2.0
-                );
+            //if closing menu
+            if (!isEmoteMenuOpen && isEmoteMenuOpenOld)
+            {
+                isEmoteMenuOpenOld = false;
+                mouseHandler.grabMouse();
 
-                isEmoteMenuOpen = true;
+                if (lastMouseX < middleX && lastMouseY < middleY)
+                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SIX_SEVEN));
 
-                lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
-                lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+                if (lastMouseX > middleX && lastMouseY < middleY)
+                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SPIN));
+
+                if (lastMouseX < middleX && lastMouseY > middleY)
+                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.HEAD_EXPLODE));
+
+                if (lastMouseX > middleX && lastMouseY > middleY)
+                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.POINT));
             }
+
+            if (isEmoteMenuOpen)
+            {
+                if (lastMouseX < middleX && lastMouseY < middleY)
+                    ScreenUtils.fill(guiGraphics, middleX - 80, middleY - 80, 80, 80, 0x66ffffff);
+
+                if (lastMouseX > middleX && lastMouseY < middleY)
+                    ScreenUtils.fill(guiGraphics, middleX, middleY - 80, 80, 80, 0x66ffffff);
+
+                if (lastMouseX < middleX && lastMouseY > middleY)
+                    ScreenUtils.fill(guiGraphics, middleX - 80, middleY, 80, 80, 0x66ffffff);
+
+                if (lastMouseX > middleX && lastMouseY > middleY)
+                    ScreenUtils.fill(guiGraphics, middleX, middleY, 80, 80, 0x66ffffff);
+
+                ScreenUtils.outline(guiGraphics, middleX, middleY - 80, 1, 160, 0xff000000);
+                ScreenUtils.outline(guiGraphics, middleX - 80, middleY, 160, 1, 0xff000000);
+
+                ScreenUtils.fill(guiGraphics, middleX - 80, middleY - 80, 80, 80, 0x33000000);
+                ScreenUtils.fill(guiGraphics, middleX, middleY - 80, 80, 80, 0x33000000);
+                ScreenUtils.fill(guiGraphics, middleX, middleY, 80, 80, 0x33000000);
+                ScreenUtils.fill(guiGraphics, middleX - 80, middleY, 80, 80, 0x33000000);
+
+
+                ScreenUtils.centeredText(guiGraphics, font, "Six Seven",
+                        middleX - 40, middleY - 40, 0xffffffff, true);
+
+                ScreenUtils.centeredText(guiGraphics, font, "Spin",
+                        middleX + 40, middleY - 40, 0xffffffff, true);
+
+                ScreenUtils.centeredText(guiGraphics, font, "Surprised",
+                        middleX - 40, middleY + 40, 0xffffffff, true);
+
+                ScreenUtils.centeredText(guiGraphics, font, "Point",
+                        middleX + 40, middleY + 40, 0xffffffff, true);
+            }
+            else
+            {
+                ScreenUtils.centeredText(guiGraphics, font, "[" + ECKeyMappings.EMOTE.getKey().getDisplayName().getString() + "] to open emote wheel",
+                        middleX, height - 60, 0xffffffff, true);
+            }
+
+
+            lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
+            lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+            isEmoteMenuOpenOld = isEmoteMenuOpen;
         }
-
-        if (!ECKeyMappings.EMOTE.isDown())
-        {
-            isEmoteMenuOpen = false;
-        }
-
-        if(isEmoteMenuOpen)
-            mouseHandler.releaseMouse();
-
-        //if closing menu
-        if (!isEmoteMenuOpen && isEmoteMenuOpenOld)
-        {
-            isEmoteMenuOpenOld = false;
-            mouseHandler.grabMouse();
-
-            if (lastMouseX < middleX && lastMouseY < middleY)
-                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SIX_SEVEN));
-
-            if (lastMouseX > middleX && lastMouseY < middleY)
-                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SPIN));
-
-            if (lastMouseX < middleX && lastMouseY > middleY)
-                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.HEAD_EXPLODE));
-
-            if (lastMouseX > middleX && lastMouseY > middleY)
-                ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.POINT));
-        }
-
-        if (isEmoteMenuOpen)
-        {
-            if (lastMouseX < middleX && lastMouseY < middleY)
-                ScreenUtils.fill(guiGraphics, middleX - 80, middleY - 80, 80, 80, 0x66ffffff);
-
-            if (lastMouseX > middleX && lastMouseY < middleY)
-                ScreenUtils.fill(guiGraphics, middleX, middleY - 80, 80, 80, 0x66ffffff);
-
-            if (lastMouseX < middleX && lastMouseY > middleY)
-                ScreenUtils.fill(guiGraphics, middleX - 80, middleY, 80, 80, 0x66ffffff);
-
-            if (lastMouseX > middleX && lastMouseY > middleY)
-                ScreenUtils.fill(guiGraphics, middleX, middleY, 80, 80, 0x66ffffff);
-
-            ScreenUtils.outline(guiGraphics, middleX, middleY - 80, 1, 160, 0xff000000);
-            ScreenUtils.outline(guiGraphics, middleX - 80, middleY, 160, 1, 0xff000000);
-
-            ScreenUtils.fill(guiGraphics, middleX - 80, middleY - 80, 80, 80, 0x33000000);
-            ScreenUtils.fill(guiGraphics, middleX, middleY - 80, 80, 80, 0x33000000);
-            ScreenUtils.fill(guiGraphics, middleX, middleY, 80, 80, 0x33000000);
-            ScreenUtils.fill(guiGraphics, middleX - 80, middleY, 80, 80, 0x33000000);
-
-
-            ScreenUtils.centeredText(guiGraphics, font, "Six Seven",
-                    middleX - 40, middleY - 40, 0xffffffff, true);
-
-            ScreenUtils.centeredText(guiGraphics, font, "Spin",
-                    middleX + 40, middleY - 40, 0xffffffff, true);
-
-            ScreenUtils.centeredText(guiGraphics, font, "Surprised",
-                    middleX - 40, middleY + 40, 0xffffffff, true);
-
-            ScreenUtils.centeredText(guiGraphics, font, "Point",
-                    middleX + 40, middleY + 40, 0xffffffff, true);
-        }
-        else
-        {
-            ScreenUtils.centeredText(guiGraphics, font, "[" + ECKeyMappings.EMOTE.getKey().getDisplayName().getString() + "] to open emote wheel",
-                    middleX, height - 60, 0xffffffff, true);
-        }
-
-
-
-
-        lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
-        lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
-        isEmoteMenuOpenOld = isEmoteMenuOpen;
     }
 }
 
