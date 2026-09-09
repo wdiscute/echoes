@@ -42,6 +42,13 @@ public class TimelessProcessor
 {
     public static final List<Utils.Duo<Either<Holder<Block>, Block>, Processor>> PROCESSORS = new ArrayList<>();
 
+    private static final int FLAGS =
+            Block.UPDATE_CLIENTS
+            | Block.UPDATE_KNOWN_SHAPE
+            | Block.UPDATE_SUPPRESS_DROPS
+            | Block.UPDATE_MOVE_BY_PISTON
+            | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
+
     public static void addDefaultProcessors()
     {
         //remove structure blocks
@@ -66,9 +73,9 @@ public class TimelessProcessor
                 instance.spawnPoint = bp;
                 instance.direction = switch (state.getValueOrElse(PortalBlock.FACING, Direction.NORTH))
                 {
-                    case WEST -> 1;
+                    case WEST -> 3;
                     case SOUTH -> 2;
-                    case EAST -> 3;
+                    case EAST -> 1;
                     default -> 0;
                 };
             }
@@ -210,7 +217,7 @@ public class TimelessProcessor
 
             //set to air if not part of skip tag
             if (!state.is(ECTags.SKIPS_SCULK_TRANSFORMATION))
-                sl.setBlock(bp, Blocks.AIR.defaultBlockState(), 0);
+                sl.setBlock(bp, Blocks.AIR.defaultBlockState(), FLAGS);
         });
     }
 

@@ -16,6 +16,7 @@ import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.utils.Utils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -204,7 +205,12 @@ public class ECEvents
         if (player != null)
         {
             int souls = SoulsApi.calculateSouls(player, ItemStack.EMPTY,
-                    ECDataEntries.SOULS.get().getOrDefault(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType()), 0f));
+                    ECDataEntries.SOULS.get()
+                            .stream()
+                            .filter(o -> o.first().equals(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType())))
+                            .map(Utils.Duo::second)
+                            .findAny()
+                            .orElse(0f));
 
             if (souls > 1)
             {

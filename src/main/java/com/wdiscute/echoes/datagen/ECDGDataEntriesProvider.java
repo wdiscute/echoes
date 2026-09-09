@@ -30,7 +30,7 @@ public class ECDGDataEntriesProvider
     public static void start(DataGenerator gen, PackOutput output, CompletableFuture<HolderLookup.Provider> lookup)
     {
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.STARTER_ITEM,
+                new DataEntryProvider<>(output, ECDataEntries.STARTER_ITEM,
                         new MaybeStack(BuiltInRegistries.ITEM.getKey(ECItems.ECHO_BLADE.get()), 1,
                                 DataComponentPatch.builder()
                                         .set(ECDataComponents.PERKS.get(), List.of(
@@ -45,7 +45,7 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.TIMELESS_LEVELS,
+                new DataEntryProvider.MultiEntry<>(output, ECDataEntries.TIMELESS_LEVELS,
                         List.of(
                                 //starter
                                 new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, 12000, Integer.MAX_VALUE),
@@ -55,22 +55,23 @@ public class ECDGDataEntriesProvider
                                 new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, 3000, Integer.MAX_VALUE),
                                 new TimelessLevelEntry(Echoes.rl("timeless/third"), 0, 10, 0, 6000, Integer.MAX_VALUE),
                                 new TimelessLevelEntry(Echoes.rl("timeless/forth"), 0, 10, 0, 9000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/fifth"), 0, 10, 0, 4000, Integer.MAX_VALUE)
+                                new TimelessLevelEntry(Echoes.rl("timeless/fifth"), 0, 10, 0, 4000, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/sixth"), 0, 10, 0, 4000, Integer.MAX_VALUE)
                         )
                 )
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.SOULS,
-                        Map.of(
-                                Utils.rl("echoes", "hollowed"), 0.8f,
-                                Utils.rl("echoes", "sculked"), 1.3f
+                new DataEntryProvider.MultiEntry<>(output, ECDataEntries.SOULS,
+                        List.of(
+                                new Utils.Duo<>(Utils.rl("echoes", "hollowed"), 0.8f),
+                                new Utils.Duo<>(Utils.rl("echoes", "sculked"), 0.8f)
                         )
                 )
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_MELEE_ENEMIES,
+                new DataEntryProvider.MultiEntry<>(output, ECDataEntries.GROUND_MELEE_ENEMIES,
                         List.of(
                                 new TimelessEnemyEntry(ECEntities.SCULKED.getId(),
                                         0, 10, 0, 1.3f, 0.5f, 1)
@@ -81,7 +82,7 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.GROUND_RANGED_ENEMIES,
+                new DataEntryProvider.MultiEntry<>(output, ECDataEntries.GROUND_RANGED_ENEMIES,
                         List.of(
                                 new TimelessEnemyEntry(ECEntities.HOLLOWED.getId(),
                                         0, 10, 0, 1.3f, 0.5f, 1)
@@ -92,7 +93,7 @@ public class ECDGDataEntriesProvider
         );
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.TIMELESS_LOOT,
+                new DataEntryProvider.MultiEntry<>(output, ECDataEntries.TIMELESS_LOOT,
                         List.of(
                                 new TimelessLootEntry(new MaybeStack(Items.DIAMOND), Rarity.LEGENDARY, 0, 2, 0),
                                 new TimelessLootEntry(new MaybeStack(Items.EMERALD), Rarity.EPIC, 0, 2, 0),
@@ -109,7 +110,7 @@ public class ECDGDataEntriesProvider
 
 
         gen.addProvider(true,
-                new DataEntryProvider<>(output, lookup, ECDataEntries.CHEST_LOOT,
+                new DataEntryProvider.MultiEntry<>(output, ECDataEntries.CHEST_LOOT,
                         List.of(
                                 new TimelessLootEntry(new MaybeStack(BuiltInRegistries.ITEM.getKey(Items.POTION), 1,
                                         DataComponentPatch.builder().set(DataComponents.POTION_CONTENTS,

@@ -35,5 +35,11 @@
     "max_uses_per_player": 4000,
     "ticks": 4000,
     "weight": 10
+  },
+  {
+    "id": "echoes:timeless/sixth",
+    "max_uses_per_player": 4000,
+    "ticks": 4000,
+    "weight": 10
   }
 ]
