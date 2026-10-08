@@ -16,22 +16,22 @@ import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.utils.TeleportTransition;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -46,6 +46,7 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.List;
+import java.util.UUID;
 
 @EventBusSubscriber(modid = Echoes.MOD_ID)
 public class ECEvents
@@ -84,12 +85,16 @@ public class ECEvents
             //if no instance found
             if (TimelessManager.getClosest(sl.getServer(), sp.blockPosition(), 10000) == null)
             {
-                TeleportTransition respawnInfo = sp.findRespawnPositionAndUseSpawnBlock(false, TeleportTransition.DO_NOTHING);
-                sp.teleport(respawnInfo);
+                DimensionTransition respawnInfo = sp.findRespawnPositionAndUseSpawnBlock(false, (d) -> {});
+
+                TeleportTransition trans = new TeleportTransition(respawnInfo.newLevel(), respawnInfo.pos(), Vec3.ZERO,
+                        respawnInfo.xRot(), respawnInfo.yRot(), (d) -> {});
+
+                trans.teleport(sp);
             }
             else
             {
-                SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), EntitySpawnReason.TRIGGERED);
+                SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), MobSpawnType.TRIGGERED);
                 specter.setPlayer(sp);
             }
         }
@@ -169,7 +174,10 @@ public class ECEvents
                 TimelessInstance closest = TimelessManager.getClosest(sp.level().getServer(), sp.blockPosition());
 
                 //remove player
-                if (closest != null) closest.killPlayer(sp);
+                if (closest != null)
+                    closest.killPlayer(sp);
+                else
+                    TimelessManager.getOrCreate(sl.getServer(), UUID.randomUUID()).removePlayer(sp);
             }
             return;
         }
@@ -214,7 +222,7 @@ public class ECEvents
 
             if (souls > 1)
             {
-                SoulEntity soulEntity = ECEntities.SOUL.get().spawn(sl, player.blockPosition(), EntitySpawnReason.TRIGGERED);
+                SoulEntity soulEntity = ECEntities.SOUL.get().spawn(sl, player.blockPosition(), MobSpawnType.TRIGGERED);
                 if (soulEntity != null)
                 {
                     soulEntity.extraSoulsToSpawn = souls - 1;

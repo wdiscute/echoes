@@ -5,6 +5,8 @@ import com.wdiscute.echoes.registry.ECEntityDataSerializers;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.utils.MaybeStack;
+import com.wdiscute.utils.ValueHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -18,10 +20,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
 
 public class TimelessCorpseEntity extends Entity implements SculkAura
 {
@@ -60,7 +58,7 @@ public class TimelessCorpseEntity extends Entity implements SculkAura
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location)
+    public InteractionResult interact(Player player, InteractionHand hand)
     {
         ItemStack stack = getStack();
 
@@ -87,25 +85,25 @@ public class TimelessCorpseEntity extends Entity implements SculkAura
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
+    public boolean hurt(DamageSource source, float amount)
     {
         return false;
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input)
+    protected void readAdditionalSaveData(CompoundTag tag)
     {
-        entityData.set(STACK, input.read("item", MaybeStack.CODEC).orElse(MaybeStack.EMPTY));
+        entityData.set(STACK, ValueHelper.read("item", MaybeStack.CODEC, tag).orElse(MaybeStack.EMPTY));
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output)
+    protected void addAdditionalSaveData(CompoundTag tag)
     {
-        output.store("item", MaybeStack.CODEC, entityData.get(STACK));
+        ValueHelper.store("item", MaybeStack.CODEC, entityData.get(STACK), tag);
     }
 
     @Override
-    public float getSculkAura(@Nullable ServerLevel sl)
+    public float getSculkAura(ServerLevel sl)
     {
         return auraSize;
     }

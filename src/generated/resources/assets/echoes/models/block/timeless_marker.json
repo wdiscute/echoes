@@ -1,7 +1,8 @@
 {
-  "parent": "minecraft:block/cube_column",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "end": "echoes:block/timeless_marker_top",
-    "side": "echoes:block/timeless_marker_side"
+    "front": "echoes:block/timeless_marker_side",
+    "side": "echoes:block/timeless_marker_side",
+    "top": "echoes:block/timeless_marker_top"
   }
 }

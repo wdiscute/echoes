@@ -2,20 +2,18 @@ package com.wdiscute.echoes.timeless;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.wdiscute.echoes.ECConfig;
-import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.utils.Counter;
+import com.wdiscute.utils.ExtraComposites;
 import com.wdiscute.utils.MaybeStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
-import java.util.Map;
 
 public record TimelessData(long timeToExit,
                            int currentStage,
@@ -23,7 +21,7 @@ public record TimelessData(long timeToExit,
                            List<MaybeStack> inventory,
                            float souls,
                            float maxSouls,
-                           Counter<Identifier> levelsCompleted
+                           Counter<ResourceLocation> levelsCompleted
 )
 {
     public static final TimelessData EMPTY = new TimelessData(Long.MAX_VALUE, -1, -1, List.of(), 0, 100, new Counter<>());
@@ -36,18 +34,18 @@ public record TimelessData(long timeToExit,
                     MaybeStack.CODEC.listOf().fieldOf("inventory").forGetter(t -> t.inventory),
                     Codec.FLOAT.fieldOf("souls").forGetter(t -> t.souls),
                     Codec.FLOAT.fieldOf("max_souls").forGetter(t -> t.maxSouls),
-                    Counter.codec(Identifier.CODEC).fieldOf("levels_played").forGetter(o -> o.levelsCompleted)
+                    Counter.codec(ResourceLocation.CODEC).fieldOf("levels_played").forGetter(o -> o.levelsCompleted)
             ).apply(instance, TimelessData::new)
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, TimelessData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.LONG, data -> data.timeToExit,
+    public static final StreamCodec<RegistryFriendlyByteBuf, TimelessData> STREAM_CODEC = ExtraComposites.composite(
+            ByteBufCodecs.VAR_LONG, data -> data.timeToExit,
             ByteBufCodecs.INT, data -> data.currentStage,
             ByteBufCodecs.INT, data -> data.maxStage,
             MaybeStack.STREAM_CODEC.apply(ByteBufCodecs.list()), data -> data.inventory,
             ByteBufCodecs.FLOAT, data -> data.souls,
             ByteBufCodecs.FLOAT, data -> data.maxSouls,
-            Counter.streamCodec(Identifier.STREAM_CODEC), data -> data.levelsCompleted,
+            Counter.streamCodec(ResourceLocation.STREAM_CODEC), data -> data.levelsCompleted,
             TimelessData::new
     );
 
@@ -86,7 +84,7 @@ public record TimelessData(long timeToExit,
         return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, levelsCompleted);
     }
 
-    private TimelessData withStageCount(Counter<Identifier> stageCount)
+    private TimelessData withStageCount(Counter<ResourceLocation> stageCount)
     {
         return new TimelessData(timeToExit, currentStage, maxStage, inventory, souls, maxSouls, stageCount);
     }
@@ -169,7 +167,7 @@ public record TimelessData(long timeToExit,
         player.setData(ECDataAttachments.TIMELESS_DATA, data.withSouls(Math.min(data.souls + souls, data.maxSouls)));
     }
 
-    public static void increaseStageCount(Player player, Identifier stage)
+    public static void increaseStageCount(Player player, ResourceLocation stage)
     {
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
         player.setData(ECDataAttachments.TIMELESS_DATA, data.withStageCount(data.levelsCompleted.add(stage)));

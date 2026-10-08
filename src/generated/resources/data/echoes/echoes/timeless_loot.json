@@ -1,66 +1,68 @@
-[
-  {
-    "rarity": "legendary",
-    "stack": {
-      "identifier": "minecraft:diamond"
+{
+  "add": [
+    {
+      "rarity": "legendary",
+      "stack": {
+        "identifier": "minecraft:diamond"
+      },
+      "weight": 2
     },
-    "weight": 2
-  },
-  {
-    "rarity": "epic",
-    "stack": {
-      "identifier": "minecraft:emerald"
+    {
+      "rarity": "epic",
+      "stack": {
+        "identifier": "minecraft:emerald"
+      },
+      "weight": 2
     },
-    "weight": 2
-  },
-  {
-    "rarity": "epic",
-    "stack": {
-      "identifier": "minecraft:echo_shard"
+    {
+      "rarity": "epic",
+      "stack": {
+        "identifier": "minecraft:echo_shard"
+      },
+      "weight": 2
     },
-    "weight": 2
-  },
-  {
-    "rarity": "rare",
-    "stack": {
-      "identifier": "minecraft:gold_ingot"
+    {
+      "rarity": "rare",
+      "stack": {
+        "identifier": "minecraft:gold_ingot"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "uncommon",
-    "stack": {
-      "identifier": "minecraft:iron_ingot"
+    {
+      "rarity": "uncommon",
+      "stack": {
+        "identifier": "minecraft:iron_ingot"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "uncommon",
-    "stack": {
-      "identifier": "minecraft:copper_ingot"
+    {
+      "rarity": "uncommon",
+      "stack": {
+        "identifier": "minecraft:copper_ingot"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "minecraft:lapis_lazuli"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "minecraft:lapis_lazuli"
+      },
+      "weight": 15
     },
-    "weight": 15
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "count": 3,
-      "identifier": "minecraft:redstone"
+    {
+      "rarity": "common",
+      "stack": {
+        "count": 3,
+        "identifier": "minecraft:redstone"
+      },
+      "weight": 15
     },
-    "weight": 15
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:prisma_shard"
-    },
-    "weight": 20
-  }
-]
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:prisma_shard"
+      },
+      "weight": 20
+    }
+  ]
+}

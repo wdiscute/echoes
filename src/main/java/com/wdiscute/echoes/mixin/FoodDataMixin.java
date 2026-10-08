@@ -2,6 +2,7 @@ package com.wdiscute.echoes.mixin;
 
 import com.wdiscute.echoes.Echoes;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +21,7 @@ public abstract class FoodDataMixin
     private int foodLevel;
 
     @Inject(method = "tick", at = @At(value = "HEAD"), cancellable = true)
-    private void echoes$tick(ServerPlayer player, CallbackInfo ci)
+    private void echoes$tick(Player player, CallbackInfo ci)
     {
         if (player.level() == null) return;
         if (player.level().dimension().equals(Echoes.TIMELESS))

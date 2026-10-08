@@ -8,11 +8,8 @@ import com.wdiscute.echoes.timeless.TimelessLootEntry;
 import com.wdiscute.utils.DataEntry;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
-
-import java.util.List;
-import java.util.Map;
 
 public interface ECDataEntries
 {
@@ -25,8 +22,8 @@ public interface ECDataEntries
     DataEntry.MultiEntry<TimelessLootEntry> CHEST_LOOT = DataEntry.MultiEntry.register(Echoes.rl("chest_loot"),
             TimelessLootEntry.CODEC);
 
-    DataEntry.MultiEntry<Utils.Duo<Identifier, Float>> SOULS = DataEntry.MultiEntry.register(Echoes.rl("souls_per_entity"),
-            Utils.Duo.codec(Identifier.CODEC, "entity", Codec.FLOAT, "souls"));
+    DataEntry.MultiEntry<Utils.Duo<ResourceLocation, Float>> SOULS = DataEntry.MultiEntry.register(Echoes.rl("souls_per_entity"),
+            Utils.Duo.codec(ResourceLocation.CODEC, "entity", Codec.FLOAT, "souls"));
 
     DataEntry.MultiEntry<TimelessEnemyEntry> GROUND_MELEE_ENEMIES = DataEntry.MultiEntry.register(Echoes.rl("ground_melee_enemies"),
             TimelessEnemyEntry.CODEC);

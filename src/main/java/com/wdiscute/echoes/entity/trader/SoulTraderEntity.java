@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.Nullable;
 
 public class SoulTraderEntity extends Mob
 {
@@ -27,7 +26,7 @@ public class SoulTraderEntity extends Mob
     }
 
     @Override
-    public boolean canBeCollidedWith(@Nullable Entity other)
+    public boolean canBeCollidedWith()
     {
         return false;
     }
@@ -74,7 +73,7 @@ public class SoulTraderEntity extends Mob
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
+    public boolean hurt(DamageSource source, float amount)
     {
         if(source.getEntity() instanceof Player player)
             player.hurt(player.damageSources().source(DamageTypes.MAGIC), 1);

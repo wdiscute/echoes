@@ -10,10 +10,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -24,13 +25,13 @@ public class EchoBladeItem extends TimelessWeaponItem
 {
     public EchoBladeItem(Properties properties, float speed)
     {
-        super(properties.useCooldown(1.0F), speed);
+        super(properties, speed);
     }
 
     @Override
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack)
+    public UseAnim getUseAnimation(ItemStack itemStack)
     {
-        return ItemUseAnimation.BOW;
+        return UseAnim.BOW;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class EchoBladeItem extends TimelessWeaponItem
         if (itemStack.getOrDefault(ECDataComponents.IS_PRISMA_BLADE, false))
             return prisma;
         else
-            return itemStack.getComponents().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY);
+            return Component.translatable(this.getDescriptionId(itemStack));
     }
 
     @Override
@@ -54,6 +55,9 @@ public class EchoBladeItem extends TimelessWeaponItem
     {
         Optional<PerkInstance> echoBladePerk = stack.getOrDefault(ECDataComponents.PERKS,
                 List.<PerkInstance>of()).stream().filter(o -> o.perk() instanceof EchoBladePerk).findAny();
+
+        if (entity instanceof Player player)
+            player.getCooldowns().addCooldown(this, 20);
 
         if (echoBladePerk.isPresent())
         {
@@ -89,10 +93,10 @@ public class EchoBladeItem extends TimelessWeaponItem
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand)
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
     {
         player.startUsingItem(hand);
-        return InteractionResult.CONSUME;
+        return InteractionResultHolder.consume(player.getItemInHand(hand));
     }
 
     @Override

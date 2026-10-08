@@ -10,28 +10,35 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class RamattraItem extends Item
 {
     public RamattraItem(Properties properties)
     {
-        super(properties.stacksTo(1).useCooldown(10));
+        super(properties.stacksTo(1));
     }
 
     @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity user)
     {
         return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity)
+    {
+        if (livingEntity instanceof Player player)
+            player.getCooldowns().addCooldown(this, 10);
+        return super.finishUsingItem(stack, level, livingEntity);
     }
 
     @Override
@@ -63,25 +70,24 @@ public class RamattraItem extends Item
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand)
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
     {
         ItemStack stack = player.getItemInHand(hand);
         if (canContinueUsing(stack, stack))
         {
             player.startUsingItem(hand);
-            return InteractionResult.CONSUME;
+            return InteractionResultHolder.consume(stack);
         }
         else
-            return InteractionResult.PASS;
+            return InteractionResultHolder.pass(stack);
     }
 
     @Override
-    public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot)
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected)
     {
-        if (owner instanceof Player player)
-            itemStack.set(ECDataComponents.RAMATTRA_CAN_USE.get(), TimelessData.get(player).souls() >= 1);
-
-        super.inventoryTick(itemStack, level, owner, slot);
+        if (entity instanceof Player player)
+            stack.set(ECDataComponents.RAMATTRA_CAN_USE.get(), TimelessData.get(player).souls() >= 1);
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @Override

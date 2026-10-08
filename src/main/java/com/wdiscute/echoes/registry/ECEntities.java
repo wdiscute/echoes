@@ -73,7 +73,6 @@ public interface ECEntities
                             .passengerAttachments(2.0125F)
                             .ridingOffset(-0.7F)
                             .clientTrackingRange(8)
-                            .notInPeaceful()
             );
 
     DeferredHolder<EntityType<?>, EntityType<HollowedEntity>> HOLLOWED =
@@ -83,7 +82,6 @@ public interface ECEntities
                             .eyeHeight(1.74F)
                             .ridingOffset(-0.7F)
                             .clientTrackingRange(8)
-                            .notInPeaceful()
             );
 
 
@@ -95,8 +93,7 @@ public interface ECEntities
     static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String name, EntityType.EntityFactory<T> factory,
                                                                                     MobCategory category, UnaryOperator<EntityType.Builder<T>> provider)
     {
-        return ENTITY_TYPES.register(name, () -> provider.apply(EntityType.Builder.of(factory, category))
-                .build(ResourceKey.create(Registries.ENTITY_TYPE, Echoes.rl(name))));
+        return ENTITY_TYPES.register(name, () -> provider.apply(EntityType.Builder.of(factory, category)).build(name));
     }
 
 }

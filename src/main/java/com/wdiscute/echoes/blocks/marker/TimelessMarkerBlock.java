@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import net.minecraft.world.phys.HitResult;
 
 
 public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements EntityBlock
@@ -36,7 +36,7 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData)
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
     {
         ItemStack stack = new ItemStack(this);
 
@@ -78,7 +78,7 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return this.defaultBlockState().setValue(TYPE, Type.SPAWN_POINT).setValue(FACING, context.getHorizontalDirection());
     }
@@ -105,7 +105,7 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
+    public BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
     {
         return ECBlockEntities.TIMELESS_MARKER.get().create(worldPosition, blockState);
     }

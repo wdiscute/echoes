@@ -1,5 +1,6 @@
 {
   "parent": "block/block",
+  "render_type": "minecraft:cutout",
   "textures": {
     "particle": "echoes:block/gleemslate",
     "bottom": "echoes:block/gleemslate",

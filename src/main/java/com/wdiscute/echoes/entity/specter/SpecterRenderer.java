@@ -5,16 +5,16 @@ import com.mojang.math.Axis;
 import com.wdiscute.echoes.entity.trader.SoulTraderModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRenderState>
+public class SpecterRenderer extends EntityRenderer<SpecterEntity>
 {
     public SpecterModel soulTraderModel;
 
@@ -28,18 +28,31 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
     }
 
     @Override
-    public void submit(
-            SpecterRenderState state,
-            PoseStack poseStack,
-            SubmitNodeCollector node,
-            CameraRenderState camera)
+    public void render(SpecterEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight)
     {
-        super.submit(state, poseStack, node, camera);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 
-        if (!state.shouldRender)
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        boolean shouldRender = true;
+
+        if (player != null
+            && entity.getEntityData().get(SpecterEntity.PLAYER_UUID).equals(player.getUUID())
+            && Minecraft.getInstance().options.getCameraType().isFirstPerson()
+        )
+        {
+            return;
+        }
+
+        float scale = (float) Math.min((entity.tickCount + partialTick) / 20.0, 1.0);
+
+        Vec3 renderPosition = entity.getRenderPosition(partialTick);
+        Vec3 networkPosition = entity.getNetworkPosition(partialTick);
+
+        if (!shouldRender)
             return;
 
-        Vec3 offset = state.renderPosition.subtract(state.networkPosition);
+        Vec3 offset = entity.renderPosition.subtract(networkPosition);
 
         poseStack.translate(offset.x, offset.y, offset.z);
 
@@ -50,59 +63,22 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity, SpecterRender
 
         poseStack.translate(0, y / 5 - 1.1, 0);
 
-        poseStack.scale(state.scale, state.scale, state.scale);
+        poseStack.scale(scale, scale, scale);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
 
-        node.submitModel(
-                soulTraderModel,
-                state,
+        soulTraderModel.renderToBuffer(
                 poseStack,
-                RenderTypes.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION),
-                state.lightCoords,
+                bufferSource.getBuffer(RenderType.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION)),
+                packedLight,
                 OverlayTexture.NO_OVERLAY,
-                -1,
-                null,
-                state.outlineColor,
-                null
+                -1
         );
     }
 
     @Override
-    public @NonNull SpecterRenderState createRenderState()
+    public ResourceLocation getTextureLocation(SpecterEntity entity)
     {
-        return new SpecterRenderState();
-    }
-
-    @Override
-    public void extractRenderState(@NonNull SpecterEntity entity, @NonNull SpecterRenderState state, float partialTicks)
-    {
-        super.extractRenderState(entity, state, partialTicks);
-
-        LocalPlayer player = Minecraft.getInstance().player;
-
-        state.shouldRender = true;
-
-        if (player != null
-            && entity.getEntityData().get(SpecterEntity.PLAYER_UUID).equals(player.getUUID())
-            && Minecraft.getInstance().options.getCameraType().isFirstPerson()
-        )
-        {
-            state.shouldRender = false;
-            return;
-        }
-
-        state.spinAnimationState.copyFrom(entity.spinAnimationState);
-        state.sixSevenAnimationState.copyFrom(entity.sixSevenAnimationState);
-        state.headExplodeAnimationState.copyFrom(entity.headExplodeAnimationState);
-        state.pointAnimationState.copyFrom(entity.pointAnimationState);
-
-        state.scale = (float) Math.min((entity.tickCount + partialTicks) / 20.0, 1.0);
-
-        state.renderPosition = entity.getRenderPosition(partialTicks);
-        state.networkPosition = entity.getNetworkPosition(partialTicks);
-
-        state.yrot = entity.getRenderYRot(partialTicks);
-        state.xrot = entity.getRenderXRot(partialTicks);
+        return SoulTraderModel.TEXTURE_LOCATION;
     }
 }

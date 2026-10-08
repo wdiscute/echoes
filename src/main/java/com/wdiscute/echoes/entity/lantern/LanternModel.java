@@ -1,26 +1,30 @@
 package com.wdiscute.echoes.entity.lantern;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wdiscute.echoes.Echoes;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
-public class LanternModel extends EntityModel<LanternRenderState>
+public class LanternModel extends EntityModel<LanternEntity>
 {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION =
             new ModelLayerLocation(Echoes.rl("lantern"), "main");
 
-    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/lantern.png");
+    public static final ResourceLocation TEXTURE_LOCATION = Echoes.rl("textures/entity/lantern.png");
 
+    private final ModelPart root;
     private final ModelPart bb_main;
 
     public LanternModel(ModelPart root)
     {
-        super(root);
+        super();
+        this.root = root;
         this.bb_main = root.getChild("bb_main");
     }
 
@@ -37,5 +41,17 @@ public class LanternModel extends EntityModel<LanternRenderState>
         PartDefinition cube_r2 = bb_main.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(16, 13).addBox(-1.0F, -2.0F, -1.0F, 3.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -9.0F, 1.0F, 0.0F, 0.7854F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 32, 32);
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    {
+        root.render(poseStack, buffer, packedLight, packedOverlay, color);
+    }
+
+    @Override
+    public void setupAnim(LanternEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    {
+
     }
 }

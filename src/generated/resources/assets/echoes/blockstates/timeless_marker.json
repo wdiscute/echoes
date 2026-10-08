@@ -1,17 +1,167 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,type=blacksmith_npc": {
       "model": "echoes:block/timeless_marker",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,type=blacksmith_stand": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=chest": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=flying_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=ground_melee_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=ground_ranged_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=heart": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=lantern": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=portal": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=spawn_point": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=east,type=timeless_corpse": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
+    "facing=north,type=blacksmith_npc": {
       "model": "echoes:block/timeless_marker"
     },
-    "facing=south": {
+    "facing=north,type=blacksmith_stand": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=chest": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=flying_enemy": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=ground_melee_enemy": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=ground_ranged_enemy": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=heart": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=lantern": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=portal": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=spawn_point": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=north,type=timeless_corpse": {
+      "model": "echoes:block/timeless_marker"
+    },
+    "facing=south,type=blacksmith_npc": {
       "model": "echoes:block/timeless_marker",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,type=blacksmith_stand": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=chest": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=flying_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=ground_melee_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=ground_ranged_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=heart": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=lantern": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=portal": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=spawn_point": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=timeless_corpse": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=west,type=blacksmith_npc": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=blacksmith_stand": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=chest": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=flying_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=ground_melee_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=ground_ranged_enemy": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=heart": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=lantern": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=portal": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=spawn_point": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=timeless_corpse": {
       "model": "echoes:block/timeless_marker",
       "y": 270
     }

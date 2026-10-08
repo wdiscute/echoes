@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,21 +26,20 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
 
 
 public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlock, SculkBehaviour
 {
     public static final EnumProperty<State> STATE = EnumProperty.create("state", State.class);
-    private static final VoxelShape SHAPE_EMPTY = Block.column(16.0, 0.0, 13.0);
-    private static final VoxelShape SHAPE_FULL = Shapes.or(SHAPE_EMPTY, Block.column(8.0, 13.0, 16.0));
+    private static final VoxelShape SHAPE_EMPTY = Block.box(0.0D, 0.0D, 1.5D, 16.0D, 16.0D, 14.5D);
+    private static final VoxelShape SHAPE_FULL = Shapes.or(SHAPE_EMPTY, Block.box(4.0D, 13.0D, 0.0D, 12.0D, 16.0D, 16.0D));
 
     public PortalBlock(Properties properties)
     {
@@ -67,7 +67,7 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(STATE, State.OPEN);
     }
@@ -93,7 +93,7 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (itemStack.is(Items.ECHO_SHARD.asItem()) && state.getValue(STATE).equals(State.CLOSED))
         {
@@ -104,22 +104,30 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
             if (!level.isClientSide())
                 level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE,  SoundSource.BLOCKS);
 
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
 
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type)
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type)
     {
         return TickableBlockEntity.getTicketHelper(level);
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
+    public BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
     {
         return ECBlockEntities.PORTAL.get().create(worldPosition, blockState);
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    {
+        if(level.getBlockEntity(pos) instanceof PortalBlockEntity pbe)
+            pbe.preRemoveSideEffects(pos, state);
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
     @Override

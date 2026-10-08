@@ -2,18 +2,18 @@ package com.wdiscute.echoes.timeless;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record TimelessEnemyEntry(Identifier id, int preferredLevel, int levelRange, int weight, float healthIncrease,
+public record TimelessEnemyEntry(ResourceLocation id, int preferredLevel, int levelRange, int weight, float healthIncrease,
                                  float damageIncrease, float lootRolls)
 {
     public static final Codec<TimelessEnemyEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Identifier.CODEC.fieldOf("id").forGetter(TimelessEnemyEntry::id),
+                    ResourceLocation.CODEC.fieldOf("id").forGetter(TimelessEnemyEntry::id),
                     Codec.INT.fieldOf("preferred_level").forGetter(TimelessEnemyEntry::preferredLevel),
                     Codec.INT.fieldOf("level_range").forGetter(TimelessEnemyEntry::levelRange),
                     Codec.INT.fieldOf("weight").forGetter(TimelessEnemyEntry::weight),

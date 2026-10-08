@@ -43,7 +43,7 @@ public record ECSBSpecterAttemptEmotePayload(SpecterEmote emote) implements Cust
         {
             if(context.player() instanceof ServerPlayer sp)
             {
-                ServerLevel sl = sp.level();
+                ServerLevel sl = sp.serverLevel();
                 TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), sp.blockPosition());
                 if(closest == null) return;
 

@@ -22,7 +22,7 @@ public interface ECDataAttachments
     Supplier<AttachmentType<TimelessData>> TIMELESS_DATA = ATTACHMENT_TYPES.register(
             "timeless_data", () -> AttachmentType.builder(() -> TimelessData.EMPTY)
                     .sync(TimelessData.STREAM_CODEC)
-                    .serialize(TimelessData.CODEC.fieldOf("data"))
+                    .serialize(TimelessData.CODEC)
                     .copyOnDeath()
                     .build()
     );
@@ -30,7 +30,7 @@ public interface ECDataAttachments
     Supplier<AttachmentType<TimelessHearts>> TIMELESS_HEARTS = ATTACHMENT_TYPES.register(
             "timeless_hearts", () -> AttachmentType.builder(() -> TimelessHearts.EMPTY)
                     .sync(TimelessHearts.STREAM_CODEC)
-                    .serialize(TimelessHearts.CODEC.fieldOf("hearts"))
+                    .serialize(TimelessHearts.CODEC)
                     .copyOnDeath()
                     .build()
     );
@@ -43,13 +43,13 @@ public interface ECDataAttachments
 
     Supplier<AttachmentType<Float>> LOOT_COUNT = ATTACHMENT_TYPES.register(
             "loot_count", () -> AttachmentType.builder(() -> 0f)
-                    .serialize(Codec.FLOAT.fieldOf("count"))
+                    .serialize(Codec.FLOAT)
                     .build()
     );
 
     Supplier<AttachmentType<List<PerkInstance>>> PERKS = ATTACHMENT_TYPES.register(
             "perks", () -> AttachmentType.builder(() -> List.<PerkInstance>of())
-                    .serialize(PerkInstance.CODEC.listOf().fieldOf("perks"))
+                    .serialize(PerkInstance.CODEC.listOf())
                     .sync(PerkInstance.STREAM_CODEC.apply(ByteBufCodecs.list()))
                     .build()
     );

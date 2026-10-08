@@ -4,14 +4,15 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.Nullable;
 
-public class SculkParticle extends SingleQuadParticle
+public class SculkParticle extends TextureSheetParticle
 {
     private final SpriteSet sprites;
 
     protected SculkParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet)
     {
-        super(level, x, y, z, spriteSet.first());
+        super(level, x, y, z);
 
         this.xd = 0f;
         this.yd = 0f;
@@ -55,9 +56,9 @@ public class SculkParticle extends SingleQuadParticle
     }
 
     @Override
-    protected Layer getLayer()
+    public ParticleRenderType getRenderType()
     {
-        return Layer.TRANSLUCENT;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType>
@@ -69,11 +70,11 @@ public class SculkParticle extends SingleQuadParticle
             this.spriteSet = spriteSet;
         }
 
+        @Nullable
         @Override
-        public @org.jspecify.annotations.Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random)
+        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
-            return new SculkParticle(level, x, y, z, this.spriteSet);
+            return new SculkParticle(clientLevel, x, y, z, this.spriteSet);
         }
     }
-
 }

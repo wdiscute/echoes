@@ -1,6 +1,5 @@
 package com.wdiscute.echoes;
 
-import com.mojang.blaze3d.platform.Window;
 import com.wdiscute.echoes.entity.specter.SpecterEmote;
 import com.wdiscute.echoes.network.ECSBSpecterAttemptEmotePayload;
 import com.wdiscute.echoes.registry.ECKeyMappings;
@@ -12,20 +11,20 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.gui.GuiLayer;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimelessGUILayer implements GuiLayer
+public class TimelessGUILayer implements LayeredDraw.Layer
 {
     public static final ScreenUtils.Image SOUL_BAR_BACKGROUND = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_bar_background.png"), 250, 20);
     public static final ScreenUtils.Image SOUL_BAR_PROGRESS = new ScreenUtils.Image(Echoes.rl("textures/gui/soul_bar_progress.png"), 250, 20);
@@ -87,7 +86,7 @@ public class TimelessGUILayer implements GuiLayer
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker)
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker)
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -231,15 +230,15 @@ public class TimelessGUILayer implements GuiLayer
                     mouseHandler.releaseMouse();
 
                     GLFW.glfwSetCursorPos(
-                            Minecraft.getInstance().getWindow().handle(),
+                            Minecraft.getInstance().getWindow().getWindow(),
                             Minecraft.getInstance().getWindow().getWidth() / 2.0,
                             Minecraft.getInstance().getWindow().getHeight() / 2.0
                     );
 
                     isEmoteMenuOpen = true;
 
-                    lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
-                    lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+                    lastMouseX = mouseHandler.xpos();
+                    lastMouseY = mouseHandler.ypos();
                 }
             }
 
@@ -258,16 +257,16 @@ public class TimelessGUILayer implements GuiLayer
                 mouseHandler.grabMouse();
 
                 if (lastMouseX < middleX && lastMouseY < middleY)
-                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SIX_SEVEN));
+                    PacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SIX_SEVEN));
 
                 if (lastMouseX > middleX && lastMouseY < middleY)
-                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SPIN));
+                    PacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.SPIN));
 
                 if (lastMouseX < middleX && lastMouseY > middleY)
-                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.HEAD_EXPLODE));
+                    PacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.HEAD_EXPLODE));
 
                 if (lastMouseX > middleX && lastMouseY > middleY)
-                    ClientPacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.POINT));
+                    PacketDistributor.sendToServer(new ECSBSpecterAttemptEmotePayload(SpecterEmote.POINT));
             }
 
             if (isEmoteMenuOpen)
@@ -312,8 +311,8 @@ public class TimelessGUILayer implements GuiLayer
             }
 
 
-            lastMouseX = mouseHandler.getScaledXPos(Minecraft.getInstance().getWindow());
-            lastMouseY = mouseHandler.getScaledYPos(Minecraft.getInstance().getWindow());
+            lastMouseX = mouseHandler.xpos();
+            lastMouseY = mouseHandler.ypos();
             isEmoteMenuOpenOld = isEmoteMenuOpen;
         }
     }

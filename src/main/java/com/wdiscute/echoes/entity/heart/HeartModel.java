@@ -1,22 +1,24 @@
 package com.wdiscute.echoes.entity.heart;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.entity.lantern.LanternRenderState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
-public class HeartModel extends EntityModel<SculkHeartRenderState>
+public class HeartModel extends EntityModel<SculkHeartEntity>
 {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION =
             new ModelLayerLocation(Echoes.rl("heart"), "main");
 
-    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/heart.png");
+    public static final ResourceLocation TEXTURE_LOCATION = Echoes.rl("textures/entity/heart.png");
 
+    private final ModelPart root;
     private final ModelPart bone;
     private final ModelPart bone2;
     private final ModelPart bone4;
@@ -26,7 +28,8 @@ public class HeartModel extends EntityModel<SculkHeartRenderState>
 
     public HeartModel(ModelPart root)
     {
-        super(root);
+        super();
+        this.root = root;
         this.bb_main = root.getChild("bb_main");
         this.bone = root.getChild("bone");
         this.bone2 = root.getChild("bone2");
@@ -150,5 +153,17 @@ public class HeartModel extends EntityModel<SculkHeartRenderState>
         PartDefinition bb_main = partdefinition.addOrReplaceChild("bb_main", CubeListBuilder.create().texOffs(66, 88).addBox(-3.0F, -29.0F, -3.0F, 6.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 256, 256);
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    {
+        root.render(poseStack, buffer,packedLight, packedOverlay, color);
+    }
+
+    @Override
+    public void setupAnim(SculkHeartEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    {
+
     }
 }

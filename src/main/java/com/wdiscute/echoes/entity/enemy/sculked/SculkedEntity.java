@@ -7,9 +7,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.Nullable;
 
 public class SculkedEntity extends Zombie implements SculkAura
 {
@@ -38,7 +37,7 @@ public class SculkedEntity extends Zombie implements SculkAura
     }
 
     @Override
-    public float getSculkAura(@Nullable ServerLevel sl)
+    public float getSculkAura(ServerLevel sl)
     {
         return 4;
     }

@@ -23,7 +23,7 @@ public interface ECCommands
     static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context)
     {
         dispatcher.register(Commands.literal("timeless")
-                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(sourceStack -> sourceStack.hasPermission(2))
 
                 //timeless reset_progress
                 .then(Commands.literal("reset_progress")
@@ -61,7 +61,7 @@ public interface ECCommands
 
     private static int advanceTime(ServerPlayer player, int ticks) throws CommandSyntaxException
     {
-        ServerLevel sl = player.level();
+        ServerLevel sl = player.serverLevel();
         TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), player.blockPosition());
 
         if (closest == null)
@@ -73,7 +73,7 @@ public interface ECCommands
 
     private static int addTime(ServerPlayer player, int ticks) throws CommandSyntaxException
     {
-        ServerLevel sl = player.level();
+        ServerLevel sl = player.serverLevel();
         TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), player.blockPosition());
 
         if (closest == null)

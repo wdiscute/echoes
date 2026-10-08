@@ -6,47 +6,20 @@ import com.mojang.math.Axis;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.blocks.PrismaPaneBlock;
 import com.wdiscute.echoes.compat.IrisCompat;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.Util;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Util;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
-import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEntity, PrismaPaneRenderState>
+public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEntity>
 {
     public PrismaPaneRenderer(BlockEntityRendererProvider.Context context)
     {
-    }
-
-    @Override
-    public PrismaPaneRenderState createRenderState()
-    {
-        return new PrismaPaneRenderState();
-    }
-
-    @Override
-    public void extractRenderState(PrismaPaneBlockEntity blockEntity, PrismaPaneRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress)
-    {
-        BlockEntityRenderer.super.extractRenderState(
-                blockEntity,
-                state,
-                partialTicks,
-                cameraPosition,
-                breakProgress
-        );
-
-        state.facing = blockEntity.getBlockState().getValue(PrismaPaneBlock.FACING);
     }
 
     private static float[] rotateAroundBlockCenter(float x, float z, PrismaPaneBlock.Facing facing)
@@ -94,7 +67,7 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
                        + worldY * 0.05F
                        + worldZ * 0.05F;
 
-        double progress = Mth.abs(Mth.sin(value * Mth.PI));
+        double progress = Mth.abs(Mth.sin((float) (value * Mth.PI)));
 
         int r1 = (color1 >> 16) & 0xFF;
         int g1 = (color1 >> 8) & 0xFF;
@@ -133,7 +106,7 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         return direction * fract(Util.getMillis() / speedMs);
     }
 
-    private static void submitFace(double offset, RenderType renderType, PoseStack poseStack, SubmitNodeCollector collector,
+    private static void submitFace(double offset, RenderType renderType, PoseStack poseStack, MultiBufferSource bufferSource,
                                    Vec3 blockCenter, int color1, int color2,
                                    float uBase, float vBase, PrismaPaneBlock.Facing facing, int light)
     {
@@ -142,13 +115,13 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         double worldZ = blockCenter.z - 0.5;
         float z = (float) (0.5F + offset);
 
-        collector.submitCustomGeometry(poseStack, renderType, (pose, buffer) ->
-        {
-            addVertex(pose, buffer, 0.0F, 0.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
-            addVertex(pose, buffer, 1.0F, 0.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
-            addVertex(pose, buffer, 1.0F, 1.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
-            addVertex(pose, buffer, 0.0F, 1.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
-        });
+        VertexConsumer buffer = bufferSource.getBuffer(renderType);
+        PoseStack.Pose pose = poseStack.last();
+
+        addVertex(pose, buffer, 0.0F, 0.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
+        addVertex(pose, buffer, 1.0F, 0.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
+        addVertex(pose, buffer, 1.0F, 1.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
+        addVertex(pose, buffer, 0.0F, 1.0F, z, worldX, worldY, worldZ, color1, color2, uBase, vBase, facing, light);
     }
 
     private static void addVertex(PoseStack.Pose pose, VertexConsumer buffer, float x, float y, float z,
@@ -164,8 +137,6 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
 
 
         int[] color = getVertexColor(vertexWorldX, vertexWorldY, vertexWorldZ, color1, color2);
-
-
 
 
         float textureX = switch (facing)
@@ -194,13 +165,16 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
     }
 
     @Override
-    public void submit(PrismaPaneRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera)
+    public void render(PrismaPaneBlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
     {
         poseStack.pushPose();
 
         poseStack.translate(0.5F, 0.0F, 0.5F);
 
-        switch (state.facing)
+        PrismaPaneBlock.Facing facing = be.getBlockState().getValue(PrismaPaneBlock.FACING);
+        BlockPos blockPos = be.getBlockPos();
+
+        switch (facing)
         {
             case NORTH -> poseStack.mulPose(Axis.YP.rotationDegrees(0F));
             case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(180F));
@@ -216,11 +190,11 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         int color21 = 0xFFdecced;
         int color22 = 0xFFd9c0ed;
 
-        int horizontalCoord = switch (state.facing)
+        int horizontalCoord = switch (facing)
         {
-            case NORTH, SOUTH -> state.blockPos.getX();
-            case WEST, EAST -> state.blockPos.getZ();
-            default -> state.blockPos.getX();
+            case NORTH, SOUTH -> blockPos.getX();
+            case WEST, EAST -> blockPos.getZ();
+            default -> blockPos.getX();
         };
 
         final float LAYER1_V_SPEED = 30000f, LAYER1_V_DIR = -1f;
@@ -236,7 +210,7 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         final float LAYER4_U_SPEED = 113000f, LAYER4_U_DIR = -1f;
 
         float uBaseBase = cellOffset(horizontalCoord);
-        float vBaseBase = cellOffset(state.blockPos.getY());
+        float vBaseBase = cellOffset(blockPos.getY());
 
         float uBaseLayer1 = uBaseBase + drift(LAYER1_U_SPEED, LAYER1_U_DIR);
         float vBaseLayer1 = vBaseBase + drift(LAYER1_V_SPEED, LAYER1_V_DIR);
@@ -251,22 +225,22 @@ public class PrismaPaneRenderer implements BlockEntityRenderer<PrismaPaneBlockEn
         float vBaseLayer4 = vBaseBase + drift(LAYER4_V_SPEED, LAYER4_V_DIR);
 
         //if iris, use lower light so it doesn't look as bright, otherwise use block light
-        int light = ModList.get().isLoaded("iris") && IrisCompat.isShaderPackInUse() ? 0xF000D8 : state.lightCoords;
+        int light = ModList.get().isLoaded("iris") && IrisCompat.isShaderPackInUse() ? 0xF000D8 : packedLight;
 
-        submitFace(0, RenderTypes.entityCutout(Echoes.rl("textures/pane_base.png")), poseStack, submitNodeCollector,
-                state.blockPos.getCenter(), color1, color2, uBaseBase, vBaseBase, state.facing, light);
+        submitFace(0, RenderType.entityCutout(Echoes.rl("textures/pane_base.png")), poseStack, bufferSource,
+                blockPos.getCenter(), color1, color2, uBaseBase, vBaseBase, facing, light);
 
-        submitFace(0.002d, RenderTypes.entityCutout(Echoes.rl("textures/pane_layer_1.png")), poseStack, submitNodeCollector,
-                state.blockPos.getCenter(), color21, color22, uBaseLayer1, vBaseLayer1, state.facing, light);
+        submitFace(0.002d, RenderType.entityCutout(Echoes.rl("textures/pane_layer_1.png")), poseStack, bufferSource,
+                blockPos.getCenter(), color21, color22, uBaseLayer1, vBaseLayer1, facing, light);
 
-        submitFace(0.004d, RenderTypes.entityTranslucent(Echoes.rl("textures/pane_layer_2.png")), poseStack, submitNodeCollector,
-                state.blockPos.getCenter(), color21, color22, uBaseLayer2, vBaseLayer2, state.facing, light);
+        submitFace(0.004d, RenderType.entityTranslucent(Echoes.rl("textures/pane_layer_2.png")), poseStack, bufferSource,
+                blockPos.getCenter(), color21, color22, uBaseLayer2, vBaseLayer2, facing, light);
 
-        submitFace(0.004d, RenderTypes.entityTranslucent(Echoes.rl("textures/pane_layer_3.png")), poseStack, submitNodeCollector,
-                state.blockPos.getCenter(), color21, color22, uBaseLayer3, vBaseLayer3, state.facing, light);
+        submitFace(0.004d, RenderType.entityTranslucent(Echoes.rl("textures/pane_layer_3.png")), poseStack, bufferSource,
+                blockPos.getCenter(), color21, color22, uBaseLayer3, vBaseLayer3, facing, light);
 
-        submitFace(0.004d, RenderTypes.entityTranslucent(Echoes.rl("textures/pane_layer_4.png")), poseStack, submitNodeCollector,
-                state.blockPos.getCenter(), color21, color22, uBaseLayer4, vBaseLayer4, state.facing, light);
+        submitFace(0.004d, RenderType.entityTranslucent(Echoes.rl("textures/pane_layer_4.png")), poseStack, bufferSource,
+                blockPos.getCenter(), color21, color22, uBaseLayer4, vBaseLayer4, facing, light);
 
         poseStack.popPose();
     }

@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.Nullable;
 
 public class SculkHeartEntity extends Mob implements SculkAura
 {
@@ -25,7 +24,7 @@ public class SculkHeartEntity extends Mob implements SculkAura
     }
 
     @Override
-    public boolean canBeCollidedWith(@Nullable Entity other)
+    public boolean canBeCollidedWith()
     {
         return false;
     }
@@ -72,10 +71,10 @@ public class SculkHeartEntity extends Mob implements SculkAura
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
+    protected void actuallyHurt(DamageSource source, float damageAmount)
     {
         //if hit by player within 10 blocks, start ending sequence
-        if (source.getEntity() instanceof Player player)
+        if (source.getEntity() instanceof Player player && level() instanceof ServerLevel level)
         {
             float v = player.distanceTo(this);
 
@@ -87,8 +86,7 @@ public class SculkHeartEntity extends Mob implements SculkAura
             }
         }
 
-        super.hurtServer(level, source, damage);
-        return true;
+        super.actuallyHurt(source, damageAmount);
     }
 
     @Override

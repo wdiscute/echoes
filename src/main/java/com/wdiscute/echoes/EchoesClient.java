@@ -1,6 +1,7 @@
 package com.wdiscute.echoes;
 
 import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
+import com.wdiscute.echoes.registry.ECItemProperties;
 import com.wdiscute.libtooltips.RGBEffect;
 import com.wdiscute.libtooltips.Tooltips;
 import net.minecraft.client.Minecraft;

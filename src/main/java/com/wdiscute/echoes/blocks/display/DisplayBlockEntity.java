@@ -2,10 +2,10 @@ package com.wdiscute.echoes.blocks.display;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECBlockEntities;
-import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.utils.MaybeStack;
+import com.wdiscute.utils.InventoryManagement;
 import com.wdiscute.utils.Utils;
+import com.wdiscute.utils.ValueHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -13,19 +13,11 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.TicketType;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.*;
 
@@ -52,17 +44,17 @@ public class DisplayBlockEntity extends BlockEntity
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output)
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
     {
-        super.saveAdditional(output);
-        output.store("trade", BlacksmithTrade.CODEC, trade);
+        super.saveAdditional(tag, registries);
+        ValueHelper.store("trade", BlacksmithTrade.CODEC, trade, tag);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input)
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
     {
-        super.loadAdditional(input);
-        trade = input.read("trade", BlacksmithTrade.CODEC).orElse(BlacksmithTrade.EMPTY);
+        super.loadAdditional(tag, registries);
+        trade = ValueHelper.read("trade", BlacksmithTrade.CODEC, tag).orElse(BlacksmithTrade.EMPTY);
     }
 
     public boolean clickedOn(Player player)
@@ -72,7 +64,7 @@ public class DisplayBlockEntity extends BlockEntity
         {
             if (sl.getBlockEntity(getBlockPos()) instanceof DisplayBlockEntity dbe)
             {
-                List<BlacksmithTrade> list = sl.registryAccess().lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
+                List<BlacksmithTrade> list = sl.registryAccess().registryOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
 
                 if (!list.isEmpty())
                     dbe.trade = BlacksmithTrade.getRandomTrade(sl);
@@ -87,13 +79,13 @@ public class DisplayBlockEntity extends BlockEntity
         }
 
         //return if player doesn't have enough items to pay
-        if(!Utils.InventoryManagement.hasEnoughItems(trade.cost(), player.getInventory())) return false;
+        if (!InventoryManagement.hasEnoughItems(trade.cost(), player.getInventory())) return false;
 
         //give player item bought
         player.addItem(trade.stack().toStack());
 
         //pay cost
-        Utils.InventoryManagement.payItems(trade.cost(), player.getInventory());
+        InventoryManagement.payItems(trade.cost(), player.getInventory());
 
         //playSound
         level.playSound(null, getBlockPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1f, 2);

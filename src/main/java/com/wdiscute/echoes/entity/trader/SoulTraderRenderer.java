@@ -2,19 +2,15 @@ package com.wdiscute.echoes.entity.trader;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.wdiscute.echoes.entity.heart.HeartModel;
-import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.entity.heart.SculkHeartRenderState;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
 
-public class SoulTraderRenderer extends EntityRenderer<SoulTraderEntity, SoulTraderRenderState>
+public class SoulTraderRenderer extends EntityRenderer<SoulTraderEntity>
 {
     public SoulTraderModel soulTraderModel;
 
@@ -25,44 +21,30 @@ public class SoulTraderRenderer extends EntityRenderer<SoulTraderEntity, SoulTra
     }
 
     @Override
-    public void submit(@NonNull SoulTraderRenderState state, PoseStack poseStack, SubmitNodeCollector node, CameraRenderState camera)
+    public void render(SoulTraderEntity p_entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight)
     {
-        super.submit(state, poseStack, node, camera);
+        super.render(p_entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 
         poseStack.translate(0, 3.5, 0);
 
         double t = (System.nanoTime()) / 1_000_000_000.0;
         double y = Math.sin(t * 1.10);
-        poseStack.translate(new Vec3(0, y/5, 0));
+        Vec3 p = new Vec3(0, y / 5, 0);
+        poseStack.translate(p.x, p.y, p.z);
 
         poseStack.scale(2, 2, 2);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
         poseStack.mulPose(Axis.YP.rotationDegrees(90));
 
-
-
-
-
-
-
         //todo fix light coords so it doesn't darken when entity is inside a block
-        node.submitModel(
-                soulTraderModel, state, poseStack, RenderTypes.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION),
-                state.lightCoords, OverlayTexture.NO_OVERLAY,
-                -1, null, state.outlineColor, null
-        );
+        soulTraderModel.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityTranslucent(SoulTraderModel.TEXTURE_LOCATION)),
+                packedLight, OverlayTexture.NO_OVERLAY, -1);
     }
 
     @Override
-    public SoulTraderRenderState createRenderState()
+    public ResourceLocation getTextureLocation(SoulTraderEntity entity)
     {
-        return new SoulTraderRenderState();
-    }
-
-    @Override
-    public void extractRenderState(SoulTraderEntity entity, SoulTraderRenderState state, float partialTicks)
-    {
-        super.extractRenderState(entity, state, partialTicks);
+        return SoulTraderModel.TEXTURE_LOCATION;
     }
 }

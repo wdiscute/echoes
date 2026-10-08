@@ -1,91 +1,93 @@
-[
-  {
-    "rarity": "common",
-    "stack": {
-      "data_components_patch": {
-        "minecraft:potion_contents": {
-          "potion": "minecraft:healing"
-        }
+{
+  "add": [
+    {
+      "rarity": "common",
+      "stack": {
+        "data_components_patch": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:healing"
+          }
+        },
+        "identifier": "minecraft:potion"
       },
-      "identifier": "minecraft:potion"
+      "weight": 20
     },
-    "weight": 20
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:sculk_spawn"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:sculk_spawn"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:hollowed_spine"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:hollowed_spine"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:sculked_teeth"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:sculked_teeth"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:echoing_marrow"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:echoing_marrow"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:rot_brain"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:rot_brain"
+      },
+      "weight": 50
     },
-    "weight": 50
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:prisma_shard"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:prisma_shard"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:lattice"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:lattice"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:lucent_shard"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:lucent_shard"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:crystal_core"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:crystal_core"
+      },
+      "weight": 10
     },
-    "weight": 10
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:lucent_die"
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:lucent_die"
+      },
+      "weight": 50
     },
-    "weight": 50
-  },
-  {
-    "rarity": "common",
-    "stack": {
-      "identifier": "echoes:soul"
-    },
-    "weight": 2000
-  }
-]
+    {
+      "rarity": "common",
+      "stack": {
+        "identifier": "echoes:soul"
+      },
+      "weight": 2000
+    }
+  ]
+}

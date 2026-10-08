@@ -1,11 +1,15 @@
 package com.wdiscute.echoes.entity.lantern;
 
+import com.wdiscute.echoes.EchoesClient;
 import com.wdiscute.echoes.SculkAura;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECEntityDataSerializers;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.utils.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -15,12 +19,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class LanternEntity extends Entity implements SculkAura
@@ -51,7 +54,13 @@ public class LanternEntity extends Entity implements SculkAura
         pickupCooldown--;
 
         //if attached entity doesn't exist any more, list uuid
-        Entity attachedEntity = level().getEntity(entityData.get(UUID));
+        Entity attachedEntity;
+        if (level() instanceof ServerLevel sl)
+            attachedEntity = sl.getEntity(entityData.get(UUID));
+        else
+            attachedEntity = level().getEntities((Entity) null,
+                    new AABB(blockPosition()).inflate(1000), (p) -> p.getUUID().equals(entityData.get(UUID))).stream().findAny().orElse(null);
+
         if (attachedEntity == null)
         {
             entityData.set(UUID, null);
@@ -59,7 +68,8 @@ public class LanternEntity extends Entity implements SculkAura
         else
         {
             //if attached, move to entity attached every tick
-            setPosRaw(attachedEntity.position().x, attachedEntity.position().y, attachedEntity.position().z);
+            Vec3 positionOfPlayer = attachedEntity.position();
+            setPosRaw(positionOfPlayer.x, attachedEntity.position().y, attachedEntity.position().z);
         }
 
         //if client set offset for render and return
@@ -74,7 +84,7 @@ public class LanternEntity extends Entity implements SculkAura
 
             if (attachedEntity instanceof Player player)
                 if (player.isCrouching())
-                    setPosRaw(position().x + player.getHeadLookAngle().x, position().y, position().z + player.getHeadLookAngle().z);
+                    setPosRaw(position().x + player.getViewVector(0).x, position().y, position().z + player.getViewVector(0).z);
 
             return;
         }
@@ -97,7 +107,7 @@ public class LanternEntity extends Entity implements SculkAura
             for (Entity entity : entitiesClose)
             {
                 //if entity already holding lanter, skip it
-                if(entity.getData(ECDataAttachments.HAS_LANTERN)) continue;
+                if (entity.getData(ECDataAttachments.HAS_LANTERN)) continue;
 
                 float dist = entity.distanceTo(this);
                 if (dist < distance)
@@ -119,7 +129,7 @@ public class LanternEntity extends Entity implements SculkAura
             {
                 if (player.isCrouching())
                 {
-                    setPosRaw(position().x + player.getHeadLookAngle().x, position().y, position().z + player.getHeadLookAngle().z);
+                    setPosRaw(position().x + player.getViewVector(0).x, position().y, position().z + player.getViewVector(0).z);
                     player.removeData(ECDataAttachments.HAS_LANTERN);
                     entityData.set(UUID, null);
                     pickupCooldown = 40;
@@ -141,21 +151,21 @@ public class LanternEntity extends Entity implements SculkAura
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
+    public boolean hurt(DamageSource source, float amount)
     {
         return false;
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input)
+    protected void readAdditionalSaveData(CompoundTag compound)
     {
-        isLocked = input.getBooleanOr("locked", false);
+        isLocked = compound.getBoolean("locked");
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output)
+    protected void addAdditionalSaveData(CompoundTag compound)
     {
-        output.putBoolean("locked", isLocked);
+        compound.putBoolean("locked", isLocked);
     }
 
     @Override

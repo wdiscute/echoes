@@ -15,7 +15,7 @@ public class IncreaseTimeOnEnteringLevelPerk extends SimplePerk
     @Override
     public void onNewInstanceEntered(ServerPlayer player, List<Float> amplifiers, TimelessInstance instance)
     {
-        instance.addTime(player.level(), amplifiers.getFirst().longValue());
+        instance.addTime(player.serverLevel(), amplifiers.getFirst().longValue());
     }
 
     @Override

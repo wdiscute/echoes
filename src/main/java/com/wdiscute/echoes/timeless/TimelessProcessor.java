@@ -22,9 +22,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -37,7 +38,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class TimelessProcessor
 {
     public static final List<Utils.Duo<Either<Holder<Block>, Block>, Processor>> PROCESSORS = new ArrayList<>();
@@ -46,13 +46,12 @@ public class TimelessProcessor
             Block.UPDATE_CLIENTS
             | Block.UPDATE_KNOWN_SHAPE
             | Block.UPDATE_SUPPRESS_DROPS
-            | Block.UPDATE_MOVE_BY_PISTON
-            | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
+            | Block.UPDATE_MOVE_BY_PISTON;
 
     public static void addDefaultProcessors()
     {
         //remove structure blocks
-        add(Blocks.STRUCTURE_BLOCK, (_, sl, state, bp, _) ->
+        add(Blocks.STRUCTURE_BLOCK, (t, sl, state, bp, b) ->
         {
             //remove structure block
             if (state.is(Blocks.STRUCTURE_BLOCK))
@@ -61,7 +60,7 @@ public class TimelessProcessor
         });
 
         //timeless marker processor
-        add(ECBlocks.TIMELESS_MARKER, (instance, sl, state, bp, _) ->
+        add(ECBlocks.TIMELESS_MARKER, (instance, sl, state, bp, b) ->
         {
             sl.setBlock(bp, Blocks.AIR.defaultBlockState(), TimelessInstance.FLAGS);
 
@@ -71,7 +70,7 @@ public class TimelessProcessor
             if (type.equals(TimelessMarkerBlock.Type.SPAWN_POINT))
             {
                 instance.spawnPoint = bp;
-                instance.direction = switch (state.getValueOrElse(PortalBlock.FACING, Direction.NORTH))
+                instance.direction = switch (state.getOptionalValue(PortalBlock.FACING).orElse(Direction.NORTH))
                 {
                     case WEST -> 3;
                     case SOUTH -> 2;
@@ -83,8 +82,8 @@ public class TimelessProcessor
             //spawn timeless corpse
             if (type.equals(TimelessMarkerBlock.Type.TIMELESS_CORPSE))
             {
-                TimelessCorpseEntity corpse = ECEntities.TIMELESS_CORPSE.get().create(sl, EntitySpawnReason.TRIGGERED);
-                corpse.snapTo(bp.getCenter().x, bp.getCenter().y - 0.7, bp.getCenter().z);
+                TimelessCorpseEntity corpse = ECEntities.TIMELESS_CORPSE.get().create(sl);
+                corpse.moveTo(bp.getCenter().x, bp.getCenter().y - 0.7, bp.getCenter().z);
 
                 if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.NORTH))
                     corpse.setYRot(0);
@@ -102,7 +101,7 @@ public class TimelessProcessor
             //spawn heart entity
             if (type.equals(TimelessMarkerBlock.Type.HEART))
             {
-                SculkHeartEntity heart = ECEntities.SCULK_HEART.get().create(sl, EntitySpawnReason.TRIGGERED);
+                SculkHeartEntity heart = ECEntities.SCULK_HEART.get().create(sl);
                 heart.setPersistenceRequired();
                 if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.NORTH))
                     heart.setYRot(0);
@@ -112,15 +111,15 @@ public class TimelessProcessor
                     heart.setYRot(180);
                 else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.EAST))
                     heart.setYRot(270);
-                heart.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
+                heart.moveTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(heart);
             }
 
             //spawn lanterns
             if (type.equals(TimelessMarkerBlock.Type.LANTERN))
             {
-                Entity entity = ECEntities.LANTERN.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
-                entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
+                Entity entity = ECEntities.LANTERN.get().spawn(sl, bp, MobSpawnType.SPAWNER);
+                entity.moveTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
                 sl.addFreshEntityWithPassengers(entity);
             }
 
@@ -131,7 +130,7 @@ public class TimelessProcessor
                 if (randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
-                            .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
+                            .value().spawn(sl, bp, MobSpawnType.SPAWNER);
                     if (entity instanceof Mob mob)
                     {
                         mob.setData(ECDataAttachments.LOOT_COUNT, randomEnemy.lootRolls());
@@ -150,7 +149,7 @@ public class TimelessProcessor
                 if (randomEnemy != null)
                 {
                     Entity entity = sl.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, randomEnemy.id()))
-                            .value().spawn(sl, bp, EntitySpawnReason.STRUCTURE);
+                            .value().spawn(sl, bp, MobSpawnType.STRUCTURE);
 
                     if (entity instanceof Mob mob)
                     {
@@ -166,22 +165,22 @@ public class TimelessProcessor
             //spawn blacksmith npc
             if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_NPC))
             {
-                SoulTraderEntity entity = ECEntities.SOUL_TRADER.get().spawn(sl, bp, EntitySpawnReason.TRIGGERED);
-                entity.snapTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
+                SoulTraderEntity entity = ECEntities.SOUL_TRADER.get().spawn(sl, bp, MobSpawnType.TRIGGERED);
+                entity.moveTo(bp.getCenter().x, bp.getCenter().y, bp.getCenter().z);
             }
 
             //spawn blacksmith stand
             if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_STAND))
             {
                 sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState());
-                sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
+                sl.getChunkSource().addRegionTicket(TicketType.PLAYER, new ChunkPos(bp), 1, new ChunkPos(bp));
                 if (sl.getBlockEntity(bp) instanceof DisplayBlockEntity dbe)
                 {
                     dbe.trade = BlacksmithTrade.getRandomTrade(sl);
                     dbe.setChanged();
 
                     sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState()
-                            .setValue(HorizontalDirectionalBlock.FACING, state.getValueOrElse(HorizontalDirectionalBlock.FACING, Direction.NORTH))
+                            .setValue(HorizontalDirectionalBlock.FACING, state.getOptionalValue(HorizontalDirectionalBlock.FACING).orElse(Direction.NORTH))
                             .setValue(DisplayBlock.RARITY, dbe.trade.rarity())
                     );
                 }
@@ -190,7 +189,7 @@ public class TimelessProcessor
             //spawn portal
             if (type.equals(TimelessMarkerBlock.Type.PORTAL))
             {
-                sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
+                sl.getChunkSource().addRegionTicket(TicketType.PLAYER, new ChunkPos(bp), 1, new ChunkPos(bp));
                 BlockState blockState = ECBlocks.PORTAL.get().defaultBlockState();
                 blockState = blockState.trySetValue(PortalBlock.STATE, PortalBlock.State.OPEN);
                 sl.setBlockAndUpdate(bp, blockState);
@@ -199,7 +198,7 @@ public class TimelessProcessor
             //spawn portal
             if (type.equals(TimelessMarkerBlock.Type.CHEST))
             {
-                sl.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(bp), 1);
+                sl.getChunkSource().addRegionTicket(TicketType.PLAYER, new ChunkPos(bp), 1, new ChunkPos(bp));
                 BlockState blockState = ECBlocks.CASKET.get().defaultBlockState();
                 sl.setBlockAndUpdate(bp, blockState);
             }
@@ -227,7 +226,7 @@ public class TimelessProcessor
         {
             entity.getAttributes().getInstance(attrib)
                     .addPermanentModifier(
-                            new AttributeModifier(attrib.getKey().identifier(), value, AttributeModifier.Operation.ADD_VALUE));
+                            new AttributeModifier(attrib.getKey().location(), value, AttributeModifier.Operation.ADD_VALUE));
         }
     }
 

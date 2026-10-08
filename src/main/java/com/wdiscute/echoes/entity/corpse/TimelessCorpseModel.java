@@ -1,5 +1,7 @@
 package com.wdiscute.echoes.entity.corpse;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wdiscute.echoes.Echoes;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -7,10 +9,11 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class TimelessCorpseModel extends EntityModel<TimelessCorpseRenderState>
+public class TimelessCorpseModel extends EntityModel<TimelessCorpseEntity>
 {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Echoes.rl("corpse"), "main");
+    private final ModelPart root;
     private final ModelPart Waist;
     private final ModelPart Head;
     private final ModelPart Body;
@@ -21,7 +24,8 @@ public class TimelessCorpseModel extends EntityModel<TimelessCorpseRenderState>
 
     public TimelessCorpseModel(ModelPart root)
     {
-        super(root);
+        super();
+        this.root = root;
         this.Waist = root.getChild("Waist");
         this.Head = this.Waist.getChild("Head");
         this.Body = this.Waist.getChild("Body");
@@ -62,5 +66,17 @@ public class TimelessCorpseModel extends EntityModel<TimelessCorpseRenderState>
         PartDefinition Left_Leg_r1 = Left_Leg.addOrReplaceChild("Left_Leg_r1", CubeListBuilder.create().texOffs(16, 48).addBox(-0.1F, -12.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.9F, 14.0F, -7.0F, -1.1781F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 64, 64);
+    }
+
+    @Override
+    public void setupAnim(TimelessCorpseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    {
+
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    {
+        root.render(poseStack, buffer,packedLight, packedOverlay, color);
     }
 }

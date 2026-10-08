@@ -6,22 +6,19 @@ import com.wdiscute.echoes.registry.ECBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.Nullable;
 
-import java.lang.classfile.TypeAnnotation;
 import java.util.concurrent.CompletableFuture;
 
 public class DGECBlocksTagsProvider extends BlockTagsProvider
 {
-
-    public DGECBlocksTagsProvider(PackOutput output,
-                                  CompletableFuture<HolderLookup.Provider> lookupProvider)
+    public DGECBlocksTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper)
     {
-        super(output, lookupProvider, Echoes.MOD_ID);
+        super(output, lookupProvider, Echoes.MOD_ID, existingFileHelper);
     }
-
 
     @Override
     protected void addTags(HolderLookup.Provider provider)
@@ -38,7 +35,7 @@ public class DGECBlocksTagsProvider extends BlockTagsProvider
                 .add(ECBlocks.SCULKED_DEEPSLATE_BRICKS.get())
         ;
 
-        tag(BlockTags.SUPPORTS_VEGETATION)
+        tag(BlockTags.DIRT)
                 .add(ECBlocks.GLEEMSLATE_GRASS.get());
 
 

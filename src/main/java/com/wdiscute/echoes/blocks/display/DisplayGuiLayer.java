@@ -1,10 +1,14 @@
 package com.wdiscute.echoes.blocks.display;
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
+import com.wdiscute.utils.InventoryManagement;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import com.wdiscute.utils.ScreenUtils;
@@ -12,22 +16,27 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.client.gui.GuiLayer;
 
 import java.util.*;
 
-public class DisplayGuiLayer implements GuiLayer
+public class DisplayGuiLayer implements LayeredDraw.Layer
 {
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker)
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker)
     {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -47,7 +56,7 @@ public class DisplayGuiLayer implements GuiLayer
 
                 long time = System.currentTimeMillis() + dbe.timeOffset;
                 int max = 10;
-                int min = 20;
+                int min = 40;
                 float speed = 0.3f;
                 ItemStack stack = dbe.trade.stack().toStack();
 
@@ -80,7 +89,7 @@ public class DisplayGuiLayer implements GuiLayer
                 double seconds = 5;
                 double interval = 600;
 
-                if (player.nameAndId().name().equals("Klmbe"))
+                if (player.getGameProfile().getName().equals("Klmbe"))
                 {
                     seconds = 1;
                     interval = 1;
@@ -96,11 +105,11 @@ public class DisplayGuiLayer implements GuiLayer
                 t = t * t * t * (t * (6 * t - 15) + 10);
                 float value = phase < duration ? (float) (360.0 * t) : 0f;
 
-                ScreenUtils.renderItem(guiGraphics, stack,
-                        value + 130,
-                        (float) (20 + 25 * (Math.sin(time / 1000.0 * 0.2f) + 1) / 2),
+                renderItem(guiGraphics, stack,
+                        value + 150,
+                        (float) (-30 + 25 * (Math.sin(time / 1000.0 * 0.4f) + 1) / 2),
                         (float) (min + (max - min) * (Math.sin(time / 1000.0 * speed) + 1) / 2),
-                        -260, -90, 5f);
+                        -130, -50, 5f);
 
                 //TODO show power level?
                 //ScreenUtils.centeredText(guiGraphics, font, Component.literal("Power Level - ").append(dbe.trade.powerLevel() + ""),
@@ -127,9 +136,9 @@ public class DisplayGuiLayer implements GuiLayer
                 {
                     ItemStack costStack = dbe.trade.cost().get(i).toStack();
 
-                    boolean hasEnough = Utils.InventoryManagement.hasEnoughItems(List.of(new MaybeStack(costStack)), Minecraft.getInstance().player.getInventory());
+                    boolean hasEnough = InventoryManagement.hasEnoughItems(List.of(new MaybeStack(costStack)), Minecraft.getInstance().player.getInventory());
 
-                    ScreenUtils.text(guiGraphics, font, MutableComponent.create(costStack.getHoverName().getContents()).append(" x" + costStack.count()),
+                    ScreenUtils.text(guiGraphics, font, MutableComponent.create(costStack.getHoverName().getContents()).append(" x" + costStack.getCount()),
                             x + 30, y + 10 + i * 16, hasEnough ? 0xff20a347 : 0xffb74646);
 
                     ScreenUtils.item(guiGraphics, costStack, x + 20, y + 14 + i * 16, guiGraphics.pose(), 1f);
@@ -202,5 +211,53 @@ public class DisplayGuiLayer implements GuiLayer
                 }
             }
         }
+    }
+
+    public static void renderItem(GuiGraphics guiGraphics, ItemStack stack, float rotY, float rotX, float rotZ, int xOffset, int yOffset, float scale)
+    {
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+
+        if (player == null || minecraft.level == null || stack.isEmpty())
+            return;
+
+        PoseStack poseStack = guiGraphics.pose();
+        BakedModel model = minecraft.getItemRenderer().getModel(stack, minecraft.level, player, 0);
+
+        float centerX = guiGraphics.guiWidth() / 2.0F + xOffset;
+        float centerY = guiGraphics.guiHeight() / 2.0F + yOffset;
+
+        poseStack.pushPose();
+
+        poseStack.translate(centerX, centerY, 150.0F);
+
+        float itemScale = 16.0F * scale;
+        poseStack.scale(itemScale, -itemScale, itemScale);
+
+        poseStack.mulPose(Axis.XP.rotationDegrees(rotX));
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotY));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(rotZ));
+
+        boolean flatLight = !model.usesBlockLight();
+        if (flatLight)
+            Lighting.setupForFlatItems();
+
+        minecraft.getItemRenderer().render(
+                stack,
+                ItemDisplayContext.GUI,
+                false,
+                poseStack,
+                guiGraphics.bufferSource(),
+                LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY,
+                model
+        );
+
+        guiGraphics.flush();
+
+        if (flatLight)
+            Lighting.setupFor3DItems();
+
+        poseStack.popPose();
     }
 }

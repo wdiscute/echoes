@@ -2,70 +2,73 @@ package com.wdiscute.echoes.blocks.display;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import net.minecraft.world.item.ItemStack;
 
-public class DisplayRenderer implements BlockEntityRenderer<DisplayBlockEntity, DisplayRenderState>
+public class DisplayRenderer implements BlockEntityRenderer<DisplayBlockEntity>
 {
-    private final ItemModelResolver itemModelResolver;
-
     public DisplayRenderer(BlockEntityRendererProvider.Context context)
     {
-        this.itemModelResolver = context.itemModelResolver();
     }
 
     @Override
-    public DisplayRenderState createRenderState()
+    public void render(DisplayBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
     {
-        return new DisplayRenderState();
-    }
+        ItemStack stack = blockEntity.trade.stack().toStack();
 
-    @Override
-    public void extractRenderState(DisplayBlockEntity blockEntity, DisplayRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress)
-    {
-        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        if (stack.isEmpty())
+            return;
 
-        state.rotationOffset = switch (blockEntity.getBlockState().getValueOrElse(DisplayBlock.FACING, Direction.NORTH))
+        Direction facing = blockEntity.getBlockState().getOptionalValue(DisplayBlock.FACING).orElse(Direction.NORTH);
+
+        float rotationOffset = switch (facing)
         {
-            case NORTH -> 0;
-            case SOUTH -> 180;
-            case WEST -> 90;
-            case EAST -> 270;
-            default -> 0;
+            case NORTH -> 0.0F;
+            case SOUTH -> 180.0F;
+            case WEST -> 90.0F;
+            case EAST -> 270.0F;
+            default -> 0.0F;
         };
-        state.stack = blockEntity.trade.stack().toStack();
-        this.itemModelResolver.updateForNonLiving(state.item, state.stack, ItemDisplayContext.FIXED, Minecraft.getInstance().player);
-    }
 
-    @Override
-    public void submit(DisplayRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera)
-    {
+        Minecraft minecraft = Minecraft.getInstance();
+
         poseStack.pushPose();
 
-        poseStack.scale(0.7f, 0.7f, 0.7f);
-        poseStack.translate(0.7f, 1.7f + (Math.sin(Util.getMillis() / 555f) / 60), 0.7f);
-        poseStack.translate(0f, 0.4f, 0f);
+        poseStack.scale(0.7F, 0.7F, 0.7F);
 
-        float x = (float) (Math.sin(Util.getMillis() / 2000f + 323) * 20f);
-        float y = (float) (Math.sin(Util.getMillis() / 2000f) * 20f);
+        poseStack.translate(
+                0.7F,
+                1.7F + (Math.sin(Util.getMillis() / 555.0F) / 60.0F),
+                0.7F
+        );
+
+        poseStack.translate(0.0F, 0.4F, 0.0F);
+
+        float x = (float) (Math.sin(Util.getMillis() / 2000.0F + 323.0F) * 20.0F);
+        float y = (float) (Math.sin(Util.getMillis() / 2000.0F) * 20.0F);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(x));
-        poseStack.mulPose(Axis.YP.rotationDegrees(y + state.rotationOffset));
-        poseStack.mulPose(Axis.ZP.rotationDegrees((float) (Math.toRadians(Util.getMillis() % 360f) / 600f)));
+        poseStack.mulPose(Axis.YP.rotationDegrees(y + rotationOffset));
 
-        if (!state.stack.isEmpty())
-            state.item.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.mulPose(Axis.ZP.rotationDegrees((float) (Math.toRadians(Util.getMillis() % 360.0F) / 600.0F)));
+
+        minecraft.getItemRenderer().renderStatic(
+                stack,
+                ItemDisplayContext.FIXED,
+                packedLight,
+                OverlayTexture.NO_OVERLAY,
+                poseStack,
+                bufferSource,
+                minecraft.level,
+                0
+        );
 
         poseStack.popPose();
     }

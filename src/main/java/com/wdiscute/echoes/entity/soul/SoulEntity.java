@@ -5,18 +5,17 @@ import com.wdiscute.echoes.registry.ECEntityDataSerializers;
 import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
@@ -40,7 +39,7 @@ public class SoulEntity extends Entity
     public void setPosition()
     {
         RandomSource random = level().getRandom();
-        positionToRender = position().offsetRandomXZ(random, 0.3f);
+        positionToRender = position().offsetRandom(random, 0.3f);
         if (random.nextBoolean())
         {
             Vec3 particlePos = positionToRender.offsetRandom(random, 1.5f);
@@ -102,10 +101,10 @@ public class SoulEntity extends Entity
 
         if (level() instanceof ServerLevel sl && extraSoulsToSpawn > 0 /*&& level().getGameTime() % 2 == 0*/)
         {
-            SoulEntity soul = ECEntities.SOUL.get().spawn(sl, blockPosition(), EntitySpawnReason.TRIGGERED);
+            SoulEntity soul = ECEntities.SOUL.get().spawn(sl, blockPosition(), MobSpawnType.TRIGGERED);
             soul.getEntityData().set(SoulEntity.UUID, entityData.get(UUID));
             Vec3 pos = position();
-            soul.snapTo(pos.x, pos.y, pos.z);
+            soul.moveTo(pos.x, pos.y, pos.z);
             sl.addFreshEntityWithPassengers(soul);
 
             extraSoulsToSpawn--;
@@ -181,19 +180,19 @@ public class SoulEntity extends Entity
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
+    public boolean hurt(DamageSource source, float amount)
     {
         return false;
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input)
+    protected void readAdditionalSaveData(CompoundTag compound)
     {
 
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output)
+    protected void addAdditionalSaveData(CompoundTag compound)
     {
 
     }

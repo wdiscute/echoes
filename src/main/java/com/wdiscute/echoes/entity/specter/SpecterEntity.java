@@ -1,19 +1,16 @@
 package com.wdiscute.echoes.entity.specter;
 
 import com.wdiscute.echoes.registry.ECEntityDataSerializers;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
@@ -34,8 +31,8 @@ public class SpecterEntity extends Entity
     private float previousRenderXRot;
     private float renderXRot;
 
-    private Vec3 previousRenderPosition;
-    private Vec3 renderPosition;
+    public Vec3 previousRenderPosition;
+    public Vec3 renderPosition;
 
     public SpecterEntity(EntityType<?> type, Level level)
     {
@@ -49,19 +46,21 @@ public class SpecterEntity extends Entity
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage)
+    public boolean hurt(DamageSource source, float amount)
     {
         return false;
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input)
+    protected void readAdditionalSaveData(CompoundTag compound)
     {
+
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output)
+    protected void addAdditionalSaveData(CompoundTag compound)
     {
+
     }
 
     @Override

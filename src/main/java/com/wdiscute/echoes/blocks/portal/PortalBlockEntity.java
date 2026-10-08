@@ -10,8 +10,11 @@ import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.TickableBlockEntity;
+import com.wdiscute.utils.ValueHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,8 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -71,24 +72,24 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
     {
         TickableBlockEntity.super.tickClient(level, pos, state);
 
-        if (state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
+        if (state.getOptionalValue(PortalBlock.STATE).orElse(PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
             portals.add(pos);
         else
             portals.remove(pos);
 
         //if not closed, do portal particles and sound
-        if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.CLOSED))
+        if (!state.getOptionalValue(PortalBlock.STATE).orElse(PortalBlock.State.CLOSED).equals(PortalBlock.State.CLOSED))
         {
             RandomSource random = level.getRandom();
 
             //particles
-            level.addParticle(ParticleTypes.END_ROD, false, true,
+            level.addParticle(ParticleTypes.END_ROD,
                     pos.getX() + 0.5d, pos.getY() + 1.7d + random.nextFloat(), pos.getZ() + 0.5d,
                     0f, 0f, 0f);
 
             //sculk particles close
             if (random.nextFloat() > 0.8f)
-                level.addParticle(ECParticles.SCULK.get(), false, true,
+                level.addParticle(ECParticles.SCULK.get(),
                         (double) pos.getX() + random.nextFloat(), (double) pos.getY() + 1.3d + random.nextFloat() * 2, (double) pos.getZ() + random.nextFloat(),
                         0f, 0f, 0f);
 
@@ -101,7 +102,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
 
 
             if (random.nextFloat() > 0.9f)
-                level.addParticle(ParticleTypes.SCULK_SOUL, false, true,
+                level.addParticle(ParticleTypes.SCULK_SOUL,
                         (double) pos.getX() + random.nextFloat(), (double) pos.getY() + 1.1d + random.nextFloat() / 10, (double) pos.getZ() + random.nextFloat(),
                         0f, 0f, 0f);
 
@@ -116,7 +117,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 level.playLocalSound(center.x, center.y, center.z,
                         SoundEvents.SCULK_BLOCK_CHARGE, SoundSource.BLOCKS, 1, 1f, false);
 
-            if (level.getRandom().nextFloat() > 0.8f && state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
+            if (level.getRandom().nextFloat() > 0.8f && state.getOptionalValue(PortalBlock.STATE).orElse(PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN))
                 level.playLocalSound(center.x, center.y, center.z,
                         SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 1f, 0.3f, false);
 
@@ -143,7 +144,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
 
         SCULK_SPREADER.updateCursors(sl, pos, sl.getRandom(), true);
 
-        if (state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.LOOTING))
+        if (state.getOptionalValue(PortalBlock.STATE).orElse(PortalBlock.State.CLOSED).equals(PortalBlock.State.LOOTING))
         {
             BlockPos bp = getBlockPos();
             if (loot == null || loot.isEmpty())
@@ -177,7 +178,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
         }
 
         //if portal is not open
-        if (!state.getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN)) return;
+        if (!state.getOptionalValue(PortalBlock.STATE).orElse(PortalBlock.State.CLOSED).equals(PortalBlock.State.OPEN)) return;
 
         for (ServerPlayer player : sl.getEntitiesOfClass(Player.class, new AABB(pos.above().above()))
                 .stream()
@@ -281,16 +282,14 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                 //set stage to either 0 (hub) or -1 if player never reached hub
                 hub.depth = Math.min(0, player.getData(ECDataAttachments.TIMELESS_DATA).maxStage());
                 //add player to either current ongoing instance or make a new one
-                hub.addPlayer(player, pos, sl.dimension().identifier());
+                hub.addPlayer(player, pos, sl.dimension().location());
             }
         }
     }
 
-    @Override
+    //@Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state)
     {
-        super.preRemoveSideEffects(pos, state);
-
         portals.remove(pos);
 
         if (instanceUUID != null && !level.isClientSide())
@@ -298,23 +297,26 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output)
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
     {
-        super.saveAdditional(output);
+        super.saveAdditional(tag, registries);
         if (instanceUUID != null)
-            output.store("instance_uuid", Codec.STRING, instanceUUID.toString());
+            ValueHelper.store("instance_uuid", Codec.STRING, instanceUUID.toString(), tag);
 
         if (loot != null && !loot.isEmpty())
-            output.store("loot", MaybeStack.CODEC.listOf(), loot);
+            ValueHelper.store("loot", MaybeStack.CODEC.listOf(), loot, tag);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input)
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
     {
-        super.loadAdditional(input);
-        instanceUUID = input.read("instance_uuid", Codec.STRING).map(UUID::fromString).orElseGet(UUID::randomUUID);
+        super.loadAdditional(tag, registries);
 
-        loot = new ArrayList<>(input.read("loot", MaybeStack.CODEC.listOf()).orElse(List.of()));
+        instanceUUID = ValueHelper.read("instance_uuid", Codec.STRING, tag).map(UUID::fromString).orElseGet(UUID::randomUUID);
+
+        instanceUUID = ValueHelper.read("", Codec.STRING, tag).map(UUID::fromString).orElseGet(UUID::randomUUID);
+
+        loot = new ArrayList<>(ValueHelper.read("loot", MaybeStack.CODEC.listOf(), tag).orElse(List.of()));
     }
 
     @Override

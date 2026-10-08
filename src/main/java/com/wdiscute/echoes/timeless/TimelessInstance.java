@@ -18,17 +18,14 @@ import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
-import com.wdiscute.utils.Counter;
-import com.wdiscute.utils.MaybeStack;
-import com.wdiscute.utils.StringRepresentableAutoForEnums;
-import com.wdiscute.utils.Utils;
+import com.wdiscute.utils.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
@@ -38,7 +35,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
@@ -50,7 +47,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLLoader;
@@ -97,6 +93,12 @@ public class TimelessInstance
             //if no players in isHub
             if (getPlayers(sl).isEmpty())
             {
+                if(grace > 0)
+                {
+                    grace--;
+                    return;
+                }
+
                 //if no linked instance, close
                 if (maybeInstance == null)
                     close(sl);
@@ -117,7 +119,14 @@ public class TimelessInstance
 
             //close if marked as finished (heart destroyed) and has no players
             if (getPlayers(sl).isEmpty())
+            {
+                if(grace > 0)
+                {
+                    grace--;
+                    return;
+                }
                 close(sl);
+            }
         }
     }
 
@@ -137,7 +146,7 @@ public class TimelessInstance
 
         if (levelToReturn != null)
         {
-            levelToReturn.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(portalPos), 1);
+            levelToReturn.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(portalPos), 6, portalPos);
             if (levelToReturn.getBlockEntity(portalPos) instanceof PortalBlockEntity pbe)
                 pbe.setLooting(loot);
         }
@@ -192,11 +201,11 @@ public class TimelessInstance
     public Phase phase;
     public long timeToExit;
     public BlockPos portalPos;
-    public Identifier portalDimension;
+    public ResourceLocation portalDimension;
     public int depth;
     public UUID linkedInstance;
     public List<MaybeStack> loot;
-    public Identifier structure;
+    public ResourceLocation structure;
 
     //converted to list for saving
     public final Map<BlockPos, BlockState> STORED_STATES = new HashMap<>();
@@ -205,12 +214,13 @@ public class TimelessInstance
     //non saved
     public int closingSequence = -1;
     public float heartAuraBoost = 0;
+    public int grace = 200;
 
     List<Pair<Vec3, Float>> auras = new ArrayList<>();
     List<Pair<Vec3, Float>> oldAuras = new ArrayList<>();
     List<Utils.Trio<Vec3, Float, Float>> rings = new ArrayList<>();
 
-    public void attemptLoad(ServerPlayer player, ServerLevel sl, BlockPos portalPos, Identifier portalDimension)
+    public void attemptLoad(ServerPlayer player, ServerLevel sl, BlockPos portalPos, ResourceLocation portalDimension)
     {
         if (phase != Phase.NEW) return;
         TimelessData timelessData = player.getData(ECDataAttachments.TIMELESS_DATA);
@@ -253,7 +263,7 @@ public class TimelessInstance
         FLIPPED_BLOCKS.remove(spawnPoint);
 
         //set origin block for debug in dev
-        if (!FMLLoader.getCurrent().isProduction())
+        if (!FMLLoader.isProduction())
             sl.setBlockAndUpdate(origin, Blocks.EMERALD_BLOCK.defaultBlockState());
     }
 
@@ -471,7 +481,7 @@ public class TimelessInstance
 
     public void killPlayer(ServerPlayer sp)
     {
-        ServerLevel sl = sp.level();
+        ServerLevel sl = sp.serverLevel();
         //get non-spectator players
         List<ServerPlayer> players = getPlayers(sl).stream().filter(o -> !o.isSpectator() && o != sp).toList();
 
@@ -479,6 +489,8 @@ public class TimelessInstance
         if (isHub() || depth == -1)
         {
             removePlayer(sp);
+            if(getPlayers(sl).isEmpty())
+                grace = 0;
             return;
         }
 
@@ -487,21 +499,25 @@ public class TimelessInstance
         {
             if (sp.getY() < -64)
                 sp.teleportTo(sp.getX(), -64, sp.getZ());
-            SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), EntitySpawnReason.TRIGGERED);
+            SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), MobSpawnType.TRIGGERED);
             specter.setPlayer(sp);
             specter.setPos(sp.position());
             sp.setGameMode(GameType.SPECTATOR);
         }
         //otherwise remove all players
         else
+        {
             getPlayers(sl).forEach(this::removePlayer);
+            if(getPlayers(sl).isEmpty())
+                grace = 0;
+        }
     }
 
     public void removePlayer(ServerPlayer player)
     {
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
 
-        ServerLevel sl = player.level();
+        ServerLevel sl = player.serverLevel();
 
         //set to survival
         if (player.isSpectator())
@@ -535,17 +551,7 @@ public class TimelessInstance
             level = sl.getServer().getLevel(Level.OVERWORLD);
 
         //load dimension to return to
-        level.getChunkSource().addTicketAndLoadWithRadius(TicketType.ENDER_PEARL, ChunkPos.containing(portalPos), 1);
-
-        float x = sl.getRandom().nextFloat() / 2 - 0.5f;
-        float z = sl.getRandom().nextFloat() / 2 - 0.5f;
-        TeleportTransition trans = new TeleportTransition(level,
-                portalPos.getCenter().add(x > 0 ? x + 1 : x - 1, 2, z > 0 ? z + 1 : z - 1),
-                new Vec3(x, sl.getRandom().nextFloat() / 2, z),
-                0,
-                0,
-                Utils::nothing
-        );
+        level.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(portalPos), 6, portalPos);
 
         //store overworld inventory
         TimelessData.setInventory(player, inventoryToStore);
@@ -558,11 +564,15 @@ public class TimelessInstance
         TimelessData.setMaxStage(player, Math.max(0, depth - ECConfig.LEVEL_PENALTY_FOR_DYING.get()));
 
         //teleport player to timeless
-        player.teleport(trans);
+        float x = sl.getRandom().nextFloat() / 2 - 0.5f;
+        float z = sl.getRandom().nextFloat() / 2 - 0.5f;
+        Vec3 add = portalPos.getCenter().add(x > 0 ? x + 1 : x - 1, 2, z > 0 ? z + 1 : z - 1);
+        player.teleportTo(level, add.x, add.y, add.z, Set.of(), 0, 0);
     }
 
-    public void addPlayer(ServerPlayer player, BlockPos portalPos, Identifier portalDimension)
+    public void addPlayer(ServerPlayer player, BlockPos portalPos, ResourceLocation portalDimension)
     {
+        grace = 200;
         //get timeless server level
         ServerLevel sl = player.level().getServer().getLevel(Echoes.TIMELESS);
 
@@ -631,7 +641,7 @@ public class TimelessInstance
         );
 
         //teleport player to timeless
-        player.teleport(trans);
+        trans.teleport(player);
     }
 
     public void flipBlock(ServerLevel sl, BlockPos bp)
@@ -695,8 +705,7 @@ public class TimelessInstance
                 Block.UPDATE_CLIENTS
                 | Block.UPDATE_KNOWN_SHAPE
                 | Block.UPDATE_SUPPRESS_DROPS
-                | Block.UPDATE_MOVE_BY_PISTON
-                | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
+                | Block.UPDATE_MOVE_BY_PISTON;
 
         sl.setBlock(bp, storedState, flags);
     }
@@ -712,7 +721,7 @@ public class TimelessInstance
             Vec3 pos = o.getFirst();
             float size = o.getSecond() / 3;
 
-            sl.sendParticles(ECParticles.SCULK.get(), false, true,
+            sl.sendParticles(ECParticles.SCULK.get(),
                     pos.x, pos.y, pos.z, (int) size,
                     size, size, size, 0);
         });
@@ -760,7 +769,7 @@ public class TimelessInstance
         auras.add(Pair.of(pos, radius));
     }
 
-    private TimelessLevelEntry spawnStructure(ServerLevel sl, Counter<Identifier> levelsCompleted)
+    private TimelessLevelEntry spawnStructure(ServerLevel sl, Counter<ResourceLocation> levelsCompleted)
     {
         //get template structure path
         TimelessLevelEntry randomLevel = TimelessLevelEntry.HUB;
@@ -772,7 +781,7 @@ public class TimelessInstance
                 return null;
         }
 
-        Identifier template = randomLevel.id();
+        ResourceLocation template = randomLevel.id();
         structure = template;
 
         //actually spawn structure
@@ -781,7 +790,7 @@ public class TimelessInstance
         return randomLevel;
     }
 
-    private void doSpawnStructure(ServerLevel sl, Identifier template, boolean sculk)
+    private void doSpawnStructure(ServerLevel sl, ResourceLocation template, boolean sculk)
     {
         StructureTemplateManager manager = sl.getStructureManager();
         StructurePlaceSettings placeSettings = new StructurePlaceSettings().setKnownShape(false);
@@ -795,7 +804,7 @@ public class TimelessInstance
                 for (int k = 0; k < 9; k++)
                 {
                     //from a00 to k99
-                    Identifier id = template.withSuffix(letter + (j + 1) + (k + 1));
+                    ResourceLocation id = template.withSuffix(letter + (j + 1) + (k + 1));
                     Optional<StructureTemplate> st = manager.get(id);
 
                     //if "structure_`letter``i`" doesn't exist, skip to next
@@ -915,8 +924,7 @@ public class TimelessInstance
             Block.UPDATE_CLIENTS
             | Block.UPDATE_KNOWN_SHAPE
             | Block.UPDATE_SUPPRESS_DROPS
-            | Block.UPDATE_MOVE_BY_PISTON
-            | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
+            | Block.UPDATE_MOVE_BY_PISTON;
 
     public TimelessInstance(UUID uuid,
                             BlockPos origin, BlockPos spawnPoint,
@@ -925,12 +933,12 @@ public class TimelessInstance
                             List<Utils.Duo<BlockPos, BlockState>> storedStates,
                             List<BlockPos> flippedStates,
                             long lastsUntil,
-                            Identifier portalDimension,
+                            ResourceLocation portalDimension,
                             BlockPos portalPos,
                             int stage,
                             UUID nextInstance,
                             List<MaybeStack> loot,
-                            Identifier structure
+                            ResourceLocation structure
     )
     {
         this.uuid = uuid;
@@ -980,11 +988,11 @@ public class TimelessInstance
                     Utils.Duo.codec(BlockPos.CODEC, BlockState.CODEC).listOf().fieldOf("stored_states").forGetter(TimelessInstance::getSculkBlocks),
                     BlockPos.CODEC.listOf().fieldOf("flipped_blocks").forGetter(TimelessInstance::getFlippedBlocks),
                     Codec.LONG.optionalFieldOf("lasts_until", Long.MAX_VALUE).forGetter(o -> o.timeToExit),
-                    Identifier.CODEC.fieldOf("portal_dim").forGetter(o -> o.portalDimension),
+                    ResourceLocation.CODEC.fieldOf("portal_dim").forGetter(o -> o.portalDimension),
                     BlockPos.CODEC.optionalFieldOf("portal_pos", BlockPos.ZERO).forGetter(o -> o.portalPos),
                     Codec.INT.fieldOf("currentStage").forGetter(o -> o.depth),
                     UUIDUtil.CODEC.fieldOf("next_instance").forGetter(o -> o.linkedInstance),
                     MaybeStack.CODEC.listOf().fieldOf("loot").forGetter(o -> o.loot),
-                    Identifier.CODEC.fieldOf("structure").forGetter(o -> o.structure)
+                    ResourceLocation.CODEC.fieldOf("structure").forGetter(o -> o.structure)
             ).apply(instance, TimelessInstance::new));
 }

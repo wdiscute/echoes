@@ -1,29 +1,25 @@
 package com.wdiscute.echoes.entity.specter;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.entity.soul.SoulRenderState;
 import net.minecraft.client.animation.*;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.joml.Vector3f;
 
-public class SpecterModel extends EntityModel<SpecterRenderState>
+public class SpecterModel extends HierarchicalModel<SpecterEntity>
 {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION =
             new ModelLayerLocation(Echoes.rl("specter"), "main");
 
-    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/soul_trader.png");
+    public static final ResourceLocation TEXTURE_LOCATION = Echoes.rl("textures/entity/soul_trader.png");
 
-    public final KeyframeAnimation SPIN;
-    public final KeyframeAnimation SIX_SEVEN;
-    public final KeyframeAnimation POINT;
-    public final KeyframeAnimation HEAD_EXPLODE;
-
+    private final ModelPart root;
     private final ModelPart body;
     private final ModelPart head;
     private final ModelPart arm_right;
@@ -31,31 +27,60 @@ public class SpecterModel extends EntityModel<SpecterRenderState>
 
     public SpecterModel(ModelPart root)
     {
-        super(root);
+        super();
+        this.root = root;
         this.body = root.getChild("body");
         this.head = this.body.getChild("head");
         this.arm_right = this.body.getChild("arm_right");
         this.arm_left = this.body.getChild("arm_left");
-
-        SPIN = spin.bake(root);
-        SIX_SEVEN = six_seven.bake(root);
-        POINT = point.bake(root);
-        HEAD_EXPLODE = head_explode.bake(root);
     }
 
     @Override
-    public void setupAnim(SpecterRenderState state)
+    public void setupAnim(SpecterEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
     {
-        super.setupAnim(state);
-
         //todo make body rotate independently of the head like vanilla mobs do
-        body.yRot += state.yrot * Mth.DEG_TO_RAD;
-        head.xRot = state.xrot * Mth.DEG_TO_RAD;
+        body.yRot += entity.getYRot() * Mth.DEG_TO_RAD;
+        head.xRot = entity.getXRot() * Mth.DEG_TO_RAD;
 
-        SPIN.apply(state.spinAnimationState, state.ageInTicks);
-        SIX_SEVEN.apply(state.sixSevenAnimationState, state.ageInTicks);
-        HEAD_EXPLODE.apply(state.headExplodeAnimationState, state.ageInTicks);
-        POINT.apply(state.pointAnimationState, state.ageInTicks);
+        if (entity.spinAnimationState.isStarted()) {
+            KeyframeAnimations.animate(
+                    this,
+                    spin,
+                    entity.spinAnimationState.getAccumulatedTime(),
+                    1.0F,
+                    new Vector3f()
+            );
+        }
+
+        if (entity.sixSevenAnimationState.isStarted()) {
+            KeyframeAnimations.animate(
+                    this,
+                    spin,
+                    entity.sixSevenAnimationState.getAccumulatedTime(),
+                    1.0F,
+                    new Vector3f()
+            );
+        }
+
+        if (entity.headExplodeAnimationState.isStarted()) {
+            KeyframeAnimations.animate(
+                    this,
+                    spin,
+                    entity.headExplodeAnimationState.getAccumulatedTime(),
+                    1.0F,
+                    new Vector3f()
+            );
+        }
+
+        if (entity.pointAnimationState.isStarted()) {
+            KeyframeAnimations.animate(
+                    this,
+                    spin,
+                    entity.pointAnimationState.getAccumulatedTime(),
+                    1.0F,
+                    new Vector3f()
+            );
+        }
     }
 
     public static final AnimationDefinition spin = AnimationDefinition.Builder.withLength(1.8333F)
@@ -191,5 +216,11 @@ public class SpecterModel extends EntityModel<SpecterRenderState>
         PartDefinition arm_left = body.addOrReplaceChild("arm_left", CubeListBuilder.create().texOffs(1, 28).addBox(-1.0F, -2.0F, -1.5F, 3.0F, 7.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(4.5F, -2.1F, 0.5F));
 
         return LayerDefinition.create(meshdefinition, 40, 40);
+    }
+
+    @Override
+    public ModelPart root()
+    {
+        return root();
     }
 }

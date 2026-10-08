@@ -20,17 +20,17 @@ public interface ECBlockEntities
             DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Echoes.MOD_ID);
 
     Supplier<BlockEntityType<PortalBlockEntity>> PORTAL = BLOCK_ENTITIES.register("portal",
-            () -> new BlockEntityType<>(PortalBlockEntity::new, ECBlocks.PORTAL.get()));
+            () -> BlockEntityType.Builder.of(PortalBlockEntity::new, ECBlocks.PORTAL.get()).build(null));
 
     Supplier<BlockEntityType<TimelessMarkerBlockEntity>> TIMELESS_MARKER = BLOCK_ENTITIES.register("timeless_marker",
-            () -> new BlockEntityType<>(TimelessMarkerBlockEntity::new, ECBlocks.TIMELESS_MARKER.get()));
+            () -> BlockEntityType.Builder.of(TimelessMarkerBlockEntity::new, ECBlocks.TIMELESS_MARKER.get()).build(null));
 
     Supplier<BlockEntityType<PrismaPaneBlockEntity>> PRISMA_PANE = BLOCK_ENTITIES.register("prisma_pane",
-            () -> new BlockEntityType<>(PrismaPaneBlockEntity::new, ECBlocks.PRISMA_PANE.get()));
+            () -> BlockEntityType.Builder.of(PrismaPaneBlockEntity::new, ECBlocks.PRISMA_PANE.get()).build(null));
 
 
     Supplier<BlockEntityType<DisplayBlockEntity>> DISPLAY = BLOCK_ENTITIES.register("display",
-            () -> new BlockEntityType<>(DisplayBlockEntity::new, ECBlocks.DISPLAY.get()));
+            () -> BlockEntityType.Builder.of(DisplayBlockEntity::new, ECBlocks.DISPLAY.get()).build(null));
 
     static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

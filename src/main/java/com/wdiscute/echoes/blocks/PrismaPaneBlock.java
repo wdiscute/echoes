@@ -1,26 +1,19 @@
 package com.wdiscute.echoes.blocks;
 
-import com.mojang.serialization.MapCodec;
-import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.registry.ECBlockEntities;
 import com.wdiscute.utils.StringRepresentableAutoForEnums;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
 
 public class PrismaPaneBlock extends Block implements EntityBlock
 {
@@ -29,7 +22,7 @@ public class PrismaPaneBlock extends Block implements EntityBlock
         super(properties
                 .requiresCorrectToolForDrops()
                 .strength(1.5F, 6.0F)
-                .lightLevel(_ -> 15));
+                .lightLevel(bs -> 15));
     }
 
     public static final EnumProperty<Facing> FACING = EnumProperty.create("facing", Facing.class);
@@ -63,7 +56,7 @@ public class PrismaPaneBlock extends Block implements EntityBlock
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
-        return switch (state.getValueOrElse(FACING, Facing.NORTH))
+        return switch (state.getOptionalValue(FACING).orElse(Facing.NORTH))
         {
             case NORTH, SOUTH -> NORTH_SOUTH_SHAPE;
             case EAST, WEST -> EAST_WEST_SHAPE;
@@ -72,7 +65,7 @@ public class PrismaPaneBlock extends Block implements EntityBlock
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         Facing facing = switch (context.getHorizontalDirection())
         {
@@ -93,7 +86,7 @@ public class PrismaPaneBlock extends Block implements EntityBlock
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
+    public BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState)
     {
         return ECBlockEntities.PRISMA_PANE.get().create(worldPosition, blockState);
     }

@@ -4,7 +4,7 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.SectionColored;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -18,7 +18,7 @@ public interface ECCreativeModeTabs
 {
     static void register(IEventBus bus)
     {
-        Identifier echoes = Echoes.rl("echoes");
+        ResourceLocation echoes = Echoes.rl("echoes");
         FancyTabSections.registerCreativeModeTab(bus, echoes, ECItems.ECHO_BLADE);
 
         //general stuff
@@ -41,7 +41,7 @@ public interface ECCreativeModeTabs
                         .add((dwa) ->
                         {
                             List<ItemStack> trades = new ArrayList<>();
-                            for (BlacksmithTrade blacksmithTrade : dwa.lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY)
+                            for (BlacksmithTrade blacksmithTrade : dwa.registryOrThrow(Echoes.BLACKSMITH_TRADE_KEY)
                                     .stream().sorted(Comparator.comparingInt(o -> o.rarity().order())).toList())
                                 trades.add(blacksmithTrade.stack().toStack());
                             return trades;

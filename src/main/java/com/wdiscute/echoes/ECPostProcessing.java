@@ -4,14 +4,14 @@ import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.gui.GuiLayer;
 
-public class ECPostProcessing implements GuiLayer
+public class ECPostProcessing implements LayeredDraw.Layer
 {
     public static int MAX_FISHEYE = 100;
     public static int MAX_FISHEYE_DISTANCE = 7;
@@ -28,7 +28,7 @@ public class ECPostProcessing implements GuiLayer
     Vec3 cachedPos = Vec3.ZERO;
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker)
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker)
     {
         LocalPlayer player = Minecraft.getInstance().player;
         Level level = Minecraft.getInstance().level;
@@ -60,7 +60,7 @@ public class ECPostProcessing implements GuiLayer
         }
 
         //if portal is no longer open, remove it from pool
-        if(level.getBlockState(closest).getValueOrElse(PortalBlock.STATE, PortalBlock.State.CLOSED).equals(PortalBlock.State.CLOSED))
+        if(level.getBlockState(closest).getOptionalValue(PortalBlock.STATE).orElse(PortalBlock.State.CLOSED).equals(PortalBlock.State.CLOSED))
         {
             PortalBlockEntity.portals.remove(closest);
             return;

@@ -14,7 +14,7 @@ public record BlacksmithTrade(MaybeStack stack, Rarity rarity, List<MaybeStack> 
 
     public static BlacksmithTrade getRandomTrade(ServerLevel sl)
     {
-        List<BlacksmithTrade> trades = sl.registryAccess().lookupOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
+        List<BlacksmithTrade> trades = sl.registryAccess().registryOrThrow(Echoes.BLACKSMITH_TRADE_KEY).stream().toList();
 
         int totalWeight = trades.stream()
                 .mapToInt(BlacksmithTrade::weight)

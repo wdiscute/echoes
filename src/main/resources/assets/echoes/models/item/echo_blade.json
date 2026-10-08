@@ -1,5 +1,8 @@
 {
   "parent": "item/handheld",
+  "overrides": [
+    {"predicate": {"echoes:cast": 1}, "model": "echoes:item/prisma_blade"}
+  ],
   "textures": {
     "layer0": "echoes:item/echo_blade"
   }

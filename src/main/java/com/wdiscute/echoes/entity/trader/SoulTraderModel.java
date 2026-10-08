@@ -1,27 +1,29 @@
 package com.wdiscute.echoes.entity.trader;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.entity.heart.SculkHeartRenderState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
-public class SoulTraderModel extends EntityModel<SoulTraderRenderState>
+public class SoulTraderModel extends EntityModel<SoulTraderEntity>
 {
-    // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION =
             new ModelLayerLocation(Echoes.rl("soul_trader"), "main");
 
-    public static final Identifier TEXTURE_LOCATION = Echoes.rl("textures/entity/soul_trader.png");
+    public static final ResourceLocation TEXTURE_LOCATION = Echoes.rl("textures/entity/soul_trader.png");
 
+    private final ModelPart root;
     private final ModelPart bb_main;
 
     public SoulTraderModel(ModelPart root)
     {
-        super(root);
+        super();
+        this.root = root;
         this.bb_main = root.getChild("bb_main");
     }
 
@@ -37,5 +39,17 @@ public class SoulTraderModel extends EntityModel<SoulTraderRenderState>
                 .texOffs(25, 2).addBox(-1.5F, -10.0F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 40, 40);
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    {
+        root.render(poseStack, buffer, packedLight, packedOverlay, color);
+    }
+
+    @Override
+    public void setupAnim(SoulTraderEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    {
+
     }
 }

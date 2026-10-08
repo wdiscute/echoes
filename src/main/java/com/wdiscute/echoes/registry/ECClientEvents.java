@@ -6,7 +6,6 @@ import com.wdiscute.echoes.blocks.display.DisplayGuiLayer;
 import com.wdiscute.echoes.blocks.display.DisplayRenderer;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneRenderer;
-import com.wdiscute.echoes.blocks.portal.PortalRenderer;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModel;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
@@ -19,30 +18,26 @@ import com.wdiscute.echoes.entity.lantern.LanternRenderer;
 import com.wdiscute.echoes.ECPostProcessing;
 import com.wdiscute.echoes.entity.soul.SoulModel;
 import com.wdiscute.echoes.entity.soul.SoulRenderer;
-import com.wdiscute.echoes.entity.specter.SpecterEmote;
 import com.wdiscute.echoes.entity.specter.SpecterModel;
 import com.wdiscute.echoes.entity.specter.SpecterRenderer;
 import com.wdiscute.echoes.entity.trader.SoulTraderModel;
 import com.wdiscute.echoes.entity.trader.SoulTraderRenderer;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
-import com.wdiscute.echoes.item.IsPrismaItemProperty;
-import com.wdiscute.echoes.network.ECSBSpecterAttemptEmotePayload;
 import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockTintSources;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.level.GrassColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.ArrayList;
@@ -57,12 +52,6 @@ public class ECClientEvents
         event.registerAboveAll(Echoes.rl("echoes_gui"), new TimelessGUILayer());
         event.registerAboveAll(Echoes.rl("display_gui"), new DisplayGuiLayer());
         event.registerAboveAll(Echoes.rl("post_processing"), new ECPostProcessing());
-    }
-
-    @SubscribeEvent
-    public static void registerHUD(RegisterRenderPipelinesEvent event)
-    {
-        event.registerPipeline(ECRenderPipelines.PORTAL);
     }
 
     @SubscribeEvent
@@ -97,6 +86,8 @@ public class ECClientEvents
         EntityRenderers.register(ECEntities.UNLEASHED_SOUL.get(), UnleashedSoulRenderer::new);
         EntityRenderers.register(ECEntities.SCULKED.get(), SculkedRenderer::new);
         EntityRenderers.register(ECEntities.HOLLOWED.get(), HollowedRenderer::new);
+
+        ECItemProperties.addCustomItemProperties();
     }
 
     @SubscribeEvent
@@ -118,7 +109,6 @@ public class ECClientEvents
         event.registerBlockEntityRenderer(ECBlockEntities.TIMELESS_MARKER.get(), TimelessMarkerRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.PRISMA_PANE.get(), PrismaPaneRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);
-        event.registerBlockEntityRenderer(ECBlockEntities.PORTAL.get(), PortalRenderer::new);
     }
 
     @SubscribeEvent
@@ -141,21 +131,18 @@ public class ECClientEvents
         if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.EXPERIENCE_LEVEL))
             event.setCanceled(true);
 
-        if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.CONTEXTUAL_INFO_BAR))
-            event.setCanceled(true);
+        //if (mc.player.level().dimension().equals(Echoes.TIMELESS) && event.getName().equals(VanillaGuiLayers.CONTEXTUAL_INFO_BAR))
+        //    event.setCanceled(true);
     }
 
     @SubscribeEvent
-    public static void registerItemModelProperties(RegisterConditionalItemModelPropertyEvent event)
-    {
-        event.register(Echoes.rl("is_prisma"), new IsPrismaItemProperty(false).type());
-    }
-
-    @SubscribeEvent
-    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.BlockTintSources event)
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event)
     {
         event.register(
-                List.of(BlockTintSources.grassBlock()),
+                (state, level, pos, tintIndex) ->
+                        level != null && pos != null
+                                ? BiomeColors.getAverageGrassColor(level, pos)
+                                : GrassColor.get(0.5D, 1.0D),
                 ECBlocks.GLEEMSLATE_GRASS.get()
         );
     }

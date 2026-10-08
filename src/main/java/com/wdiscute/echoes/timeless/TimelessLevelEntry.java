@@ -5,29 +5,20 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataEntries;
 import com.wdiscute.utils.Counter;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, int levelRange, int ticks, int maxUses)
+public record TimelessLevelEntry(ResourceLocation id, int preferredLevel, int weight, int levelRange, int ticks, int maxUses)
 {
     public static final TimelessLevelEntry HUB = new TimelessLevelEntry(Echoes.rl("timeless/hub"), 0, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
     public static final TimelessLevelEntry TUTORIAL = new TimelessLevelEntry(Echoes.rl("timeless/starter"), 0, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     public static final Codec<TimelessLevelEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Identifier.CODEC.fieldOf("id").forGetter(TimelessLevelEntry::id),
+                    ResourceLocation.CODEC.fieldOf("id").forGetter(TimelessLevelEntry::id),
                     Codec.INT.optionalFieldOf("preferred_level", 0).forGetter(TimelessLevelEntry::preferredLevel),
                     Codec.INT.fieldOf("weight").forGetter(TimelessLevelEntry::weight),
                     Codec.INT.optionalFieldOf("level_range", 0).forGetter(TimelessLevelEntry::levelRange),
@@ -36,7 +27,7 @@ public record TimelessLevelEntry(Identifier id, int preferredLevel, int weight, 
             ).apply(instance, TimelessLevelEntry::new)
     );
 
-    public static @Nullable TimelessLevelEntry getRandomLevel(ServerLevel sl, Counter<Identifier> levelsCompleted, int level)
+    public static @Nullable TimelessLevelEntry getRandomLevel(ServerLevel sl, Counter<ResourceLocation> levelsCompleted, int level)
     {
         List<TimelessLevelEntry> entries = ECDataEntries.TIMELESS_LEVELS.get()
                 .stream()

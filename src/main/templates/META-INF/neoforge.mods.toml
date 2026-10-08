@@ -1,27 +1,37 @@
-license="${mod_license}"
+modLoader="javafml" #mandatory
+
+loaderVersion="[2,]" #mandatory
+
+license="MIT"
+
+issueTrackerURL="https://discord.gg/WsuFsGSegD" #optional
 
 [[mods]] #mandatory
-modId="${mod_id}" #mandatory
-version="${mod_version}" #mandatory
-displayName="${mod_name}" #mandatory
-
-description='''
-Curseforge 2026 modjam entry
-'''
+modId="echoes"
+version="${mod_version}"
+displayName="${mod_name}"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/timeless-echoes"
+logoFile = "icon.png"
+mod_authors="${mod_authors}" #optional
+description='''A roguelike mod about exploring The Timeless'''
 
 [[mixins]]
 config="echoes.mixins.json"
 
-[[dependencies.${mod_id}]] #optional
-    modId="neoforge" #mandatory
-    type="required" #mandatory
-    versionRange="[${neo_version},)" #mandatory
-    ordering="NONE"
-    side="BOTH"
+# In neoforge.mods.toml:
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
 
-[[dependencies.${mod_id}]]
-    modId="minecraft"
-    type="required"
-    versionRange="${minecraft_version_range}"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.echoes]] #optional
+modId="neoforge" #mandatory
+type="required" #mandatory
+versionRange="${neo_version_range}" #mandatory
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.echoes]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="AFTER"
+side="BOTH"

@@ -2,16 +2,15 @@ package com.wdiscute.echoes.entity.unleashedsoul;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
-public class UnleashedSoulRenderer extends EntityRenderer<UnleashedSoulEntity, UnleashedSoulRenderState>
+public class UnleashedSoulRenderer extends EntityRenderer<UnleashedSoulEntity>
 {
-
     private final UnleashedSoulModel model;
 
     public UnleashedSoulRenderer(EntityRendererProvider.Context context)
@@ -24,46 +23,41 @@ public class UnleashedSoulRenderer extends EntityRenderer<UnleashedSoulEntity, U
     }
 
     @Override
-    public UnleashedSoulRenderState createRenderState()
+    public void render(UnleashedSoulEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight)
     {
-        return new UnleashedSoulRenderState();
-    }
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 
-    @Override
-    public void extractRenderState(UnleashedSoulEntity entity, UnleashedSoulRenderState state, float partialTick)
-    {
-        super.extractRenderState(entity, state, partialTick);
+        int maxTicks = entity.getEntityData().get(UnleashedSoulEntity.MAX_TICKS);
+        float ticksAlive = entity.tickCount + partialTick;
+        float yRot = entity.getViewYRot(partialTick);
+        float xRot = entity.getViewXRot(partialTick);
 
-        state.maxTicks = entity.getEntityData().get(UnleashedSoulEntity.MAX_TICKS);
-        state.ticksAlive = entity.tickCount + partialTick;
-        state.yRot = entity.getYRot(partialTick);
-        state.xRot = entity.getXRot(partialTick);
-    }
-
-    @Override
-    public void submit(UnleashedSoulRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState)
-    {
         poseStack.pushPose();
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(-state.yRot));
-        poseStack.mulPose(Axis.XP.rotationDegrees(state.xRot));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-yRot));
+        poseStack.mulPose(Axis.XP.rotationDegrees(xRot));
 
         float scale = 1.0f;
 
-        if (state.ticksAlive < 5.0f) {
-            scale = state.ticksAlive / 5.0f;
-        } else if (state.ticksAlive > state.maxTicks - 5.0f) {
-            scale = 1.0f - (
-                    (state.ticksAlive - (state.maxTicks - 5.0f)) / 5.0f
-            );
-        }
+        if (ticksAlive < 5.0f)
+            scale = ticksAlive / 5.0f;
+        else if (ticksAlive > maxTicks - 5.0f)
+            scale = 1.0f - ((ticksAlive - (maxTicks - 5.0f)) / 5.0f);
 
         poseStack.scale(scale, scale, scale);
 
         poseStack.translate(0.0F, -0.9F, -0.3F);
 
-        collector.submitModel(model, state, poseStack, RenderTypes.entityTranslucent(UnleashedSoulModel.TEXTURE_LOCATION), 0x00ffffff, OverlayTexture.NO_OVERLAY, -1, null, 0, null);
+        model.renderToBuffer(poseStack,
+                bufferSource.getBuffer(RenderType.entityTranslucent(UnleashedSoulModel.TEXTURE_LOCATION)),
+                0x00ffffff, OverlayTexture.NO_OVERLAY, -1);
 
         poseStack.popPose();
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(UnleashedSoulEntity entity)
+    {
+        return UnleashedSoulModel.TEXTURE_LOCATION;
     }
 }
