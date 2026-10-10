@@ -5,6 +5,7 @@ import com.wdiscute.echoes.blocks.*;
 import com.wdiscute.echoes.blocks.display.DisplayBlock;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
+import com.wdiscute.echoes.blocks.upgrader.UpgraderBlock;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -22,6 +23,7 @@ public interface ECBlocks
     DeferredBlock<PortalBlock> PORTAL = register("portal", PortalBlock::new);
     DeferredBlock<TimelessMarkerBlock> TIMELESS_MARKER = register("timeless_marker", TimelessMarkerBlock::new);
     DeferredBlock<DisplayBlock> DISPLAY = register("display", DisplayBlock::new);
+    DeferredBlock<UpgraderBlock> UPGRADER = register("upgrader", UpgraderBlock::new);
     DeferredBlock<CasketBlock> CASKET = register("casket", CasketBlock::new);
 
 

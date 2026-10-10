@@ -2,7 +2,7 @@ package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.perks.*;
+import com.wdiscute.echoes.perks.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;

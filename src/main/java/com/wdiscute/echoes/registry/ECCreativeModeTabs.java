@@ -2,8 +2,10 @@ package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
+import com.wdiscute.utils.Utils;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.SectionColored;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -11,7 +13,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public interface ECCreativeModeTabs
@@ -29,22 +30,31 @@ public interface ECCreativeModeTabs
                         .add(ECBlocks.PORTAL)
                         .add(ECBlocks.TIMELESS_MARKER)
                         .add(ECBlocks.DISPLAY)
+                        .add(ECBlocks.UPGRADER)
                         .add(ECItems.SOUL_HEART_CONTAINER)
                         .add(ECBlocks.CASKET)
-
         );
 
         FancyTabSections.addSection(echoes,
                 new SectionColored(Echoes.rl("blacksmith_trades"))
                         .setBannerColor(0xff344545)
 
-                        .add((dwa) ->
+                        .add((registryAccess) ->
                         {
-                            List<ItemStack> trades = new ArrayList<>();
-                            for (BlacksmithTrade blacksmithTrade : dwa.registryOrThrow(Echoes.BLACKSMITH_TRADE_KEY)
-                                    .stream().sorted(Comparator.comparingInt(o -> o.rarity().order())).toList())
-                                trades.add(blacksmithTrade.stack().toStack());
-                            return trades;
+                            List<ItemStack> stacks = new ArrayList<>();
+
+                            //add all items of all rarities from all trades
+                            Registry<BlacksmithTrade> registry = registryAccess.registryOrThrow(Echoes.BLACKSMITH_TRADE_KEY);
+                            for (BlacksmithTrade trade : registry)
+                                for (BlacksmithTrade.Entry entry : trade.entries())
+                                {
+                                    ItemStack stack = entry.item().toStack();
+                                    if (trade.hasUpgrades())
+                                        stack.set(ECDataComponents.TRADE_INFO.get(), new Utils.Duo<>(entry.rarity(), registry.getKey(trade)));
+                                    stacks.add(stack);
+                                }
+
+                            return stacks;
                         })
         );
 
@@ -83,7 +93,6 @@ public interface ECCreativeModeTabs
                         .add(Items.AIR)
                         .add(Items.AIR)
                         .add(Items.AIR)
-
 
 
                         .add(ECBlocks.SCULKED_DEEPSLATE)

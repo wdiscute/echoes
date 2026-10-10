@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
+//todo rework this into a proper registry stop being lazy
 public class TimelessProcessor
 {
     public static final List<Utils.Duo<Either<Holder<Block>, Block>, Processor>> PROCESSORS = new ArrayList<>();
@@ -176,14 +177,23 @@ public class TimelessProcessor
                 sl.getChunkSource().addRegionTicket(TicketType.PLAYER, new ChunkPos(bp), 1, new ChunkPos(bp));
                 if (sl.getBlockEntity(bp) instanceof DisplayBlockEntity dbe)
                 {
-                    dbe.trade = BlacksmithTrade.getRandomTrade(sl);
+                    dbe.trade = BlacksmithTrade.getRandomTradeForDisplay(sl);
                     dbe.setChanged();
 
                     sl.setBlockAndUpdate(bp, ECBlocks.DISPLAY.get().defaultBlockState()
-                            .setValue(HorizontalDirectionalBlock.FACING, state.getOptionalValue(HorizontalDirectionalBlock.FACING).orElse(Direction.NORTH))
-                            .setValue(DisplayBlock.RARITY, dbe.trade.rarity())
+                                    .setValue(HorizontalDirectionalBlock.FACING, state.getOptionalValue(HorizontalDirectionalBlock.FACING).orElse(Direction.NORTH))
+                            //.setValue(DisplayBlock.RARITY, dbe.trade.first().rarity())
                     );
                 }
+            }
+
+            //spawn blacksmith stand
+            if (type.equals(TimelessMarkerBlock.Type.BLACKSMITH_UPGRADER))
+            {
+                sl.setBlockAndUpdate(bp, ECBlocks.UPGRADER.get().defaultBlockState()
+                                .setValue(HorizontalDirectionalBlock.FACING, state.getOptionalValue(HorizontalDirectionalBlock.FACING).orElse(Direction.NORTH))
+                        //.setValue(DisplayBlock.RARITY, dbe.trade.first().rarity())
+                );
             }
 
             //spawn portal

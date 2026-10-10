@@ -1,5 +1,6 @@
 package com.wdiscute.echoes.upgrades;
 
+import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.timeless.TimelessInstance;
@@ -39,6 +40,13 @@ public abstract class Perk
         return perks;
     }
 
+    public String formatAmplifier(List<Float> floats, int order)
+    {
+        if(order >= floats.size())
+            return "";
+        return "[" + Echoes.FORMAT.format(floats.get(order)) + "]";
+    }
+
     public void onEntityKilled(@NotNull Player killer, @NotNull ItemStack weapon, @NotNull Entity entityKilled, List<Float> value)
     {
 
@@ -59,6 +67,16 @@ public abstract class Perk
         return 0;
     }
 
+    public float addFlatSoulsReduction(Player player, List<Float> amplifier, float soulsToBeConsumed)
+    {
+        return 0;
+    }
+
+    public float addPercentSoulsReduction(Player player, List<Float> amplifier, float soulsToBeConsumed)
+    {
+        return 0;
+    }
+
     public float reduceDamage(Player player, List<Float> amplifiers)
     {
         return 0;
@@ -73,11 +91,11 @@ public abstract class Perk
         return 0;
     }
 
-    public abstract List<MutableComponent> getItemTooltip(ItemStack stack, List<Float> value);
+    public abstract List<MutableComponent> getItemTooltip(ItemStack stack, List<Float> amplifiers);
 
-    public abstract List<MutableComponent> getShopTooltip(ItemStack stack, List<Float> value);
+    public abstract List<MutableComponent> getShopTooltip(ItemStack stack, List<Float> amplifiers);
 
-    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> value)
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> amplifiers)
     {
         return List.of();
     }

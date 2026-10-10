@@ -8,6 +8,10 @@
       "model": "echoes:block/timeless_marker",
       "y": 90
     },
+    "facing=east,type=blacksmith_upgrader": {
+      "model": "echoes:block/timeless_marker",
+      "y": 90
+    },
     "facing=east,type=chest": {
       "model": "echoes:block/timeless_marker",
       "y": 90
@@ -50,6 +54,9 @@
     "facing=north,type=blacksmith_stand": {
       "model": "echoes:block/timeless_marker"
     },
+    "facing=north,type=blacksmith_upgrader": {
+      "model": "echoes:block/timeless_marker"
+    },
     "facing=north,type=chest": {
       "model": "echoes:block/timeless_marker"
     },
@@ -82,6 +89,10 @@
       "y": 180
     },
     "facing=south,type=blacksmith_stand": {
+      "model": "echoes:block/timeless_marker",
+      "y": 180
+    },
+    "facing=south,type=blacksmith_upgrader": {
       "model": "echoes:block/timeless_marker",
       "y": 180
     },
@@ -126,6 +137,10 @@
       "y": 270
     },
     "facing=west,type=blacksmith_stand": {
+      "model": "echoes:block/timeless_marker",
+      "y": 270
+    },
+    "facing=west,type=blacksmith_upgrader": {
       "model": "echoes:block/timeless_marker",
       "y": 270
     },

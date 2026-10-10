@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "count": 10,
+          "identifier": "echoes:sculked_teeth"
+        }
+      ],
+      "item": {
+        "identifier": "echoes:rot_brain"
+      },
+      "rarity": "common"
+    }
+  ],
+  "has_upgrades": false,
+  "weight": 10
+}

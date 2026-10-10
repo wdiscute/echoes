@@ -7,6 +7,7 @@ import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlockEntity;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneBlockEntity;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
+import com.wdiscute.echoes.blocks.upgrader.UpgraderBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -31,6 +32,9 @@ public interface ECBlockEntities
 
     Supplier<BlockEntityType<DisplayBlockEntity>> DISPLAY = BLOCK_ENTITIES.register("display",
             () -> BlockEntityType.Builder.of(DisplayBlockEntity::new, ECBlocks.DISPLAY.get()).build(null));
+
+    Supplier<BlockEntityType<UpgraderBlockEntity>> UPGRADER = BLOCK_ENTITIES.register("upgrader",
+            () -> BlockEntityType.Builder.of(UpgraderBlockEntity::new, ECBlocks.UPGRADER.get()).build(null));
 
     static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

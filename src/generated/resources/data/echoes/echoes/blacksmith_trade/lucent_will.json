@@ -1,0 +1,175 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "count": 5,
+          "identifier": "echoes:lucent_shard"
+        },
+        {
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                4.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                4.0,
+                4.0
+              ],
+              "perk": "echoes:extra_damage_consumes_souls"
+            }
+          ],
+          "echoes:rarity": "common"
+        },
+        "identifier": "echoes:lucent_will"
+      },
+      "rarity": "common"
+    },
+    {
+      "cost": [
+        {
+          "count": 15,
+          "identifier": "echoes:lucent_shard"
+        },
+        {
+          "count": 5,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                5.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                4.0,
+                5.0
+              ],
+              "perk": "echoes:extra_damage_consumes_souls"
+            }
+          ],
+          "echoes:rarity": "uncommon"
+        },
+        "identifier": "echoes:lucent_will"
+      },
+      "rarity": "uncommon"
+    },
+    {
+      "cost": [
+        {
+          "count": 32,
+          "identifier": "echoes:lucent_shard"
+        },
+        {
+          "count": 15,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                6.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                4.0,
+                6.0
+              ],
+              "perk": "echoes:extra_damage_consumes_souls"
+            }
+          ],
+          "echoes:rarity": "rare"
+        },
+        "identifier": "echoes:lucent_will"
+      },
+      "rarity": "rare"
+    },
+    {
+      "cost": [
+        {
+          "count": 64,
+          "identifier": "echoes:lucent_shard"
+        },
+        {
+          "count": 32,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                7.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                4.0,
+                7.0
+              ],
+              "perk": "echoes:extra_damage_consumes_souls"
+            }
+          ],
+          "echoes:rarity": "epic"
+        },
+        "identifier": "echoes:lucent_will"
+      },
+      "rarity": "epic"
+    },
+    {
+      "cost": [
+        {
+          "count": 128,
+          "identifier": "echoes:lucent_shard"
+        },
+        {
+          "count": 64,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                8.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                4.0,
+                10.0
+              ],
+              "perk": "echoes:extra_damage_consumes_souls"
+            }
+          ],
+          "echoes:rarity": "legendary"
+        },
+        "identifier": "echoes:lucent_will"
+      },
+      "rarity": "legendary"
+    }
+  ],
+  "has_upgrades": true,
+  "weight": 20
+}

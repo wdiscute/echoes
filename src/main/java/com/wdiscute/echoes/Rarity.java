@@ -10,17 +10,17 @@ import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public enum Rarity implements StringRepresentableAutoForEnums
 {
-    COMMON(0),
-    UNCOMMON(1),
-    RARE(2),
-    EPIC(3),
-    LEGENDARY(4);
+    COMMON(),
+    UNCOMMON(),
+    RARE(),
+    EPIC(),
+    LEGENDARY(),
+    UNIQUE(),
+    ;
 
-    final int order;
-
-    Rarity(int order)
+    private static final Rarity[] vals = values();
+    Rarity()
     {
-        this.order = order;
     }
 
     public static final Codec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
@@ -29,6 +29,11 @@ public enum Rarity implements StringRepresentableAutoForEnums
     public String toTranslationKey()
     {
         return "echoes.rarity." + getSerializedName();
+    }
+
+    public String toTranslationKeySimple()
+    {
+        return "echoes.rarity." + getSerializedName() + ".simple";
     }
 
     public String wrapWithRarityMarkdownAsString(String s)
@@ -41,8 +46,9 @@ public enum Rarity implements StringRepresentableAutoForEnums
         return Component.literal("<ec" + getSerializedName() + ">" + s + "</ec" + getSerializedName() + ">");
     }
 
-    public int order()
+    public Rarity next()
     {
-        return order;
+        int lenght = vals.length;
+        return vals[(this.ordinal() + 1) % lenght];
     }
 }

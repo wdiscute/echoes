@@ -54,6 +54,7 @@ public class Echoes
         ECBlocks.register(modEventBus);
         ECBlockEntities.register(modEventBus);
         ECEntities.register(modEventBus);
+        ECArmorMaterials.register(modEventBus);
         ECDataComponents.register(modEventBus);
         ECDataAttachments.register(modEventBus);
         ECDataEntries.register(modEventBus);

@@ -55,7 +55,6 @@ public class DisplayBlock extends HorizontalDirectionalBlock implements EntityBl
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
     {
-
         if (level.getBlockEntity(pos) instanceof DisplayBlockEntity dbe)
             if (dbe.clickedOn(player))
                 return InteractionResult.SUCCESS;

@@ -1,12 +1,11 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.item.EchoBladeItem;
-import com.wdiscute.echoes.item.TimelessWeaponItem;
-import com.wdiscute.echoes.item.RamattraItem;
-import com.wdiscute.echoes.item.SoulHeartContainer;
+import com.wdiscute.echoes.item.*;
+import com.wdiscute.utils.item.BasicEquipableItem;
 import com.wdiscute.utils.item.BasicItem;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -39,6 +38,17 @@ public interface ECItems
     DeferredItem<Item> LUCENT_WILL = ITEMS.registerItem("lucent_will", (p) -> new TimelessWeaponItem(p, -2.4f));
     DeferredItem<Item> TIME_KEEPER = ITEMS.registerItem("time_keeper", (p) -> new TimelessWeaponItem(p, -2.4f));
 
+    //
+    //  ,--.           ,--.          ,--.               ,--.
+    //,-'  '-. ,--.--. `--' ,--,--,  |  |,-.   ,---.  ,-'  '-.  ,---.
+    //'-.  .-' |  .--' ,--. |      \ |     /  | .-. : '-.  .-' (  .-'
+    //  |  |   |  |    |  | |  ||  | |  \  \  \   --.   |  |   .-'  `)
+    //  `--'   `--'    `--' `--''--' `--'`--'  `----'   `--'   `----'
+    //
+
+
+    DeferredItem<Item> RECOVERY_TOTEM_ITEM = ITEMS.registerItem("recovery_totem_item", TotemItem::new);
+
 
     //                      ,--.                   ,--.          ,--.
     //,--,--,--.  ,--,--. ,-'  '-.  ,---.  ,--.--. `--'  ,--,--. |  |  ,---.
@@ -70,16 +80,17 @@ public interface ECItems
     // `--`--' `--'    `--`--`--'  `---'  `--'
     //
 
-    //DeferredItem<Item> TIMELOST_HELMET = ITEMS.registerItem("timelost_helmet", (p) -> new BasicEquipableItem(p, EquipmentSlot.HEAD, Echoes.rl("timelost")));
-    //DeferredItem<Item> TIMELOST_CHESTPLATE = ITEMS.registerItem("timelost_chestplate", (p) -> new BasicEquipableItem(p, EquipmentSlot.CHEST, Echoes.rl("timelost")));
-    //DeferredItem<Item> TIMELOST_LEGGINGS = ITEMS.registerItem("timelost_leggings", (p) -> new BasicEquipableItem(p, EquipmentSlot.LEGS, Echoes.rl("timelost")));
-    //DeferredItem<Item> TIMELOST_BOOTS = ITEMS.registerItem("timelost_boots", (p) -> new BasicEquipableItem(p, EquipmentSlot.FEET, Echoes.rl("timelost")));
+    DeferredItem<Item> TIMELOST_HELMET = ITEMS.registerItem("timelost_helmet",
+            (p) -> new BasicEquipableItem(p, ECArmorMaterials.TIMELOST_MATERIAL, ArmorItem.Type.HELMET, EquipmentSlot.HEAD));
 
-    DeferredItem<Item> TIMELOST_HELMET = ITEMS.registerItem("timelost_helmet", BasicItem::new);
-    DeferredItem<Item> TIMELOST_CHESTPLATE = ITEMS.registerItem("timelost_chestplate", BasicItem::new);
-    DeferredItem<Item> TIMELOST_LEGGINGS = ITEMS.registerItem("timelost_leggings", BasicItem::new);
-    DeferredItem<Item> TIMELOST_BOOTS = ITEMS.registerItem("timelost_boots", BasicItem::new);
+    DeferredItem<Item> TIMELOST_CHESTPLATE = ITEMS.registerItem("timelost_chestplate",
+            (p) -> new BasicEquipableItem(p, ECArmorMaterials.TIMELOST_MATERIAL, ArmorItem.Type.CHESTPLATE, EquipmentSlot.CHEST));
 
+    DeferredItem<Item> TIMELOST_LEGGINGS = ITEMS.registerItem("timelost_leggings",
+            (p) -> new BasicEquipableItem(p, ECArmorMaterials.TIMELOST_MATERIAL, ArmorItem.Type.LEGGINGS, EquipmentSlot.LEGS));
+
+    DeferredItem<Item> TIMELOST_BOOTS = ITEMS.registerItem("timelost_boots",
+            (p) -> new BasicEquipableItem(p, ECArmorMaterials.TIMELOST_MATERIAL, ArmorItem.Type.BOOTS, EquipmentSlot.FEET));
 
     static void register(IEventBus modEventBus)
     {

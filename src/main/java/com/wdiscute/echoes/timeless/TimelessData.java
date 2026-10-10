@@ -3,6 +3,8 @@ package com.wdiscute.echoes.timeless;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.echoes.registry.ECDataAttachments;
+import com.wdiscute.echoes.upgrades.Perk;
+import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.ExtraComposites;
 import com.wdiscute.utils.MaybeStack;
@@ -140,10 +142,31 @@ public record TimelessData(long timeToExit,
     //`----'   `---'   `----'  `--' `----'
     //
 
-    //returns if souls were consume. souls are only consumed if player has enough
+    //returns if souls were consumed. souls are only consumed if player has enough
     public static boolean consumeSouls(Player player, float souls)
     {
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
+
+        List<PerkInstance> activePerks = Perk.getActivePerks(player, player.getMainHandItem());
+
+        float flatToReduce = 0;
+        for (PerkInstance activePerk : activePerks)
+            flatToReduce = activePerk.perk().addFlatSoulsReduction(player, activePerk.amplifiers(), souls);
+
+        souls = souls - flatToReduce;
+        if(souls <= 0)
+            return true;
+
+        float percentToReduce = 0;
+        for (PerkInstance activePerk : activePerks)
+            percentToReduce = activePerk.perk().addPercentSoulsReduction(player, activePerk.amplifiers(), souls);
+
+        percentToReduce = Math.clamp(100 - percentToReduce, 0, 100) / 100f;
+
+        souls = souls * percentToReduce;
+
+        if(souls <= 0)
+            return true;
 
         float newSouls = data.souls - souls;
         if (newSouls >= 0)

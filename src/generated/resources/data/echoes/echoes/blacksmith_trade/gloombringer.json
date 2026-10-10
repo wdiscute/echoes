@@ -1,0 +1,136 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "identifier": "echoes:sculked_teeth"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                12.0
+              ],
+              "perk": "echoes:extra_damage"
+            }
+          ],
+          "echoes:rarity": "common"
+        },
+        "identifier": "echoes:gloombringer"
+      },
+      "rarity": "common"
+    },
+    {
+      "cost": [
+        {
+          "count": 5,
+          "identifier": "echoes:sculked_teeth"
+        },
+        {
+          "count": 2,
+          "identifier": "echoes:hollowed_spine"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                16.0
+              ],
+              "perk": "echoes:extra_damage"
+            }
+          ],
+          "echoes:rarity": "uncommon"
+        },
+        "identifier": "echoes:gloombringer"
+      },
+      "rarity": "uncommon"
+    },
+    {
+      "cost": [
+        {
+          "count": 15,
+          "identifier": "echoes:sculked_teeth"
+        },
+        {
+          "count": 5,
+          "identifier": "echoes:hollowed_spine"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                20.0
+              ],
+              "perk": "echoes:extra_damage"
+            }
+          ],
+          "echoes:rarity": "rare"
+        },
+        "identifier": "echoes:gloombringer"
+      },
+      "rarity": "rare"
+    },
+    {
+      "cost": [
+        {
+          "count": 32,
+          "identifier": "echoes:sculked_teeth"
+        },
+        {
+          "count": 10,
+          "identifier": "echoes:hollowed_spine"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                25.0
+              ],
+              "perk": "echoes:extra_damage"
+            }
+          ],
+          "echoes:rarity": "epic"
+        },
+        "identifier": "echoes:gloombringer"
+      },
+      "rarity": "epic"
+    },
+    {
+      "cost": [
+        {
+          "count": 64,
+          "identifier": "echoes:sculked_teeth"
+        },
+        {
+          "count": 25,
+          "identifier": "echoes:hollowed_spine"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                30.0
+              ],
+              "perk": "echoes:extra_damage"
+            }
+          ],
+          "echoes:rarity": "legendary"
+        },
+        "identifier": "echoes:gloombringer"
+      },
+      "rarity": "legendary"
+    }
+  ],
+  "has_upgrades": true,
+  "weight": 20
+}

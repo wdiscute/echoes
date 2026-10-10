@@ -6,6 +6,8 @@ import com.wdiscute.echoes.blocks.display.DisplayGuiLayer;
 import com.wdiscute.echoes.blocks.display.DisplayRenderer;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneRenderer;
+import com.wdiscute.echoes.blocks.upgrader.UpgraderGuiLayer;
+import com.wdiscute.echoes.blocks.upgrader.UpgraderRenderer;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModel;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
@@ -26,11 +28,14 @@ import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.libtooltips.Tooltips;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.GrassColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -51,6 +56,7 @@ public class ECClientEvents
     {
         event.registerAboveAll(Echoes.rl("echoes_gui"), new TimelessGUILayer());
         event.registerAboveAll(Echoes.rl("display_gui"), new DisplayGuiLayer());
+        event.registerAboveAll(Echoes.rl("upgrader_gui"), new UpgraderGuiLayer());
         event.registerAboveAll(Echoes.rl("post_processing"), new ECPostProcessing());
     }
 
@@ -63,14 +69,25 @@ public class ECClientEvents
             List<MutableComponent> shopExtendedTooltip = perk.perk().getShopExtendedTooltip(event.getItemStack(), perk.amplifiers());
 
             if (shopExtendedTooltip.isEmpty())
+            {
                 perkComps.addAll(perk.perk().getItemTooltip(event.getItemStack(), perk.amplifiers()));
+            }
 
-            perkComps.addAll(shopExtendedTooltip.reversed());
+            List<MutableComponent> reversed = shopExtendedTooltip.reversed();
+            if(!reversed.isEmpty())
+            {
+                perkComps.addAll(reversed);
+                perkComps.add(Component.empty());
+            }
         }
 
         for (var perkComp : perkComps)
             if (!event.getToolTip().isEmpty())
                 event.getToolTip().add(1, perkComp.withStyle(ChatFormatting.GRAY));
+
+        var tradeInfo = event.getItemStack().get(ECDataComponents.TRADE_INFO);
+        if(tradeInfo != null)
+            event.getToolTip().add(1, Tooltips.resolveTagsToComponentFromTranslationKey(tradeInfo.first().toTranslationKeySimple()).withStyle(ChatFormatting.DARK_GRAY));
 
     }
 
@@ -109,6 +126,7 @@ public class ECClientEvents
         event.registerBlockEntityRenderer(ECBlockEntities.TIMELESS_MARKER.get(), TimelessMarkerRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.PRISMA_PANE.get(), PrismaPaneRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);
+        event.registerBlockEntityRenderer(ECBlockEntities.UPGRADER.get(), UpgraderRenderer::new);
     }
 
     @SubscribeEvent

@@ -65,6 +65,7 @@ public class TimelessMarkerBlock extends HorizontalDirectionalBlock implements E
         FLYING_ENEMY,
         BLACKSMITH_NPC,
         BLACKSMITH_STAND,
+        BLACKSMITH_UPGRADER,
         PORTAL,
         CHEST,
         ;

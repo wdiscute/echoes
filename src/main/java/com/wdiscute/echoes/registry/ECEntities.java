@@ -8,6 +8,7 @@ import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import com.wdiscute.echoes.entity.soul.SoulEntity;
 import com.wdiscute.echoes.entity.specter.SpecterEntity;
+import com.wdiscute.echoes.entity.totem.TotemEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -54,6 +55,10 @@ public interface ECEntities
     DeferredHolder<EntityType<?>, EntityType<UnleashedSoulEntity>> UNLEASHED_SOUL =
             register("unleashed_soul", UnleashedSoulEntity::new, MobCategory.MISC,
                     b -> b.sized(0.5f, 0.5f).noSave().noSummon());
+
+    DeferredHolder<EntityType<?>, EntityType<TotemEntity>> TOTEM =
+            register("totem", TotemEntity::new, MobCategory.MISC,
+                    b -> b.sized(0.5f, 0.5f).noSummon());
 
 
     //

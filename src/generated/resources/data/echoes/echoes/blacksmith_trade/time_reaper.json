@@ -1,0 +1,190 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "identifier": "echoes:sculk_tendril"
+        },
+        {
+          "count": 3,
+          "identifier": "echoes:echoing_marrow"
+        },
+        {
+          "identifier": "echoes:rot_brain"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                6.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                20.0,
+                1.0
+              ],
+              "perk": "echoes:extra_damage_consumes_time"
+            }
+          ],
+          "echoes:rarity": "common"
+        },
+        "identifier": "echoes:time_reaper"
+      },
+      "rarity": "common"
+    },
+    {
+      "cost": [
+        {
+          "count": 5,
+          "identifier": "echoes:sculk_tendril"
+        },
+        {
+          "count": 7,
+          "identifier": "echoes:echoing_marrow"
+        },
+        {
+          "identifier": "echoes:rot_brain"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                8.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                20.0,
+                2.0
+              ],
+              "perk": "echoes:extra_damage_consumes_time"
+            }
+          ],
+          "echoes:rarity": "uncommon"
+        },
+        "identifier": "echoes:time_reaper"
+      },
+      "rarity": "uncommon"
+    },
+    {
+      "cost": [
+        {
+          "count": 15,
+          "identifier": "echoes:sculk_tendril"
+        },
+        {
+          "count": 12,
+          "identifier": "echoes:echoing_marrow"
+        },
+        {
+          "identifier": "echoes:rot_brain"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                10.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                20.0,
+                3.0
+              ],
+              "perk": "echoes:extra_damage_consumes_time"
+            }
+          ],
+          "echoes:rarity": "rare"
+        },
+        "identifier": "echoes:time_reaper"
+      },
+      "rarity": "rare"
+    },
+    {
+      "cost": [
+        {
+          "count": 32,
+          "identifier": "echoes:sculk_tendril"
+        },
+        {
+          "count": 30,
+          "identifier": "echoes:echoing_marrow"
+        },
+        {
+          "identifier": "echoes:rot_brain"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                15.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                20.0,
+                4.0
+              ],
+              "perk": "echoes:extra_damage_consumes_time"
+            }
+          ],
+          "echoes:rarity": "epic"
+        },
+        "identifier": "echoes:time_reaper"
+      },
+      "rarity": "epic"
+    },
+    {
+      "cost": [
+        {
+          "count": 64,
+          "identifier": "echoes:sculk_tendril"
+        },
+        {
+          "count": 57,
+          "identifier": "echoes:echoing_marrow"
+        },
+        {
+          "identifier": "echoes:rot_brain"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                20.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                20.0,
+                5.0
+              ],
+              "perk": "echoes:extra_damage_consumes_time"
+            }
+          ],
+          "echoes:rarity": "legendary"
+        },
+        "identifier": "echoes:time_reaper"
+      },
+      "rarity": "legendary"
+    }
+  ],
+  "has_upgrades": true,
+  "weight": 20
+}

@@ -9,7 +9,6 @@ import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.Perk;
 import com.wdiscute.echoes.upgrades.PerkInstance;
-import com.wdiscute.echoes.upgrades.perks.ExtraDamagePerk;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.Holder;
@@ -21,7 +20,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 import java.util.ArrayList;
@@ -79,8 +77,9 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RarityValues(4F, 5F, 6F, 7F, 8F)),
 
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS,
-                        new RarityValues(4F, 6F, 8F, 10F, 12F),
-                        new RarityValues(2F, 3F, 4F, 5F, 6F)),
+                        new RarityValues(4f, 4f, 4f, 4f, 4f),
+                        new RarityValues(4F, 6F, 8F, 10F, 12F)
+                ),
 
                 new RaritifiedPerk(ECPerks.ECHO_BLADE,
                         //flat damage echo
@@ -174,7 +173,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(4, 5, 6, 7, 8)),
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS,
                         //souls cost
-                        new RarityValues(5f, 4f, 3f, 2f, 1f),
+                        new RarityValues(4f, 4f, 4f, 4f, 4f),
                         //extra damage
                         new RarityValues(4f, 5f, 6f, 7f, 10f)
                 )
@@ -238,7 +237,6 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
                 new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
         );
-
     }
 
     public static void register(BootstrapContext<BlacksmithTrade> context, BlacksmithTrade trade)
@@ -248,7 +246,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     public static ResourceKey<BlacksmithTrade> getKey(BlacksmithTrade trade)
     {
-        return ResourceKey.create(Echoes.BLACKSMITH_TRADE_KEY, Utils.rl("echoes", trade.stack().identifier().getPath() + "_" + trade.rarity().getSerializedName()));
+        return ResourceKey.create(Echoes.BLACKSMITH_TRADE_KEY, Utils.rl("echoes", trade.getBase().item().identifier().getPath()));
     }
 
     //list must have 5 entries
@@ -291,6 +289,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 case RARE -> rare;
                 case EPIC -> epic;
                 case LEGENDARY -> legendary;
+                default -> common;
             };
         }
     }
@@ -298,22 +297,18 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
     static void resourceTrade(BootstrapContext<BlacksmithTrade> context, Rarity rarity, int weight, MaybeStack stack, MaybeStack... cost)
     {
         //register trade
-        register(context, new BlacksmithTrade(stack, rarity, Arrays.stream(cost).toList(), weight));
+        register(context, new BlacksmithTrade(List.of(new BlacksmithTrade.Entry(Rarity.COMMON, stack, Arrays.stream(cost).toList())), weight, false));
     }
 
     static void allRarities(BootstrapContext<BlacksmithTrade> context, Item item, List<RaritifiedCost> cost, RaritifiedPerk... perks)
     {
+        List<BlacksmithTrade.Entry> entries = new ArrayList<>();
         //for each rarity
         for (Rarity rarity : Rarity.values())
         {
-            int weight = switch (rarity)
-            {
-                case COMMON -> 20;
-                case UNCOMMON -> 15;
-                case RARE -> 10;
-                case EPIC -> 5;
-                case LEGENDARY -> 2;
-            };
+            //all rarities does not include unique
+            if (rarity.equals(Rarity.UNIQUE))
+                break;
 
             //get all perks to add to item based on rarity
             List<PerkInstance> perksToAdd = Arrays.stream(perks).map(o -> o.makePerkInstance(rarity)).toList();
@@ -324,16 +319,15 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                     .set(ECDataComponents.RARITY.get(), rarity)
                     .build();
 
-            //register trade
-            register(context,
-                    new BlacksmithTrade(
-                            new MaybeStack(BuiltInRegistries.ITEM.getKey(item), 1, patch),
-                            rarity,
-                            cost.stream().map(o -> o.makeMaybeStack(rarity)).filter(o -> o.count() > 0).toList(),
-                            weight
-                    )
-            );
+            //add rarity to entries
+            entries.add(new BlacksmithTrade.Entry(rarity, new MaybeStack(BuiltInRegistries.ITEM.getKey(item), 1, patch),
+                    cost.stream().map(o -> o.makeMaybeStack(rarity)).filter(o -> o.count() > 0).toList()));
+
         }
+
+        //register trade
+        register(context, new BlacksmithTrade(entries, 20, true)
+        );
     }
 
 

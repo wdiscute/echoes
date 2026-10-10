@@ -5,8 +5,10 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.Rarity;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.utils.Utils;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -21,6 +23,9 @@ public interface ECDataComponents
 
     DeferredHolder<DataComponentType<?>, DataComponentType<List<PerkInstance>>> PERKS = register(
             "perks", builder -> builder.persistent(PerkInstance.CODEC.listOf()));
+
+    DeferredHolder<DataComponentType<?>, DataComponentType<Utils.Duo<Rarity, ResourceLocation>>> TRADE_INFO = register(
+            "trade_info", builder -> builder.persistent(Utils.Duo.codec(Rarity.CODEC, ResourceLocation.CODEC)));
 
     DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RAMATTRA_CAN_USE = register(
             "ramattra_can_use", builder -> builder.persistent(Codec.BOOL));

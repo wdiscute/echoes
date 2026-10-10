@@ -1,0 +1,22 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "count": 4,
+          "identifier": "echoes:rot_brain"
+        },
+        {
+          "count": 4,
+          "identifier": "echoes:hollowed_spine"
+        }
+      ],
+      "item": {
+        "identifier": "echoes:soul_heart_container"
+      },
+      "rarity": "common"
+    }
+  ],
+  "has_upgrades": false,
+  "weight": 10
+}

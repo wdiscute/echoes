@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "count": 10,
+          "identifier": "echoes:echoing_marrow"
+        }
+      ],
+      "item": {
+        "identifier": "echoes:hollowed_spine"
+      },
+      "rarity": "common"
+    }
+  ],
+  "has_upgrades": false,
+  "weight": 10
+}

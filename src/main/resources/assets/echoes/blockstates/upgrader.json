@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "echoes:block/upgrader",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "echoes:block/upgrader",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "echoes:block/upgrader",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "echoes:block/upgrader"
+    }
+  }
+}

@@ -21,7 +21,11 @@ public class DisplayRenderer implements BlockEntityRenderer<DisplayBlockEntity>
     @Override
     public void render(DisplayBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
     {
-        ItemStack stack = blockEntity.trade.stack().toStack();
+        //do not render anything if there's no trade
+        if(blockEntity.trade == null)
+            return;
+
+        ItemStack stack = blockEntity.trade.first().item().toStack();
 
         if (stack.isEmpty())
             return;

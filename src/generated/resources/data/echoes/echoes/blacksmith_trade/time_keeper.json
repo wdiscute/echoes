@@ -1,0 +1,170 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "count": 5,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                3.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                200.0
+              ],
+              "perk": "echoes:extra_ticks_per_kill"
+            }
+          ],
+          "echoes:rarity": "common"
+        },
+        "identifier": "echoes:time_keeper"
+      },
+      "rarity": "common"
+    },
+    {
+      "cost": [
+        {
+          "count": 15,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 5,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                4.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                300.0
+              ],
+              "perk": "echoes:extra_ticks_per_kill"
+            }
+          ],
+          "echoes:rarity": "uncommon"
+        },
+        "identifier": "echoes:time_keeper"
+      },
+      "rarity": "uncommon"
+    },
+    {
+      "cost": [
+        {
+          "count": 32,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 15,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                5.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                400.0
+              ],
+              "perk": "echoes:extra_ticks_per_kill"
+            }
+          ],
+          "echoes:rarity": "rare"
+        },
+        "identifier": "echoes:time_keeper"
+      },
+      "rarity": "rare"
+    },
+    {
+      "cost": [
+        {
+          "count": 64,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 32,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                6.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                500.0
+              ],
+              "perk": "echoes:extra_ticks_per_kill"
+            }
+          ],
+          "echoes:rarity": "epic"
+        },
+        "identifier": "echoes:time_keeper"
+      },
+      "rarity": "epic"
+    },
+    {
+      "cost": [
+        {
+          "count": 128,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 64,
+          "identifier": "echoes:crystal_core"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": [
+                7.0
+              ],
+              "perk": "echoes:extra_damage"
+            },
+            {
+              "amplifiers": [
+                600.0
+              ],
+              "perk": "echoes:extra_ticks_per_kill"
+            }
+          ],
+          "echoes:rarity": "legendary"
+        },
+        "identifier": "echoes:time_keeper"
+      },
+      "rarity": "legendary"
+    }
+  ],
+  "has_upgrades": true,
+  "weight": 20
+}

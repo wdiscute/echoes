@@ -128,5 +128,11 @@
   "echoes.rarity.uncommon" : "<ecuncommon>§lUNCOMMON</ecuncommon>",
   "echoes.rarity.rare" : "<ecrare>§lRARE</ecrare>",
   "echoes.rarity.epic" : "<ecepic>§lEPIC</ecepic>",
-  "echoes.rarity.legendary" : "<eclegendary>LEGENDARY</eclegendary>"
+  "echoes.rarity.legendary" : "<eclegendary>LEGENDARY</eclegendary>",
+
+  "echoes.rarity.common.simple" : "Common",
+  "echoes.rarity.uncommon.simple" : "Uncommon",
+  "echoes.rarity.rare.simple" : "Rare",
+  "echoes.rarity.epic.simple" : "Epic",
+  "echoes.rarity.legendary.simple" : "Legendary"
 }

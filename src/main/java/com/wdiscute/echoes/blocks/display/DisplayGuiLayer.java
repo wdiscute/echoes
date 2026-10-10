@@ -10,7 +10,6 @@ import com.wdiscute.echoes.upgrades.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.utils.InventoryManagement;
 import com.wdiscute.utils.MaybeStack;
-import com.wdiscute.utils.Utils;
 import com.wdiscute.utils.ScreenUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
@@ -20,8 +19,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
@@ -48,7 +45,7 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
 
             if (blockState.is(ECBlocks.DISPLAY) && player.level().getBlockEntity(hitResult.getBlockPos()) instanceof DisplayBlockEntity dbe)
             {
-                if (dbe.trade == null || dbe.trade.equals(BlacksmithTrade.EMPTY)) return;
+                if (dbe.trade == null || dbe.trade.equals(BlacksmithTrade.Entry.EMPTY)) return;
 
                 int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
                 int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
@@ -58,7 +55,9 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
                 int max = 10;
                 int min = 40;
                 float speed = 0.3f;
-                ItemStack stack = dbe.trade.stack().toStack();
+
+                BlacksmithTrade.Entry tradeEntry = dbe.trade.first();
+                ItemStack stack = tradeEntry.item().toStack();
 
                 //get all perks to display on left side
                 List<MutableComponent> perkComps = new ArrayList<>();
@@ -67,7 +66,7 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
                     perkComps.addAll(Objects.requireNonNull(perkInstance.perk().getShopTooltip(stack, perkInstance.amplifiers())));
 
                 int yPerkOffset = perkComps.size() * 11;
-                int yCostOffset = dbe.trade.cost().size() * 16;
+                int yCostOffset = tradeEntry.cost().size() * 16;
 
                 int x = width / 2 - 200;
                 int y = height / 2 - 120;
@@ -82,7 +81,7 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
 
                 //rarity
                 ScreenUtils.centeredText(guiGraphics,
-                        font, Tooltips.resolveTagsToComponentFromTranslationKey(dbe.trade.rarity().toTranslationKey()).withStyle(ChatFormatting.BOLD),
+                        font, Tooltips.resolveTagsToComponentFromTranslationKey(tradeEntry.rarity().toTranslationKey()).withStyle(ChatFormatting.BOLD),
                         x + 70, y + 18, 0xffffffff, true);
 
                 //render item
@@ -109,7 +108,7 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
                         value + 150,
                         (float) (-30 + 25 * (Math.sin(time / 1000.0 * 0.4f) + 1) / 2),
                         (float) (min + (max - min) * (Math.sin(time / 1000.0 * speed) + 1) / 2),
-                        -130, -50, 5f);
+                        -130, -50, 4f);
 
                 //TODO show power level?
                 //ScreenUtils.centeredText(guiGraphics, font, Component.literal("Power Level - ").append(dbe.trade.powerLevel() + ""),
@@ -132,9 +131,9 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
 
 
                 //render costs
-                for (int i = 0; i < dbe.trade.cost().size(); i++)
+                for (int i = 0; i < tradeEntry.cost().size(); i++)
                 {
-                    ItemStack costStack = dbe.trade.cost().get(i).toStack();
+                    ItemStack costStack = tradeEntry.cost().get(i).toStack();
 
                     boolean hasEnough = InventoryManagement.hasEnoughItems(List.of(new MaybeStack(costStack)), Minecraft.getInstance().player.getInventory());
 
