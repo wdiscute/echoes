@@ -235,7 +235,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         //if hub not linked (something went wrong!)
                         if(hub == null)
                         {
-                            currentInstance.removePlayer(player);
+                            currentInstance.removePlayer(player, new ArrayList<>());
                             return;
                         }
 
@@ -257,7 +257,7 @@ public class PortalBlockEntity extends BlockEntity implements TickableBlockEntit
                         hub.linkedInstance = nextInstance.uuid;
                         nextInstance.linkedInstance = hub.uuid;
 
-                        TimelessData.increaseStageCount(player, currentInstance.structure);
+                        TimelessData.increaseStageCount(player, currentInstance.timelessLevel.id());
 
                         //add player to next instance
                         nextInstance.addPlayer(player, currentInstance.portalPos, currentInstance.portalDimension);

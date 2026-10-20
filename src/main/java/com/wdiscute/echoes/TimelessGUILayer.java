@@ -195,7 +195,7 @@ public class TimelessGUILayer implements LayeredDraw.Layer
         //
 
         //display time remaining if not Long.MAX_VALUE (isHub)
-        if (timelessData.timeToExit() != Long.MAX_VALUE)
+        if (false && timelessData.timeToExit() != Long.MAX_VALUE)
         {
             long ticksRemaining = timelessData.timeToExit() - player.level().getGameTime();
 

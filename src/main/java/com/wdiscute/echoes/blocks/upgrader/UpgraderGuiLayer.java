@@ -5,12 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.Rarity;
-import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.registry.ECBlocks;
-import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.registry.ECDataComponents;
-import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.utils.InventoryManagement;
 import com.wdiscute.utils.MaybeStack;
@@ -28,7 +25,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 public class UpgraderGuiLayer implements LayeredDraw.Layer
 {
@@ -72,13 +68,16 @@ public class UpgraderGuiLayer implements LayeredDraw.Layer
                     List<PerkInstance> perks = stack.getOrDefault(ECDataComponents.PERKS, List.of());
                     for (PerkInstance perkInstance : perks)
                     {
-                        perkComps.addAll(perkInstance.perk().getShopTooltip(stack, perkInstance.amplifiers()));
+                        perkComps.addAll(perkInstance.perk().getShopTooltip(stack, perkInstance));
 
                         //add all amplifier values, with format controlled by the perk
                         MutableComponent amplifiers = Component.empty();
-                        for (int i = 0; i < perkInstance.amplifiers().size(); i++)
-                            amplifiers.append(Component.literal(perkInstance.perk().formatAmplifier(perkInstance.amplifiers(), i) + (i == perkInstance.amplifiers().size() - 1 ? "" : " "))
+                        List<String> ids = perkInstance.perk().getIds();
+                        for (int i = 0; i < ids.size(); i++)
+                        {
+                            amplifiers.append(Component.literal(perkInstance.perk().format(perkInstance, ids.get(i)) + (i == perkInstance.amplifiers().size() - 1 ? "" : " "))
                                     .withStyle(ChatFormatting.WHITE));
+                        }
 
                         perkComps.add(amplifiers);
                     }
@@ -161,12 +160,13 @@ public class UpgraderGuiLayer implements LayeredDraw.Layer
                     List<PerkInstance> perks = stack.getOrDefault(ECDataComponents.PERKS, List.of());
                     for (PerkInstance perkInstance : perks)
                     {
-                        perkComps.addAll(perkInstance.perk().getShopTooltip(stack, perkInstance.amplifiers()));
+                        perkComps.addAll(perkInstance.perk().getShopTooltip(stack, perkInstance));
 
                         //add all amplifier values, with format controlled by the perk
                         MutableComponent amplifiers = Component.empty();
-                        for (int i = 0; i < perkInstance.amplifiers().size(); i++)
-                            amplifiers.append(Component.literal(perkInstance.perk().formatAmplifier(perkInstance.amplifiers(), i) + (i == perkInstance.amplifiers().size() - 1 ? "" : " "))
+                        List<String> ids = perkInstance.perk().getIds();
+                        for (int i = 0; i < ids.size(); i++)
+                            amplifiers.append(Component.literal(perkInstance.perk().format(perkInstance, ids.get(i)) + (i == perkInstance.amplifiers().size() - 1 ? "" : " "))
                                     .withStyle(ChatFormatting.WHITE));
 
                         perkComps.add(amplifiers);

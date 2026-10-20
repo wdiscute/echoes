@@ -1,5 +1,8 @@
-package com.wdiscute.echoes.perks;
+package com.wdiscute.echoes.perk.generic;
 
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
+import com.wdiscute.echoes.perk.SimplePerk;
 import com.wdiscute.echoes.timeless.TimelessData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -14,14 +17,11 @@ import java.util.List;
 
 public class ExtraDamageConsumesSoulsPerk extends SimplePerk
 {
-    //first value = souls consumed
-    //second value = damage added
-
     @Override
-    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, List<Float> value)
+    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, PerkInstance instance)
     {
-        float damageToAdd = value.get(1);
-        float soulsToConsume = value.get(0);
+        float damageToAdd = instance.getDamage();
+        float soulsToConsume = instance.getCost();
 
         if(TimelessData.consumeSouls(player, soulsToConsume))
             return damageToAdd;
@@ -29,18 +29,24 @@ public class ExtraDamageConsumesSoulsPerk extends SimplePerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, PerkInstance instance)
     {
         return List.of(Component.literal("Soulrend").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     @Override
-    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> amplifiers)
+    public List<String> getIds()
+    {
+        return List.of(Perk.COST, Perk.DAMAGE);
+    }
+
+    @Override
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, PerkInstance instance)
     {
         List<MutableComponent> list = new ArrayList<>();
 
         list.add(Component.literal("Soulrend").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
-        list.add(Component.literal("Consumes " + formatAmplifier(amplifiers, 0) + " souls to do " + formatAmplifier(amplifiers, 1) + " damage"));
+        list.add(Component.literal("Consumes " + format(instance, Perk.COST) + " souls to do " + format(instance, Perk.DAMAGE) + " damage"));
 
         return list;
     }

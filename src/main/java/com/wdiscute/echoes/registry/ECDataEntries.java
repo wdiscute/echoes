@@ -34,9 +34,9 @@ public interface ECDataEntries
     DataEntry.MultiEntry<TimelessEnemyEntry> FLYING_ENEMIES = DataEntry.MultiEntry.register(Echoes.rl("flying_enemies"),
             TimelessEnemyEntry.CODEC);
 
-    DataEntry<MaybeStack> STARTER_ITEM = DataEntry.register(Echoes.rl("starter_item"),
-            MaybeStack.CODEC,
-            MaybeStack.EMPTY);
+    DataEntry<ResourceLocation> STARTER_ITEM = DataEntry.register(Echoes.rl("starter_item"),
+            ResourceLocation.CODEC,
+            Echoes.MISSINGNO);
 
     static void register(IEventBus bus){}
 }

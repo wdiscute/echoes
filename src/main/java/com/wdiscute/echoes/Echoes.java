@@ -1,11 +1,12 @@
 package com.wdiscute.echoes;
 
 import com.mojang.logging.LogUtils;
+import com.wdiscute.echoes.anomaly.Anomaly;
 import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessProcessor;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.Perk;
+import com.wdiscute.echoes.perk.Perk;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -33,8 +34,17 @@ public class Echoes
     public static final ResourceKey<Registry<Perk>> PERK =
             ResourceKey.createRegistryKey(Echoes.rl("perk"));
 
+    public static final ResourceKey<Registry<Anomaly>> ANOMALY =
+            ResourceKey.createRegistryKey(Echoes.rl("anomaly"));
+
     //registry
     public static final Registry<Perk> PERK_REGISTRY = new RegistryBuilder<>(PERK)
+            .sync(true)
+            .defaultKey(Echoes.rl("empty"))
+            .create();
+
+    //registry
+    public static final Registry<Anomaly> ANOMALY_REGISTRY = new RegistryBuilder<>(ANOMALY)
             .sync(true)
             .defaultKey(Echoes.rl("empty"))
             .create();

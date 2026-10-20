@@ -6,7 +6,7 @@ import com.mojang.math.Axis;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.utils.InventoryManagement;
 import com.wdiscute.utils.MaybeStack;
@@ -63,7 +63,7 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
                 List<MutableComponent> perkComps = new ArrayList<>();
                 List<PerkInstance> perks = stack.getOrDefault(ECDataComponents.PERKS, List.of());
                 for (PerkInstance perkInstance : perks)
-                    perkComps.addAll(Objects.requireNonNull(perkInstance.perk().getShopTooltip(stack, perkInstance.amplifiers())));
+                    perkComps.addAll(Objects.requireNonNull(perkInstance.perk().getShopTooltip(stack, perkInstance)));
 
                 int yPerkOffset = perkComps.size() * 11;
                 int yCostOffset = tradeEntry.cost().size() * 16;
@@ -163,7 +163,7 @@ public class DisplayGuiLayer implements LayeredDraw.Layer
                 for (PerkInstance perk : perks)
                 {
                     List<MutableComponent> tooltip =
-                            new ArrayList<>(perk.perk().getShopExtendedTooltip(stack, perk.amplifiers()));
+                            new ArrayList<>(perk.perk().getShopExtendedTooltip(stack, perk));
 
                     if (tooltip.isEmpty())
                         continue;

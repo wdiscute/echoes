@@ -5,11 +5,9 @@ import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.timeless.TimelessData;
-import com.wdiscute.echoes.upgrades.PerkInstance;
-import net.minecraft.server.level.ServerLevel;
+import com.wdiscute.echoes.perk.PerkInstance;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -48,11 +46,11 @@ public class RamattraItem extends Item
         {
 
             //get damage to spawn soul with
-            List<PerkInstance> list = itemStack.getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()).stream().filter(o -> o.perk().equals(ECPerks.RAMATTRA)).toList();
+            List<PerkInstance> list = itemStack.getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()).stream().filter(o -> o.perk().equals(ECPerks.RAMATTRA.get())).toList();
 
             float damage;
             if (list.isEmpty()) damage = 1;
-            else damage = list.getFirst().amplifiers().getFirst();
+            else damage = list.getFirst().getDamage();
 
             Vec3 direction = player.getLookAngle();
             UnleashedSoulEntity projectile = new UnleashedSoulEntity(

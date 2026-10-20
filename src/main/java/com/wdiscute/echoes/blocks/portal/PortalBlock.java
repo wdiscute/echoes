@@ -10,7 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,15 +30,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 
 public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlock, SculkBehaviour
 {
     public static final EnumProperty<State> STATE = EnumProperty.create("state", State.class);
-    private static final VoxelShape SHAPE_EMPTY = Block.box(0.0D, 0.0D, 1.5D, 16.0D, 16.0D, 14.5D);
-    private static final VoxelShape SHAPE_FULL = Shapes.or(SHAPE_EMPTY, Block.box(4.0D, 13.0D, 0.0D, 12.0D, 16.0D, 16.0D));
+    private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 14, 16);
 
     public PortalBlock(Properties properties)
     {
@@ -89,7 +86,7 @@ public class PortalBlock extends HorizontalDirectionalBlock implements EntityBlo
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
-        return state.getValue(STATE).equals(State.OPEN) ? SHAPE_FULL : SHAPE_EMPTY;
+        return SHAPE;
     }
 
     @Override

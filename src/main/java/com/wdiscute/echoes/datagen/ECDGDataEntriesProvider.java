@@ -2,12 +2,13 @@ package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.Rarity;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.unique.EchoBladePerk;
 import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.timeless.TimelessEnemyEntry;
 import com.wdiscute.echoes.timeless.TimelessLevelEntry;
 import com.wdiscute.echoes.timeless.TimelessLootEntry;
-import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import com.wdiscute.utils.datagen.DataEntryProvider;
@@ -30,33 +31,22 @@ public class ECDGDataEntriesProvider
     public static void start(DataGenerator gen, PackOutput output, CompletableFuture<HolderLookup.Provider> lookup)
     {
         gen.addProvider(true,
-                new DataEntryProvider<>(output, ECDataEntries.STARTER_ITEM,
-                        new MaybeStack(BuiltInRegistries.ITEM.getKey(ECItems.ECHO_BLADE.get()), 1,
-                                DataComponentPatch.builder()
-                                        .set(ECDataComponents.PERKS.get(), List.of(
-                                                new PerkInstance(ECPerks.EXTRA_DAMAGE, 4f),
-                                                new PerkInstance(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS, 4F, 2f),
-                                                new PerkInstance(ECPerks.ECHO_BLADE, 4F, 4f, 4f, 2f, 1.6f, 0.5f)
-                                        ))
-                                        .set(ECDataComponents.RARITY.get(), Rarity.COMMON)
-                                        .build()
-                        )
-                )
+                new DataEntryProvider<>(output, ECDataEntries.STARTER_ITEM, Echoes.rl("echo_blade"))
         );
 
         gen.addProvider(true,
                 new DataEntryProvider.MultiEntry<>(output, ECDataEntries.TIMELESS_LEVELS,
                         List.of(
                                 //starter
-                                new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, 12000, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/starter"), -1, 10, 0, Integer.MAX_VALUE),
 
                                 //arenas
-                                new TimelessLevelEntry(Echoes.rl("timeless/first"), 0, 10, 0, 3000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, 3000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/third"), 0, 10, 0, 6000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/forth"), 0, 10, 0, 9000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/fifth"), 0, 10, 0, 4000, Integer.MAX_VALUE),
-                                new TimelessLevelEntry(Echoes.rl("timeless/sixth"), 0, 10, 0, 4000, Integer.MAX_VALUE)
+                                new TimelessLevelEntry(Echoes.rl("timeless/first"), 0, 10, 0, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/second"), 0, 10, 0, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/third"), 0, 10, 0, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/forth"), 0, 10, 0, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/fifth"), 0, 10, 0, Integer.MAX_VALUE),
+                                new TimelessLevelEntry(Echoes.rl("timeless/sixth"), 0, 10, 0, Integer.MAX_VALUE)
                         )
                 )
         );

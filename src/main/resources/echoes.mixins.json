@@ -6,6 +6,7 @@
   "mixins": [
     "FoodDataMixin",
     "GetNameMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
     "SpectatorTeleportMixin"
   ],
@@ -13,5 +14,6 @@
     "defaultRequire": 1
   },
   "client": [
+    "GuiMixin"
   ]
 }

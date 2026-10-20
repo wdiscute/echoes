@@ -17,16 +17,16 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                6.0
-              ],
+              "amplifiers": {
+                "damage": 6.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                20.0,
-                1.0
-              ],
+              "amplifiers": {
+                "cost": 20.0,
+                "damage": 1.0
+              },
               "perk": "echoes:extra_damage_consumes_time"
             }
           ],
@@ -54,16 +54,16 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                8.0
-              ],
+              "amplifiers": {
+                "damage": 8.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                20.0,
-                2.0
-              ],
+              "amplifiers": {
+                "cost": 20.0,
+                "damage": 2.0
+              },
               "perk": "echoes:extra_damage_consumes_time"
             }
           ],
@@ -91,16 +91,16 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                10.0
-              ],
+              "amplifiers": {
+                "damage": 10.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                20.0,
-                3.0
-              ],
+              "amplifiers": {
+                "cost": 20.0,
+                "damage": 3.0
+              },
               "perk": "echoes:extra_damage_consumes_time"
             }
           ],
@@ -128,16 +128,16 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                15.0
-              ],
+              "amplifiers": {
+                "damage": 15.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                20.0,
-                4.0
-              ],
+              "amplifiers": {
+                "cost": 20.0,
+                "damage": 4.0
+              },
               "perk": "echoes:extra_damage_consumes_time"
             }
           ],
@@ -165,16 +165,16 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                20.0
-              ],
+              "amplifiers": {
+                "damage": 20.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                20.0,
-                5.0
-              ],
+              "amplifiers": {
+                "cost": 20.0,
+                "damage": 5.0
+              },
               "perk": "echoes:extra_damage_consumes_time"
             }
           ],

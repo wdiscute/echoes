@@ -27,15 +27,17 @@ import com.wdiscute.echoes.entity.trader.SoulTraderRenderer;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
 import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.particles.SculkParticle;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
+import com.wdiscute.utils.ScreenUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GrassColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -66,15 +68,15 @@ public class ECClientEvents
         List<MutableComponent> perkComps = new ArrayList<>();
         for (var perk : event.getItemStack().getOrDefault(ECDataComponents.PERKS, List.<PerkInstance>of()).reversed())
         {
-            List<MutableComponent> shopExtendedTooltip = perk.perk().getShopExtendedTooltip(event.getItemStack(), perk.amplifiers());
+            List<MutableComponent> shopExtendedTooltip = perk.perk().getShopExtendedTooltip(event.getItemStack(), perk);
 
             if (shopExtendedTooltip.isEmpty())
             {
-                perkComps.addAll(perk.perk().getItemTooltip(event.getItemStack(), perk.amplifiers()));
+                perkComps.addAll(perk.perk().getItemTooltip(event.getItemStack(), perk));
             }
 
             List<MutableComponent> reversed = shopExtendedTooltip.reversed();
-            if(!reversed.isEmpty())
+            if (!reversed.isEmpty())
             {
                 perkComps.addAll(reversed);
                 perkComps.add(Component.empty());
@@ -86,8 +88,12 @@ public class ECClientEvents
                 event.getToolTip().add(1, perkComp.withStyle(ChatFormatting.GRAY));
 
         var tradeInfo = event.getItemStack().get(ECDataComponents.TRADE_INFO);
-        if(tradeInfo != null)
+        if (tradeInfo != null)
             event.getToolTip().add(1, Tooltips.resolveTagsToComponentFromTranslationKey(tradeInfo.first().toTranslationKeySimple()).withStyle(ChatFormatting.DARK_GRAY));
+
+        var timeless = event.getItemStack().get(ECDataComponents.TIMELESS);
+        if (timeless != null)
+            event.getToolTip().add(1, Tooltips.resolveTagsToComponentFromTranslationKey("echoes.timeless"));
 
     }
 
@@ -133,6 +139,27 @@ public class ECClientEvents
     public static void registerParticleFactories(RegisterParticleProvidersEvent event)
     {
         event.registerSpriteSet(ECParticles.SCULK.get(), SculkParticle.Provider::new);
+    }
+
+    public static final int[] RAINBOW = {0xaaFFAA00, 0xaaFF55FF, 0xaaFF55FF, 0xaa55cdff};
+
+    @SubscribeEvent
+    public static void onContainerScreenRenderForeground(ContainerScreenEvent.Render.Foreground event)
+    {
+        for (Slot slot : event.getContainerScreen().getMenu().slots)
+        {
+            ItemStack stack = slot.getItem();
+
+            if (stack.has(ECDataComponents.TIMELESS.get()))
+            {
+                long time = System.currentTimeMillis();
+
+                ScreenUtils.fillGradient(event.getGuiGraphics(), slot.x, slot.y, 16, 16,
+                        ScreenUtils.gradient(time, 3000, RAINBOW),
+                        ScreenUtils.gradient(time + 2000, 3000, RAINBOW)
+                );
+            }
+        }
     }
 
     @SubscribeEvent

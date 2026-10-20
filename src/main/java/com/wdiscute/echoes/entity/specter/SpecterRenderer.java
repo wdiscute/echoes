@@ -52,7 +52,7 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity>
         if (!shouldRender)
             return;
 
-        Vec3 offset = entity.renderPosition.subtract(networkPosition);
+        Vec3 offset = renderPosition.subtract(networkPosition);
 
         poseStack.translate(offset.x, offset.y, offset.z);
 
@@ -66,6 +66,7 @@ public class SpecterRenderer extends EntityRenderer<SpecterEntity>
         poseStack.scale(scale, scale, scale);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
+        poseStack.mulPose(Axis.YP.rotationDegrees(entity.getRenderYRot(partialTick)));
 
         soulTraderModel.renderToBuffer(
                 poseStack,

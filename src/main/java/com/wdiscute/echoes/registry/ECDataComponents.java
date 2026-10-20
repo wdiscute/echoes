@@ -3,9 +3,9 @@ package com.wdiscute.echoes.registry;
 import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.Rarity;
-import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.Utils;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +14,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 
 public interface ECDataComponents
@@ -33,6 +34,8 @@ public interface ECDataComponents
     DeferredHolder<DataComponentType<?>, DataComponentType<Rarity>> RARITY = register(
             "rarity", builder -> builder.persistent(Rarity.CODEC));
 
+    DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> TIMELESS = register(
+            "timeless", builder -> builder.persistent(UUIDUtil.CODEC));
 
     DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> IS_PRISMA_BLADE = register(
             "is_prisma_blade", builder -> builder.persistent(Codec.BOOL));

@@ -1,4 +1,4 @@
-package com.wdiscute.echoes.upgrades;
+package com.wdiscute.echoes.perk;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.registry.ECDataAttachments;
@@ -19,6 +19,14 @@ import java.util.List;
 
 public abstract class Perk
 {
+    public static final String DAMAGE = "damage";
+    public static final String VALUE = "value";
+    public static final String HEAL = "heal";
+    public static final String COST = "cost";
+    public static final String DURATION = "duration";
+    public static final String COOLDOWN = "cooldown";
+    public static final String RANGE = "range";
+
     public static List<PerkInstance> getActivePerks(@NotNull Player player, @NotNull ItemStack weaponItem)
     {
         List<PerkInstance> perks = new ArrayList<>();
@@ -40,64 +48,63 @@ public abstract class Perk
         return perks;
     }
 
-    public String formatAmplifier(List<Float> floats, int order)
+    public String format(PerkInstance instance, String id)
     {
-        if(order >= floats.size())
-            return "";
-        return "[" + Echoes.FORMAT.format(floats.get(order)) + "]";
+        return "[" + Echoes.FORMAT.format(instance.get(id)) + "]";
     }
 
-    public void onEntityKilled(@NotNull Player killer, @NotNull ItemStack weapon, @NotNull Entity entityKilled, List<Float> value)
+    public void onEntityKilled(@NotNull Player killer, @NotNull ItemStack weapon, @NotNull Entity entityKilled, PerkInstance value)
     {
 
     }
 
-    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, List<Float> value)
+    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, PerkInstance value)
     {
         return 0;
     }
 
-    public float addFlatSouls(Player player, ItemStack weapon, @Nullable LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
+    public float addFlatSouls(Player player, ItemStack weapon, @Nullable LivingEntity entityKilled, PerkInstance instance, float currentSouls)
     {
         return 0;
     }
 
-    public float addPercentSouls(Player player, ItemStack weapon, @Nullable LivingEntity entityKilled, List<Float> amplifier, float currentSouls)
+    public float addPercentSouls(Player player, ItemStack weapon, @Nullable LivingEntity entityKilled, PerkInstance instance, float currentSouls)
     {
         return 0;
     }
 
-    public float addFlatSoulsReduction(Player player, List<Float> amplifier, float soulsToBeConsumed)
+    public float addFlatSoulsReduction(Player player, PerkInstance instance, float soulsToBeConsumed)
     {
         return 0;
     }
 
-    public float addPercentSoulsReduction(Player player, List<Float> amplifier, float soulsToBeConsumed)
+    public float addPercentSoulsReduction(Player player, PerkInstance instance, float soulsToBeConsumed)
     {
         return 0;
     }
 
-    public float reduceDamage(Player player, List<Float> amplifiers)
+    public float reduceDamage(Player player, PerkInstance instance)
     {
         return 0;
     }
 
-    public void onNewInstanceEntered(ServerPlayer player, List<Float> amplifiers, TimelessInstance instance)
+    public void onNewInstanceEntered(ServerPlayer player, PerkInstance instance, TimelessInstance timelessInstance)
     {
     }
 
-    public float addChestRolls(Player player, List<Float> amplifiers)
+    public float addChestRolls(Player player, PerkInstance instance)
     {
         return 0;
     }
 
-    public abstract List<MutableComponent> getItemTooltip(ItemStack stack, List<Float> amplifiers);
+    public abstract List<MutableComponent> getItemTooltip(ItemStack stack, PerkInstance instance);
 
-    public abstract List<MutableComponent> getShopTooltip(ItemStack stack, List<Float> amplifiers);
+    public abstract List<MutableComponent> getShopTooltip(ItemStack stack, PerkInstance instance);
 
-    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> amplifiers)
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, PerkInstance instance)
     {
         return List.of();
     }
 
+    public abstract List<String> getIds();
 }

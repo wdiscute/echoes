@@ -8,14 +8,13 @@ import com.wdiscute.echoes.timeless.SoulsApi;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessLootEntry;
 import com.wdiscute.echoes.timeless.TimelessManager;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -64,7 +63,7 @@ public class CasketBlock extends Block
 
             //add extra rolls from perks
             for (PerkInstance activePerk : activePerks)
-                rolls += activePerk.perk().addChestRolls(player, activePerk.amplifiers());
+                rolls += activePerk.perk().addChestRolls(player, activePerk);
 
             //get loot
             float baseSoulsToSpawn = 0;

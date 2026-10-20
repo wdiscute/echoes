@@ -1,8 +1,12 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.perks.*;
+import com.wdiscute.echoes.perk.generic.*;
+import com.wdiscute.echoes.perk.totem.RecoveryTotemPerk;
+import com.wdiscute.echoes.perk.unique.EchoBladePerk;
+import com.wdiscute.echoes.perk.unique.RamattraPerk;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -26,6 +30,9 @@ public interface ECPerks
 
     DeferredHolder<Perk, Perk> FLAT_REDUCE_DAMAGE_TAKEN = register("flat_reduce_damage_taken", FlatReduceDamageTakenPerk::new);
     DeferredHolder<Perk, Perk> INCREASE_TIME_ON_ENTERING_LEVEL = register("increase_time_on_entering_level", IncreaseTimeOnEnteringLevelPerk::new);
+
+    //totem
+    DeferredHolder<Perk, Perk> RECOVERY_TOTEM = register("recovery_totem", RecoveryTotemPerk::new);
 
 
     //fake perks

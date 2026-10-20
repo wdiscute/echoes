@@ -1,0 +1,151 @@
+{
+  "entries": [
+    {
+      "cost": [
+        {
+          "identifier": "echoes:prisma_shard"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": {
+                "cooldown": 4.0,
+                "cost": 0.25,
+                "heal": 20.0,
+                "range": 2.0
+              },
+              "perk": "echoes:recovery_totem"
+            }
+          ],
+          "echoes:rarity": "common"
+        },
+        "identifier": "echoes:recovery_totem_item"
+      },
+      "rarity": "common"
+    },
+    {
+      "cost": [
+        {
+          "count": 5,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 2,
+          "identifier": "echoes:lattice"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": {
+                "cooldown": 4.5,
+                "cost": 0.5,
+                "heal": 20.0,
+                "range": 2.0
+              },
+              "perk": "echoes:recovery_totem"
+            }
+          ],
+          "echoes:rarity": "uncommon"
+        },
+        "identifier": "echoes:recovery_totem_item"
+      },
+      "rarity": "uncommon"
+    },
+    {
+      "cost": [
+        {
+          "count": 15,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 5,
+          "identifier": "echoes:lattice"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": {
+                "cooldown": 5.0,
+                "cost": 1.0,
+                "heal": 20.0,
+                "range": 2.0
+              },
+              "perk": "echoes:recovery_totem"
+            }
+          ],
+          "echoes:rarity": "rare"
+        },
+        "identifier": "echoes:recovery_totem_item"
+      },
+      "rarity": "rare"
+    },
+    {
+      "cost": [
+        {
+          "count": 32,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 10,
+          "identifier": "echoes:lattice"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": {
+                "cooldown": 5.5,
+                "cost": 1.5,
+                "heal": 20.0,
+                "range": 2.0
+              },
+              "perk": "echoes:recovery_totem"
+            }
+          ],
+          "echoes:rarity": "epic"
+        },
+        "identifier": "echoes:recovery_totem_item"
+      },
+      "rarity": "epic"
+    },
+    {
+      "cost": [
+        {
+          "count": 64,
+          "identifier": "echoes:prisma_shard"
+        },
+        {
+          "count": 25,
+          "identifier": "echoes:lattice"
+        }
+      ],
+      "item": {
+        "data_components_patch": {
+          "echoes:perks": [
+            {
+              "amplifiers": {
+                "cooldown": 6.0,
+                "cost": 2.0,
+                "heal": 20.0,
+                "range": 2.0
+              },
+              "perk": "echoes:recovery_totem"
+            }
+          ],
+          "echoes:rarity": "legendary"
+        },
+        "identifier": "echoes:recovery_totem_item"
+      },
+      "rarity": "legendary"
+    }
+  ],
+  "has_upgrades": true,
+  "weight": 20
+}

@@ -1,28 +1,37 @@
 package com.wdiscute.echoes.entity.totem;
 
-import com.wdiscute.echoes.perks.TotemPerk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.mojang.serialization.Codec;
+import com.wdiscute.echoes.perk.totem.TotemPerk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.ValueHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class TotemEntity extends Entity
 {
-    PerkInstance perkInstance;
+    public Player player;
+    public PerkInstance perkInstance;
+    public int cooldown;
 
     public TotemEntity(EntityType<?> entityType, Level level)
     {
         super(entityType, level);
     }
 
+    public void setPerk(PerkInstance perk)
+    {
+        perkInstance = perk;
+    }
+
     @Override
     public void tick()
     {
         if(perkInstance != null && perkInstance.perk() instanceof TotemPerk perk)
-            perk.onTick(this, perkInstance.amplifiers());
+            perk.onTick(this, perkInstance);
 
         super.tick();
     }
@@ -37,11 +46,13 @@ public class TotemEntity extends Entity
     protected void readAdditionalSaveData(CompoundTag compoundTag)
     {
         perkInstance = ValueHelper.read("perk", PerkInstance.CODEC, compoundTag).orElse(null);
+        cooldown = ValueHelper.read("cooldown", Codec.INT, compoundTag).orElse(0);
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag)
     {
-        ValueHelper.store("perl", PerkInstance.CODEC, perkInstance, compoundTag);
+        ValueHelper.store("perk", PerkInstance.CODEC, perkInstance, compoundTag);
+        ValueHelper.store("cooldown", Codec.INT, cooldown, compoundTag);
     }
 }

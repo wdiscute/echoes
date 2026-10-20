@@ -31,8 +31,8 @@ public class SpecterEntity extends Entity
     private float previousRenderXRot;
     private float renderXRot;
 
-    public Vec3 previousRenderPosition;
-    public Vec3 renderPosition;
+    public Vec3 previousRenderPosition = Vec3.ZERO;
+    public Vec3 renderPosition = Vec3.ZERO;
 
     public SpecterEntity(EntityType<?> type, Level level)
     {

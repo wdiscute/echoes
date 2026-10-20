@@ -11,19 +11,20 @@ import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlockEntity;
 import com.wdiscute.echoes.entity.lantern.LanternEntity;
 import com.wdiscute.echoes.entity.specter.SpecterEntity;
-import com.wdiscute.echoes.network.ECCBAddLootPayload;
-import com.wdiscute.echoes.network.ECCBSetLootPayload;
 import com.wdiscute.echoes.network.ECCBPlaySoundPayload;
 import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -36,6 +37,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
@@ -93,18 +95,13 @@ public class TimelessInstance
             //if no players in isHub
             if (getPlayers(sl).isEmpty())
             {
-                if(grace > 0)
-                {
-                    grace--;
-                    return;
-                }
-
                 //if no linked instance, close
                 if (maybeInstance == null)
                     close(sl);
                 else
                     //if linked instance, delegate closing to the instance
-                    maybeInstance.attemptClose(sl);
+                    if (maybeInstance.phase == Phase.CLOSED)
+                        close(sl);
             }
         }
         //if not hub
@@ -117,10 +114,10 @@ public class TimelessInstance
                 return;
             }
 
-            //close if marked as finished (heart destroyed) and has no players
-            if (getPlayers(sl).isEmpty())
+            //close if marked as finished (heart destroyed) and has no players and grace has ended
+            if (getPlayers(sl).stream().filter(o -> !o.isSpectator()).findAny().isEmpty())
             {
-                if(grace > 0)
+                if (grace > 0)
                 {
                     grace--;
                     return;
@@ -137,7 +134,9 @@ public class TimelessInstance
 
         //remove players
         List<ServerPlayer> players = getPlayers(sl);
-        players.forEach(this::removePlayer);
+        List<MaybeStack> timelessLoot = new ArrayList<>();
+        for (ServerPlayer player : players)
+            removePlayer(player, timelessLoot);
 
         phase = Phase.CLOSED;
 
@@ -148,7 +147,7 @@ public class TimelessInstance
         {
             levelToReturn.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(portalPos), 6, portalPos);
             if (levelToReturn.getBlockEntity(portalPos) instanceof PortalBlockEntity pbe)
-                pbe.setLooting(loot);
+                pbe.setLooting(timelessLoot);
         }
     }
 
@@ -157,8 +156,11 @@ public class TimelessInstance
         return depth == 0;
     }
 
-    public void addLoot(ServerLevel sl, float lootCount)
+    public void addLoot(ServerLevel sl, Entity entity)
     {
+        Level level = entity.level();
+        float lootCount = (float) (entity.getData(ECDataAttachments.LOOT_COUNT) * ECConfig.GLOBAL_EXTRA_TIMELESS_LOOT_DROPS.getAsDouble());
+
         //if luck allows for the extra .X% to give an extra drop
         //example 5.3f will give 5 rolls + 30% chance of extra
         float extraDrop = lootCount % 1;
@@ -167,17 +169,18 @@ public class TimelessInstance
 
         for (int i = 0; i < lootCount; i++)
         {
-            loot = new ArrayList<>(loot);
-
             TimelessLootEntry randomLoot = TimelessLootEntry.getRandomLoot(sl.getRandom(), depth, false);
 
             if (randomLoot != null)
             {
-                //add random loot to instance loot
-                loot.add(randomLoot.stack());
-
-                //set notif to players
-                getPlayers(sl).forEach(o -> PacketDistributor.sendToPlayer(o, new ECCBAddLootPayload(randomLoot.stack(), true)));
+                ItemStack itemstack = randomLoot.stack().toStack();
+                for (int j = 0; j < itemstack.getCount(); j++)
+                {
+                    itemstack.set(ECDataComponents.TIMELESS, UUID.randomUUID());
+                    ItemEntity itementity = new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), itemstack.copyWithCount(1));
+                    itementity.setDefaultPickUpDelay();
+                    level.addFreshEntity(itementity);
+                }
             }
         }
     }
@@ -204,8 +207,7 @@ public class TimelessInstance
     public ResourceLocation portalDimension;
     public int depth;
     public UUID linkedInstance;
-    public List<MaybeStack> loot;
-    public ResourceLocation structure;
+    public TimelessLevelEntry timelessLevel;
 
     //converted to list for saving
     public final Map<BlockPos, BlockState> STORED_STATES = new HashMap<>();
@@ -214,7 +216,7 @@ public class TimelessInstance
     //non saved
     public int closingSequence = -1;
     public float heartAuraBoost = 0;
-    public int grace = 200;
+    public int grace = 2000;
 
     List<Pair<Vec3, Float>> auras = new ArrayList<>();
     List<Pair<Vec3, Float>> oldAuras = new ArrayList<>();
@@ -233,10 +235,11 @@ public class TimelessInstance
         this.portalDimension = portalDimension;
         this.portalPos = portalPos;
 
-        TimelessLevelEntry entry = spawnStructure(sl, TimelessData.get(player).levelsCompleted());
+        spawnStructure(sl, TimelessData.get(player).levelsCompleted());
 
         //set time to exit to ticks from json + config
-        this.timeToExit = sl.getGameTime() + (entry == null ? 1200 : entry.ticks()) + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
+        //this.timeToExit = sl.getGameTime() + (entry == null ? 1200 : entry.ticks()) + ECConfig.GLOBAL_EXTRA_TIMELESS_DURATION.get();
+        this.timeToExit = Long.MAX_VALUE;
 
         //if first level, no time limit
         if (depth == -1)
@@ -482,38 +485,27 @@ public class TimelessInstance
     public void killPlayer(ServerPlayer sp)
     {
         ServerLevel sl = sp.serverLevel();
-        //get non-spectator players
-        List<ServerPlayer> players = getPlayers(sl).stream().filter(o -> !o.isSpectator() && o != sp).toList();
 
         //if on hub on tutorial, kick out
         if (isHub() || depth == -1)
         {
-            removePlayer(sp);
-            if(getPlayers(sl).isEmpty())
+            if (getPlayers(sl).isEmpty())
                 grace = 0;
+            close(sp.serverLevel());
             return;
         }
 
-        //if there's another player still alive, set to spectator
-        if (!players.isEmpty() && !sp.isSpectator())
-        {
-            if (sp.getY() < -64)
-                sp.teleportTo(sp.getX(), -64, sp.getZ());
-            SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), MobSpawnType.TRIGGERED);
-            specter.setPlayer(sp);
-            specter.setPos(sp.position());
-            sp.setGameMode(GameType.SPECTATOR);
-        }
-        //otherwise remove all players
-        else
-        {
-            getPlayers(sl).forEach(this::removePlayer);
-            if(getPlayers(sl).isEmpty())
-                grace = 0;
-        }
+        //set to spectator
+        if (sp.getY() < -64)
+            sp.teleportTo(sp.getX(), -64, sp.getZ());
+        SpecterEntity specter = ECEntities.SPECTER.get().spawn(sl, sp.blockPosition(), MobSpawnType.TRIGGERED);
+        specter.setPlayer(sp);
+        specter.setPos(sp.position());
+        sp.setGameMode(GameType.SPECTATOR);
+        grace = 60;
     }
 
-    public void removePlayer(ServerPlayer player)
+    public void removePlayer(ServerPlayer player, List<MaybeStack> timelessLoot)
     {
         TimelessData data = player.getData(ECDataAttachments.TIMELESS_DATA);
 
@@ -526,23 +518,29 @@ public class TimelessInstance
         //add regen
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 5));
 
-        //client loot
-        PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(List.of()));
-
         //save overworld inventory and swap to timeless inventory
-        List<MaybeStack> currentInventory = data.inventory();
+        List<MaybeStack> storedInventory = data.inventory();
         List<MaybeStack> inventoryToStore = new ArrayList<>();
         for (int i = 0; i < 100; i++)
         {
-            ItemStack item = player.getInventory().getItem(i);
+            ItemStack stack = player.getInventory().getItem(i);
+
+            //add stack to loot if timeless
+            if (stack.has(ECDataComponents.TIMELESS))
+            {
+                stack.remove(ECDataComponents.TIMELESS);
+                timelessLoot.add(new MaybeStack(stack));
+                stack = ItemStack.EMPTY;
+            }
 
             //if item should be removed, set item to empty
-            if (item.is(ECTags.REMOVED_ON_TIMELESS_EXIT)) item = ItemStack.EMPTY;
+            if (stack.is(ECTags.REMOVED_ON_TIMELESS_EXIT))
+                stack = ItemStack.EMPTY;
 
-            inventoryToStore.add(new MaybeStack(item));
+            inventoryToStore.add(new MaybeStack(stack));
 
-            if (currentInventory.size() > i)
-                player.getInventory().setItem(i, currentInventory.get(i).toStack());
+            if (storedInventory.size() > i)
+                player.getInventory().setItem(i, storedInventory.get(i).toStack());
         }
 
         //make transition or use respawn point if no pos/dim is set
@@ -561,7 +559,7 @@ public class TimelessInstance
 
         //set currentStage to
         TimelessData.setCurrentStage(player, depth);
-        TimelessData.setMaxStage(player, Math.max(0, depth - ECConfig.LEVEL_PENALTY_FOR_DYING.get()));
+        TimelessData.setMaxStage(player, Math.max(-1, depth));
 
         //teleport player to timeless
         float x = sl.getRandom().nextFloat() / 2 - 0.5f;
@@ -576,12 +574,12 @@ public class TimelessInstance
         //get timeless server level
         ServerLevel sl = player.level().getServer().getLevel(Echoes.TIMELESS);
 
-        player.heal(3425);
+        //player.heal(3425);
 
         //load dimension + structures
         attemptLoad(player, sl, portalPos, portalDimension);
 
-        //if player is not on timeless, swap inventory
+        //if player is not on timeless (hub/previous level), swap inventory
         if (!player.level().dimension().equals(Echoes.TIMELESS))
         {
             //save overworld inventory and swap to timeless inventory
@@ -600,24 +598,10 @@ public class TimelessInstance
             //store overworld inventory
             TimelessData.setInventory(player, list);
         }
-        else
-        {
-            //add loot from current instance to next instance, in case 2 players enter new instance after slower player killed a mob
-            TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), player.blockPosition());
-            if (closest != null)
-            {
-                loot = new ArrayList<>(loot);
-                loot.addAll(closest.loot);
-                closest.loot = List.of();
-            }
-        }
 
         //trigger perks
         for (PerkInstance activePerk : Perk.getActivePerks(player, ItemStack.EMPTY))
-            activePerk.perk().onNewInstanceEntered(player, activePerk.amplifiers(), this);
-
-        //set client loot to instance loot
-        PacketDistributor.sendToPlayer(player, new ECCBSetLootPayload(loot));
+            activePerk.perk().onNewInstanceEntered(player, activePerk, this);
 
         //set time to exit
         TimelessData.setTimeToExit(player, getTimeToExit(sl));
@@ -642,6 +626,19 @@ public class TimelessInstance
 
         //teleport player to timeless
         trans.teleport(player);
+
+        if (depth != 0)
+        {
+            //display name
+            player.connection.send(new ClientboundSetTitleTextPacket(Component.empty()));
+            player.connection.send(new ClientboundSetSubtitleTextPacket(Component.translatable("echoes." + timelessLevel.id().toLanguageKey())));
+
+            //display depth
+            player.displayClientMessage(
+                    depth == -1 ? Component.literal("Depth ???") :
+                            Component.literal("Depth " + depth), true
+            );
+        }
     }
 
     public void flipBlock(ServerLevel sl, BlockPos bp)
@@ -771,23 +768,24 @@ public class TimelessInstance
 
     private TimelessLevelEntry spawnStructure(ServerLevel sl, Counter<ResourceLocation> levelsCompleted)
     {
-        //get template structure path
-        TimelessLevelEntry randomLevel = TimelessLevelEntry.HUB;
-        if (!isHub())
+        if (timelessLevel == TimelessLevelEntry.HUB && !isHub())
         {
-            randomLevel = TimelessLevelEntry.getRandomLevel(sl, levelsCompleted, depth);
+            //get template structure path
+            TimelessLevelEntry randomLevel = TimelessLevelEntry.HUB;
+            if (!isHub())
+            {
+                randomLevel = TimelessLevelEntry.getRandomLevel(sl, levelsCompleted, depth);
 
-            if (randomLevel == null)
-                return null;
+                if (randomLevel == null)
+                    return null;
+            }
+            timelessLevel = randomLevel;
         }
 
-        ResourceLocation template = randomLevel.id();
-        structure = template;
-
         //actually spawn structure
-        doSpawnStructure(sl, template.withSuffix("/sculk_"), true);
-        doSpawnStructure(sl, template.withSuffix("/prisma_"), false);
-        return randomLevel;
+        doSpawnStructure(sl, timelessLevel.id().withSuffix("/sculk_"), true);
+        doSpawnStructure(sl, timelessLevel.id().withSuffix("/prisma_"), false);
+        return timelessLevel;
     }
 
     private void doSpawnStructure(ServerLevel sl, ResourceLocation template, boolean sculk)
@@ -937,8 +935,7 @@ public class TimelessInstance
                             BlockPos portalPos,
                             int stage,
                             UUID nextInstance,
-                            List<MaybeStack> loot,
-                            ResourceLocation structure
+                            TimelessLevelEntry structure
     )
     {
         this.uuid = uuid;
@@ -953,8 +950,7 @@ public class TimelessInstance
         this.linkedInstance = nextInstance;
         storedStates.forEach(o -> STORED_STATES.put(o.first(), o.second()));
         FLIPPED_BLOCKS.addAll(flippedStates);
-        this.loot = loot;
-        this.structure = structure;
+        this.timelessLevel = structure;
     }
 
     public static TimelessInstance create(UUID uuid)
@@ -973,8 +969,7 @@ public class TimelessInstance
                 BlockPos.ZERO,
                 Integer.MIN_VALUE,
                 UUID.randomUUID(),
-                List.of(),
-                Echoes.MISSINGNO
+                TimelessLevelEntry.HUB
         );
     }
 
@@ -992,7 +987,6 @@ public class TimelessInstance
                     BlockPos.CODEC.optionalFieldOf("portal_pos", BlockPos.ZERO).forGetter(o -> o.portalPos),
                     Codec.INT.fieldOf("currentStage").forGetter(o -> o.depth),
                     UUIDUtil.CODEC.fieldOf("next_instance").forGetter(o -> o.linkedInstance),
-                    MaybeStack.CODEC.listOf().fieldOf("loot").forGetter(o -> o.loot),
-                    ResourceLocation.CODEC.fieldOf("structure").forGetter(o -> o.structure)
+                    TimelessLevelEntry.CODEC.fieldOf("level").forGetter(o -> o.timelessLevel)
             ).apply(instance, TimelessInstance::new));
 }

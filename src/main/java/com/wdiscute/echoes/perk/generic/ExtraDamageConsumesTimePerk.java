@@ -1,9 +1,10 @@
-package com.wdiscute.echoes.perks;
+package com.wdiscute.echoes.perk.generic;
 
-import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
+import com.wdiscute.echoes.perk.SimplePerk;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessManager;
-import com.wdiscute.echoes.upgrades.PerkInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,31 +20,37 @@ import java.util.List;
 public class ExtraDamageConsumesTimePerk extends SimplePerk
 {
     @Override
-    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, List<Float> value)
+    public float addDamage(@NotNull Player player, @NotNull ItemStack weapon, @NotNull Entity entity, PerkInstance instance)
     {
         TimelessInstance closest = TimelessManager.getClosest(player.level().getServer(), player.blockPosition());
         if(closest != null && closest.timeToExit != Long.MAX_VALUE && player.level() instanceof ServerLevel sl)
         {
-            closest.setTime(sl, closest.timeToExit - value.getFirst().longValue());
-            return value.get(1);
+            closest.setTime(sl, closest.timeToExit - (long) instance.getCost());
+            return instance.getDamage();
         }
         return 0;
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ItemStack stack, List<Float> value)
+    public List<MutableComponent> getTooltip(ItemStack stack, PerkInstance instance)
     {
         return List.of(Component.literal("Temporal Decay").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     @Override
-    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, List<Float> amplifiers)
+    public List<String> getIds()
+    {
+        return List.of(Perk.COST, Perk.DAMAGE);
+    }
+
+    @Override
+    public List<MutableComponent> getShopExtendedTooltip(ItemStack stack, PerkInstance instance)
     {
         List<MutableComponent> list = new ArrayList<>();
 
         list.add(Component.literal("Temporal Decay").withStyle(ChatFormatting.DARK_PURPLE).withStyle(ChatFormatting.BOLD));
-        list.add(Component.literal("Consumes " + formatAmplifier(amplifiers, 0) + " seconds"));
-        list.add(Component.literal("to do " + formatAmplifier(amplifiers, 1) + " damage"));
+        list.add(Component.literal("Consumes " + format(instance, Perk.COST) + " seconds"));
+        list.add(Component.literal("to do " + format(instance, Perk.DAMAGE) + " damage"));
 
         return list;
     }

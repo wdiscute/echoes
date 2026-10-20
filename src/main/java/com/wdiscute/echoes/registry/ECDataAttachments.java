@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;

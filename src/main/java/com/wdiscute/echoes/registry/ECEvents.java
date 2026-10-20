@@ -1,6 +1,5 @@
 package com.wdiscute.echoes.registry;
 
-import com.wdiscute.echoes.ECConfig;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
@@ -14,8 +13,8 @@ import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.TeleportTransition;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,6 +44,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -119,7 +119,7 @@ public class ECEvents
 
             for (PerkInstance perk : perks)
             {
-                float reduceDamage = perk.perk().reduceDamage(player, perk.amplifiers());
+                float reduceDamage = perk.perk().reduceDamage(player, perk);
                 float newDamage = Math.max(0, event.getNewDamage() - reduceDamage);
                 event.setNewDamage(newDamage);
             }
@@ -135,7 +135,7 @@ public class ECEvents
 
             for (PerkInstance perk : perks)
             {
-                float damageToAdd = perk.perk().addDamage(player, weaponItem, entityDamaged, perk.amplifiers());
+                float damageToAdd = perk.perk().addDamage(player, weaponItem, entityDamaged, perk);
                 event.setNewDamage(event.getNewDamage() + damageToAdd * player.getAttackStrengthScale(0));
             }
         }
@@ -177,7 +177,7 @@ public class ECEvents
                 if (closest != null)
                     closest.killPlayer(sp);
                 else
-                    TimelessManager.getOrCreate(sl.getServer(), UUID.randomUUID()).removePlayer(sp);
+                    TimelessManager.getOrCreate(sl.getServer(), UUID.randomUUID()).removePlayer(sp, new ArrayList<>());
             }
             return;
         }
@@ -185,7 +185,7 @@ public class ECEvents
         {
             TimelessInstance closest = TimelessManager.getClosest(sl.getServer(), entityKilled.blockPosition());
             if (closest != null)
-                closest.addLoot(sl, (float) (entityKilled.getData(ECDataAttachments.LOOT_COUNT) * ECConfig.GLOBAL_EXTRA_TIMELESS_LOOT_DROPS.getAsDouble()));
+                closest.addLoot(sl, entityKilled);
         }
 
         Player player = sl.getNearestPlayer(entityKilled, 1000);
@@ -207,7 +207,7 @@ public class ECEvents
 
         //trigger perks
         for (PerkInstance perk : perks)
-            perk.perk().onEntityKilled(player, weapon, entityKilled, perk.amplifiers());
+            perk.perk().onEntityKilled(player, weapon, entityKilled, perk);
 
         //spawn souls
         if (player != null)
@@ -266,18 +266,6 @@ public class ECEvents
                 ECCBPlaySoundPayload::handle
         );
 
-        registrar.playToClient(
-                ECCBAddLootPayload.TYPE,
-                ECCBAddLootPayload.STREAM_CODEC,
-                ECCBAddLootPayload::handle
-        );
-
-        registrar.playToClient(
-                ECCBSetLootPayload.TYPE,
-                ECCBSetLootPayload.STREAM_CODEC,
-                ECCBSetLootPayload::handle
-        );
-
         registrar.playToServer(
                 ECSBSpecterAttemptEmotePayload.TYPE,
                 ECSBSpecterAttemptEmotePayload.STREAM_CODEC,
@@ -303,5 +291,6 @@ public class ECEvents
     public static void addRegistry(NewRegistryEvent event)
     {
         event.register(Echoes.PERK_REGISTRY);
+        event.register(Echoes.ANOMALY_REGISTRY);
     }
 }

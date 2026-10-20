@@ -1,7 +1,7 @@
 package com.wdiscute.echoes.timeless;
 
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,10 +16,10 @@ public class SoulsApi
 
         List<PerkInstance> activePerks = Perk.getActivePerks(player, weapon);
         for (PerkInstance activePerk : activePerks)
-            soulsToSpawn += activePerk.perk().addFlatSouls(player, ItemStack.EMPTY, null, activePerk.amplifiers(), baseSouls);
+            soulsToSpawn += activePerk.perk().addFlatSouls(player, ItemStack.EMPTY, null, activePerk, baseSouls);
 
         for (PerkInstance activePerk : activePerks)
-            percentSouls += activePerk.perk().addPercentSouls(player, ItemStack.EMPTY, null, activePerk.amplifiers(), soulsToSpawn);
+            percentSouls += activePerk.perk().addPercentSouls(player, ItemStack.EMPTY, null, activePerk, soulsToSpawn);
 
         soulsToSpawn *= percentSouls;
         return (int) (player.level().getRandom().nextFloat() < soulsToSpawn % 1 ? soulsToSpawn + 1 : soulsToSpawn);

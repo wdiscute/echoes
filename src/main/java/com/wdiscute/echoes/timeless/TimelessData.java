@@ -3,8 +3,8 @@ package com.wdiscute.echoes.timeless;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.echoes.registry.ECDataAttachments;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.Counter;
 import com.wdiscute.utils.ExtraComposites;
 import com.wdiscute.utils.MaybeStack;
@@ -151,7 +151,7 @@ public record TimelessData(long timeToExit,
 
         float flatToReduce = 0;
         for (PerkInstance activePerk : activePerks)
-            flatToReduce = activePerk.perk().addFlatSoulsReduction(player, activePerk.amplifiers(), souls);
+            flatToReduce = activePerk.perk().addFlatSoulsReduction(player, activePerk, souls);
 
         souls = souls - flatToReduce;
         if(souls <= 0)
@@ -159,7 +159,7 @@ public record TimelessData(long timeToExit,
 
         float percentToReduce = 0;
         for (PerkInstance activePerk : activePerks)
-            percentToReduce = activePerk.perk().addPercentSoulsReduction(player, activePerk.amplifiers(), souls);
+            percentToReduce = activePerk.perk().addPercentSoulsReduction(player, activePerk, souls);
 
         percentToReduce = Math.clamp(100 - percentToReduce, 0, 100) / 100f;
 

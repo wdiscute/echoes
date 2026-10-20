@@ -10,27 +10,27 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                4.0
-              ],
+              "amplifiers": {
+                "damage": 4.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                4.0,
-                4.0
-              ],
+              "amplifiers": {
+                "cost": 4.0,
+                "damage": 4.0
+              },
               "perk": "echoes:extra_damage_consumes_souls"
             },
             {
-              "amplifiers": [
-                4.0,
-                4.0,
-                4.0,
-                2.0,
-                0.6,
-                0.5
-              ],
+              "amplifiers": {
+                "echo_damage": 4.0,
+                "echo_extra_damage": 4.0,
+                "echo_souls_cost": 2.0,
+                "prisma_damage": 4.0,
+                "prisma_souls_flat": 0.5,
+                "prisma_souls_percentage": 0.6
+              },
               "perk": "echoes:echo_blade"
             }
           ],
@@ -55,27 +55,27 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                5.0
-              ],
+              "amplifiers": {
+                "damage": 5.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                4.0,
-                6.0
-              ],
+              "amplifiers": {
+                "cost": 4.0,
+                "damage": 6.0
+              },
               "perk": "echoes:extra_damage_consumes_souls"
             },
             {
-              "amplifiers": [
-                5.0,
-                5.0,
-                6.0,
-                3.0,
-                0.8,
-                1.0
-              ],
+              "amplifiers": {
+                "echo_damage": 5.0,
+                "echo_extra_damage": 6.0,
+                "echo_souls_cost": 3.0,
+                "prisma_damage": 5.0,
+                "prisma_souls_flat": 1.0,
+                "prisma_souls_percentage": 0.8
+              },
               "perk": "echoes:echo_blade"
             }
           ],
@@ -100,27 +100,27 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                6.0
-              ],
+              "amplifiers": {
+                "damage": 6.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                4.0,
-                8.0
-              ],
+              "amplifiers": {
+                "cost": 4.0,
+                "damage": 8.0
+              },
               "perk": "echoes:extra_damage_consumes_souls"
             },
             {
-              "amplifiers": [
-                6.0,
-                6.0,
-                8.0,
-                4.0,
-                1.0,
-                1.5
-              ],
+              "amplifiers": {
+                "echo_damage": 6.0,
+                "echo_extra_damage": 8.0,
+                "echo_souls_cost": 4.0,
+                "prisma_damage": 6.0,
+                "prisma_souls_flat": 1.5,
+                "prisma_souls_percentage": 1.0
+              },
               "perk": "echoes:echo_blade"
             }
           ],
@@ -145,27 +145,27 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                7.0
-              ],
+              "amplifiers": {
+                "damage": 7.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                4.0,
-                10.0
-              ],
+              "amplifiers": {
+                "cost": 4.0,
+                "damage": 10.0
+              },
               "perk": "echoes:extra_damage_consumes_souls"
             },
             {
-              "amplifiers": [
-                7.0,
-                7.0,
-                10.0,
-                5.0,
-                1.2,
-                2.0
-              ],
+              "amplifiers": {
+                "echo_damage": 7.0,
+                "echo_extra_damage": 10.0,
+                "echo_souls_cost": 5.0,
+                "prisma_damage": 7.0,
+                "prisma_souls_flat": 2.0,
+                "prisma_souls_percentage": 1.2
+              },
               "perk": "echoes:echo_blade"
             }
           ],
@@ -190,27 +190,27 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                8.0
-              ],
+              "amplifiers": {
+                "damage": 8.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                4.0,
-                12.0
-              ],
+              "amplifiers": {
+                "cost": 4.0,
+                "damage": 12.0
+              },
               "perk": "echoes:extra_damage_consumes_souls"
             },
             {
-              "amplifiers": [
-                8.0,
-                8.0,
-                12.0,
-                6.0,
-                2.0,
-                5.0
-              ],
+              "amplifiers": {
+                "echo_damage": 8.0,
+                "echo_extra_damage": 12.0,
+                "echo_souls_cost": 6.0,
+                "prisma_damage": 8.0,
+                "prisma_souls_flat": 5.0,
+                "prisma_souls_percentage": 2.0
+              },
               "perk": "echoes:echo_blade"
             }
           ],

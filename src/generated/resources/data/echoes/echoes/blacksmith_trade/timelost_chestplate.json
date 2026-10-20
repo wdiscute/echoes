@@ -14,15 +14,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                0.2
-              ],
+              "amplifiers": {
+                "value": 0.2
+              },
               "perk": "echoes:flat_reduce_damage_taken"
             },
             {
-              "amplifiers": [
-                500.0
-              ],
+              "amplifiers": {
+                "value": 500.0
+              },
               "perk": "echoes:increase_time_on_entering_level"
             }
           ],
@@ -47,15 +47,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                0.4
-              ],
+              "amplifiers": {
+                "value": 0.4
+              },
               "perk": "echoes:flat_reduce_damage_taken"
             },
             {
-              "amplifiers": [
-                800.0
-              ],
+              "amplifiers": {
+                "value": 800.0
+              },
               "perk": "echoes:increase_time_on_entering_level"
             }
           ],
@@ -80,15 +80,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                0.6
-              ],
+              "amplifiers": {
+                "value": 0.6
+              },
               "perk": "echoes:flat_reduce_damage_taken"
             },
             {
-              "amplifiers": [
-                1100.0
-              ],
+              "amplifiers": {
+                "value": 1100.0
+              },
               "perk": "echoes:increase_time_on_entering_level"
             }
           ],
@@ -113,15 +113,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                0.8
-              ],
+              "amplifiers": {
+                "value": 0.8
+              },
               "perk": "echoes:flat_reduce_damage_taken"
             },
             {
-              "amplifiers": [
-                1400.0
-              ],
+              "amplifiers": {
+                "value": 1400.0
+              },
               "perk": "echoes:increase_time_on_entering_level"
             }
           ],
@@ -146,15 +146,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                1.0
-              ],
+              "amplifiers": {
+                "value": 1.0
+              },
               "perk": "echoes:flat_reduce_damage_taken"
             },
             {
-              "amplifiers": [
-                1700.0
-              ],
+              "amplifiers": {
+                "value": 1700.0
+              },
               "perk": "echoes:increase_time_on_entering_level"
             }
           ],

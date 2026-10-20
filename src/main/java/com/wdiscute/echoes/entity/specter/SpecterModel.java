@@ -221,6 +221,6 @@ public class SpecterModel extends HierarchicalModel<SpecterEntity>
     @Override
     public ModelPart root()
     {
-        return root();
+        return root;
     }
 }

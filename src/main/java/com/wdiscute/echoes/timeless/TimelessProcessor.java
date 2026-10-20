@@ -2,6 +2,8 @@ package com.wdiscute.echoes.timeless;
 
 import com.mojang.datafixers.util.Either;
 import com.wdiscute.echoes.ECTags;
+import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.Rarity;
 import com.wdiscute.echoes.blocks.display.DisplayBlock;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
@@ -9,10 +11,7 @@ import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.entity.corpse.TimelessCorpseEntity;
 import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
 import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
-import com.wdiscute.echoes.registry.ECBlocks;
-import com.wdiscute.echoes.registry.ECDataAttachments;
-import com.wdiscute.echoes.registry.ECDataEntries;
-import com.wdiscute.echoes.registry.ECEntities;
+import com.wdiscute.echoes.registry.*;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.BlockPos;
@@ -29,6 +28,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 //todo rework this into a proper registry stop being lazy
 public class TimelessProcessor
@@ -95,7 +96,13 @@ public class TimelessProcessor
                 else if (state.getValue(TimelessMarkerBlock.FACING).equals(Direction.EAST))
                     corpse.setYRot(270);
 
-                corpse.setStack(ECDataEntries.STARTER_ITEM.get().toStack());
+                Optional<BlacksmithTrade> optional = sl.registryAccess().registryOrThrow(Echoes.BLACKSMITH_TRADE_KEY).getOptional(ECDataEntries.STARTER_ITEM.get());
+                optional.ifPresent(trade ->
+                {
+                    ItemStack stack = trade.getBase().item().toStack();
+                    stack.set(ECDataComponents.TRADE_INFO.get(), new Utils.Duo<>(Rarity.COMMON, ECDataEntries.STARTER_ITEM.get()));
+                    corpse.setStack(stack);
+                });
                 sl.addFreshEntityWithPassengers(corpse);
             }
 

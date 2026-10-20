@@ -2,13 +2,14 @@ package com.wdiscute.echoes.datagen;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.Rarity;
+import com.wdiscute.echoes.perk.unique.EchoBladePerk;
 import com.wdiscute.echoes.registry.ECBlocks;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.registry.ECPerks;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.Perk;
+import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
 import net.minecraft.core.Holder;
@@ -22,10 +23,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
@@ -39,6 +37,29 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
 
     private static void bootstrap(BootstrapContext<BlacksmithTrade> context)
     {
+        //
+        //  ,--.           ,--.          ,--.               ,--.
+        //,-'  '-. ,--.--. `--' ,--,--,  |  |,-.   ,---.  ,-'  '-.  ,---.
+        //'-.  .-' |  .--' ,--. |      \ |     /  | .-. : '-.  .-' (  .-'
+        //  |  |   |  |    |  | |  ||  | |  \  \  \   --.   |  |   .-'  `)
+        //  `--'   `--'    `--' `--''--' `--'`--'  `----'   `--'   `----'
+        //
+
+        allRarities(context, ECItems.RECOVERY_TOTEM_ITEM.get(),
+                List.of(
+                        new RaritifiedCost(ECItems.PRISMA_SHARD.get(), new RarityValues(1, 5, 15, 32, 64)),
+                        new RaritifiedCost(ECItems.LATTICE.get(), new RarityValues(0, 2, 5, 10, 25))
+                ),
+
+                new RaritifiedPerk(ECPerks.RECOVERY_TOTEM,
+                        new RarityValues(Perk.COST, 0.25f, 0.5F, 1, 1.5f, 2),
+                        new RarityValues(Perk.HEAL, 20, 20, 20, 20, 20),
+                        new RarityValues(Perk.COOLDOWN, 4F, 4.5F, 5F, 5.5F, 6F),
+                        new RarityValues(Perk.RANGE, 2, 2, 2, 2, 2)
+                )
+
+        );
+
 
         //
         //
@@ -66,6 +87,14 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 new MaybeStack(ECItems.ROT_BRAIN.get(), 4), new MaybeStack(ECItems.HOLLOWED_SPINE.get(), 4));
 
 
+        //
+        //
+        //,--.   ,--.  ,---.   ,--,--.  ,---.   ,---.  ,--,--,   ,---.
+        //|  |.'.|  | | .-. : ' ,-.  | | .-. | | .-. | |      \ (  .-'
+        //|   .'.   | \   --. \ '-'  | | '-' ' ' '-' ' |  ||  | .-'  `)
+        //'--'   '--'  `----'  `--`--' |  |-'   `---'  `--''--' `----'
+        //                             `--'
+
         //echo/prisma blade
         allRarities(context, ECItems.ECHO_BLADE.get(),
                 List.of(
@@ -74,28 +103,28 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 ),
 
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE,
-                        new RarityValues(4F, 5F, 6F, 7F, 8F)),
+                        new RarityValues(Perk.DAMAGE, 4F, 5F, 6F, 7F, 8F)),
 
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS,
-                        new RarityValues(4f, 4f, 4f, 4f, 4f),
-                        new RarityValues(4F, 6F, 8F, 10F, 12F)
+                        new RarityValues(Perk.COST, 4f, 4f, 4f, 4f, 4f),
+                        new RarityValues(Perk.DAMAGE, 4F, 6F, 8F, 10F, 12F)
                 ),
 
                 new RaritifiedPerk(ECPerks.ECHO_BLADE,
                         //flat damage echo
-                        new RarityValues(4F, 5F, 6F, 7F, 8F),
+                        new RarityValues(EchoBladePerk.ECHO_DAMAGE, 4F, 5F, 6F, 7F, 8F),
                         //flat damage prisma
-                        new RarityValues(4F, 5F, 6F, 7F, 8F),
+                        new RarityValues(EchoBladePerk.PRISMA_DAMAGE, 4F, 5F, 6F, 7F, 8F),
 
                         //echo extra damage when consuming soul
-                        new RarityValues(4F, 6F, 8F, 10F, 12F),
+                        new RarityValues(EchoBladePerk.ECHO_EXTRA_DAMAGE, 4F, 6F, 8F, 10F, 12F),
                         //echo souls consumed
-                        new RarityValues(2F, 3F, 4F, 5F, 6F),
+                        new RarityValues(EchoBladePerk.ECHO_SOULS_COST, 2F, 3F, 4F, 5F, 6F),
 
                         //extra souls gathered percentage
-                        new RarityValues(0.6F, 0.8F, 1F, 1.2F, 2F),
+                        new RarityValues(EchoBladePerk.PRISMA_SOULS_PERCENTAGE, 0.6F, 0.8F, 1F, 1.2F, 2F),
                         //extra souls gathered flat
-                        new RarityValues(0.5F, 1F, 1.5F, 2F, 5F)
+                        new RarityValues(EchoBladePerk.PRISMA_SOULS_FLAT, 0.5F, 1F, 1.5F, 2F, 5F)
                 )
         );
 
@@ -121,7 +150,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                 ),
 
                 new RaritifiedPerk(ECPerks.RAMATTRA,
-                        new RarityValues(1, 2, 3, 4, 5)
+                        new RarityValues(Perk.DAMAGE, 1, 2, 3, 4, 5)
                 )
         );
 
@@ -133,10 +162,10 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.ROT_BRAIN.get(), new RarityValues(1, 1, 1, 1, 1))
                 ),
 
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(6, 8, 10, 15, 20)),
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(Perk.DAMAGE, 6, 8, 10, 15, 20)),
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_TIME,
-                        new RarityValues(20, 20, 20, 20, 20),
-                        new RarityValues(1, 2, 3, 4, 5)
+                        new RarityValues(Perk.COST, 20, 20, 20, 20, 20),
+                        new RarityValues(Perk.DAMAGE, 1, 2, 3, 4, 5)
                 )
         );
 
@@ -147,7 +176,7 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.HOLLOWED_SPINE.get(), new RarityValues(0, 2, 5, 10, 25))
                 ),
 
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(12, 16, 20, 25, 30))
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(Perk.DAMAGE,12, 16, 20, 25, 30))
         );
 
         //
@@ -170,12 +199,12 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(4, 5, 6, 7, 8)),
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(Perk.DAMAGE, 4, 5, 6, 7, 8)),
                 new RaritifiedPerk(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS,
                         //souls cost
-                        new RarityValues(4f, 4f, 4f, 4f, 4f),
+                        new RarityValues(Perk.COST, 4f, 4f, 4f, 4f, 4f),
                         //extra damage
-                        new RarityValues(4f, 5f, 6f, 7f, 10f)
+                        new RarityValues(Perk.DAMAGE, 4f, 5f, 6f, 7f, 10f)
                 )
         );
 
@@ -186,8 +215,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(3, 4, 5, 6, 7)),
-                new RaritifiedPerk(ECPerks.EXTRA_TICKS_PER_KILL, new RarityValues(200, 300, 400, 500, 600))
+                new RaritifiedPerk(ECPerks.EXTRA_DAMAGE, new RarityValues(Perk.DAMAGE,3, 4, 5, 6, 7)),
+                new RaritifiedPerk(ECPerks.EXTRA_TICKS_PER_KILL, new RarityValues(Perk.VALUE,200, 300, 400, 500, 600))
         );
 
         //
@@ -204,8 +233,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
-                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(Perk.VALUE,0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(Perk.VALUE,500, 800, 1100, 1400, 1700))
         );
 
         allRarities(context, ECItems.TIMELOST_CHESTPLATE.get(),
@@ -214,8 +243,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
-                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(Perk.VALUE,0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(Perk.VALUE,500, 800, 1100, 1400, 1700))
         );
 
         allRarities(context, ECItems.TIMELOST_LEGGINGS.get(),
@@ -224,8 +253,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
-                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(Perk.VALUE,0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(Perk.VALUE,500, 800, 1100, 1400, 1700))
         );
 
         allRarities(context, ECItems.TIMELOST_BOOTS.get(),
@@ -234,8 +263,8 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
                         new RaritifiedCost(ECItems.CRYSTAL_CORE.get(), new RarityValues(1, 5, 15, 32, 64))
                 ),
 
-                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(0.2f, 0.4f, 0.6f, 0.8f, 1f)),
-                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(500, 800, 1100, 1400, 1700))
+                new RaritifiedPerk(ECPerks.FLAT_REDUCE_DAMAGE_TAKEN, new RarityValues(Perk.VALUE,0.2f, 0.4f, 0.6f, 0.8f, 1f)),
+                new RaritifiedPerk(ECPerks.INCREASE_TIME_ON_ENTERING_LEVEL, new RarityValues(Perk.VALUE,500, 800, 1100, 1400, 1700))
         );
     }
 
@@ -262,22 +291,30 @@ public class DGECBlacksmithTradesProvider extends DatapackBuiltinEntriesProvider
     {
         public PerkInstance makePerkInstance(Rarity rarity)
         {
-            List<Float> valuesForRarity = new ArrayList<>();
+            Map<String, Float> valuesForRarity = new HashMap<>();
 
-            for (RarityValues rarityValues : rarityValues)
+            for (RarityValues value : rarityValues)
             {
-                valuesForRarity.add(rarityValues.getForRarity(rarity));
+                if (value.id.isEmpty())
+                    throw new IllegalStateException("tried to make perk instance with empty id: " + perk.value());
+                valuesForRarity.put(value.id, value.getForRarity(rarity));
             }
+
 
             return new PerkInstance(perk.value(), valuesForRarity);
         }
     }
 
-    private record RarityValues(float common, float uncommon, float rare, float epic, float legendary)
+    private record RarityValues(String id, float common, float uncommon, float rare, float epic, float legendary)
     {
-        public RarityValues of(float common, float uncommon, float rare, float epic, float legendary)
+        public RarityValues(float common, float uncommon, float rare, float epic, float legendary)
         {
-            return new RarityValues(common, uncommon, rare, epic, legendary);
+            this("", common, uncommon, rare, epic, legendary);
+        }
+
+        public RarityValues of(String id, float common, float uncommon, float rare, float epic, float legendary)
+        {
+            return new RarityValues(id, common, uncommon, rare, epic, legendary);
         }
 
         float getForRarity(Rarity rarity)

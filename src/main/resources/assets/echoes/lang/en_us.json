@@ -1,9 +1,17 @@
 {
   "itemGroup.echoes.echoes" : "Timeless Echoes",
 
+  "echoes.timeless" : "<ltcolor>c=FFAA00;c=FF55FF;c=FFFF55;c=FF55FF;c=55cdff;Timeless</ltcolor>",
 
 
 
+  "echoes.echoes.timeless/starter" : "Somewhere in-between",
+  "echoes.echoes.timeless/first" : "The Outskirts",
+  "echoes.echoes.timeless/second" : "Stairways",
+  "echoes.echoes.timeless/third" : "The Waning Crescent",
+  "echoes.echoes.timeless/forth" : "Hanging Reflections",
+  "echoes.echoes.timeless/fifth" : "Lost Steps",
+  "echoes.echoes.timeless/sixth" : "Split Paths",
 
 
   "section.echoes.general" : "Must Have",
@@ -12,8 +20,6 @@
   "block.echoes.display" : "Blacksmith Display",
   "block.echoes.timeless_marker" : "Timeless Marker",
   "item.echoes.soul_heart_container" : "Soul Heart Container",
-
-
 
 
 

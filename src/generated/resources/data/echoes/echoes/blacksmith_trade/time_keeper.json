@@ -14,15 +14,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                3.0
-              ],
+              "amplifiers": {
+                "damage": 3.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                200.0
-              ],
+              "amplifiers": {
+                "value": 200.0
+              },
               "perk": "echoes:extra_ticks_per_kill"
             }
           ],
@@ -47,15 +47,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                4.0
-              ],
+              "amplifiers": {
+                "damage": 4.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                300.0
-              ],
+              "amplifiers": {
+                "value": 300.0
+              },
               "perk": "echoes:extra_ticks_per_kill"
             }
           ],
@@ -80,15 +80,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                5.0
-              ],
+              "amplifiers": {
+                "damage": 5.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                400.0
-              ],
+              "amplifiers": {
+                "value": 400.0
+              },
               "perk": "echoes:extra_ticks_per_kill"
             }
           ],
@@ -113,15 +113,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                6.0
-              ],
+              "amplifiers": {
+                "damage": 6.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                500.0
-              ],
+              "amplifiers": {
+                "value": 500.0
+              },
               "perk": "echoes:extra_ticks_per_kill"
             }
           ],
@@ -146,15 +146,15 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                7.0
-              ],
+              "amplifiers": {
+                "damage": 7.0
+              },
               "perk": "echoes:extra_damage"
             },
             {
-              "amplifiers": [
-                600.0
-              ],
+              "amplifiers": {
+                "value": 600.0
+              },
               "perk": "echoes:extra_ticks_per_kill"
             }
           ],

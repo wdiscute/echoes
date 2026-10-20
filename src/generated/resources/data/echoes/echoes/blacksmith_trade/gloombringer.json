@@ -10,9 +10,9 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                12.0
-              ],
+              "amplifiers": {
+                "damage": 12.0
+              },
               "perk": "echoes:extra_damage"
             }
           ],
@@ -37,9 +37,9 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                16.0
-              ],
+              "amplifiers": {
+                "damage": 16.0
+              },
               "perk": "echoes:extra_damage"
             }
           ],
@@ -64,9 +64,9 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                20.0
-              ],
+              "amplifiers": {
+                "damage": 20.0
+              },
               "perk": "echoes:extra_damage"
             }
           ],
@@ -91,9 +91,9 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                25.0
-              ],
+              "amplifiers": {
+                "damage": 25.0
+              },
               "perk": "echoes:extra_damage"
             }
           ],
@@ -118,9 +118,9 @@
         "data_components_patch": {
           "echoes:perks": [
             {
-              "amplifiers": [
-                30.0
-              ],
+              "amplifiers": {
+                "damage": 30.0
+              },
               "perk": "echoes:extra_damage"
             }
           ],

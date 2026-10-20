@@ -1,12 +1,10 @@
 package com.wdiscute.echoes.item;
 
 import com.wdiscute.echoes.entity.totem.TotemEntity;
-import com.wdiscute.echoes.perks.TotemPerk;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.timeless.TimelessData;
-import com.wdiscute.echoes.upgrades.Perk;
-import com.wdiscute.echoes.upgrades.PerkInstance;
+import com.wdiscute.echoes.perk.PerkInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -32,16 +30,15 @@ public class TotemItem extends Item
 
         for (PerkInstance instance : perks)
         {
-            if(instance.perk() instanceof TotemPerk totemPerk)
+            //if player has enough souls to spawn totem
+            if (TimelessData.consumeSouls(player, instance.amplifiers().get(0)))
             {
-                //if player has enough souls to spawn totem
-                if(TimelessData.consumeSouls(player, instance.amplifiers().get(0)))
+                TotemEntity totemEntity = ECEntities.TOTEM.get().create(level);
+
+                if (totemEntity != null)
                 {
-                    TotemEntity totemEntity = ECEntities.TOTEM.get().create(level);
-
-
-
-
+                    totemEntity.setPerk(instance);
+                    level.addFreshEntity(totemEntity);
                 }
             }
         }

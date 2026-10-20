@@ -1,9 +1,10 @@
 package com.wdiscute.echoes.item;
 
+import com.wdiscute.echoes.perk.Perk;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECPerks;
-import com.wdiscute.echoes.upgrades.PerkInstance;
-import com.wdiscute.echoes.perks.EchoBladePerk;
+import com.wdiscute.echoes.perk.PerkInstance;
+import com.wdiscute.echoes.perk.unique.EchoBladePerk;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -14,9 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class EchoBladeItem extends TimelessWeaponItem
 {
@@ -62,25 +61,27 @@ public class EchoBladeItem extends TimelessWeaponItem
             //swap is_prisma_blade
             stack.set(ECDataComponents.IS_PRISMA_BLADE, !isPrisma);
 
-            PerkInstance perk = echoBladePerk.get();
-            List<Float> values = perk.amplifiers();
+            PerkInstance instance = echoBladePerk.get();
 
             List<PerkInstance> newPerks = new ArrayList<>();
 
             if (!isPrisma)
             {
                 entity.playSound(SoundEvents.BEACON_ACTIVATE, 1, 2);
-                newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE, values.get(1)));
-                newPerks.add(new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS, values.get(4)));
-                newPerks.add(new PerkInstance(ECPerks.EXTRA_FLAT_SOULS, values.get(5)));
-                newPerks.add(perk);
+                newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE, Perk.DAMAGE, instance.get(EchoBladePerk.PRISMA_DAMAGE)));
+                newPerks.add(new PerkInstance(ECPerks.EXTRA_PERCENTAGE_SOULS, Perk.VALUE, instance.get(EchoBladePerk.PRISMA_SOULS_PERCENTAGE)));
+                newPerks.add(new PerkInstance(ECPerks.EXTRA_FLAT_SOULS, Perk.VALUE, instance.get(EchoBladePerk.PRISMA_SOULS_FLAT)));
+                newPerks.add(instance);
             }
             else
             {
                 entity.playSound(SoundEvents.BEACON_DEACTIVATE, 1, 2);
-                newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE, values.get(0)));
-                newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS, values.get(2), values.get(3)));
-                newPerks.add(perk);
+                newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE, Perk.DAMAGE, instance.get(EchoBladePerk.ECHO_DAMAGE)));
+                newPerks.add(new PerkInstance(ECPerks.EXTRA_DAMAGE_CONSUMES_SOULS, Map.of(
+                        Perk.COST, instance.get(EchoBladePerk.ECHO_SOULS_COST),
+                        Perk.DAMAGE, instance.get(EchoBladePerk.ECHO_EXTRA_DAMAGE)
+                )));
+                newPerks.add(instance);
             }
 
             stack.set(ECDataComponents.PERKS, newPerks);

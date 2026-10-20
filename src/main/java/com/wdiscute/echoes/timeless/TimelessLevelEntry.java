@@ -11,10 +11,10 @@ import net.minecraft.server.level.ServerLevel;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record TimelessLevelEntry(ResourceLocation id, int preferredLevel, int weight, int levelRange, int ticks, int maxUses)
+public record TimelessLevelEntry(ResourceLocation id, int preferredLevel, int weight, int levelRange, int maxUses)
 {
-    public static final TimelessLevelEntry HUB = new TimelessLevelEntry(Echoes.rl("timeless/hub"), 0, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-    public static final TimelessLevelEntry TUTORIAL = new TimelessLevelEntry(Echoes.rl("timeless/starter"), 0, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final TimelessLevelEntry HUB = new TimelessLevelEntry(Echoes.rl("timeless/hub"), 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final TimelessLevelEntry TUTORIAL = new TimelessLevelEntry(Echoes.rl("timeless/starter"), 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     public static final Codec<TimelessLevelEntry> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -22,8 +22,7 @@ public record TimelessLevelEntry(ResourceLocation id, int preferredLevel, int we
                     Codec.INT.optionalFieldOf("preferred_level", 0).forGetter(TimelessLevelEntry::preferredLevel),
                     Codec.INT.fieldOf("weight").forGetter(TimelessLevelEntry::weight),
                     Codec.INT.optionalFieldOf("level_range", 0).forGetter(TimelessLevelEntry::levelRange),
-                    Codec.INT.optionalFieldOf("ticks", 0).forGetter(TimelessLevelEntry::ticks),
-                    Codec.INT.optionalFieldOf("max_uses_per_player", Integer.MAX_VALUE).forGetter(TimelessLevelEntry::ticks)
+                    Codec.INT.optionalFieldOf("max_uses_per_player", Integer.MAX_VALUE).forGetter(TimelessLevelEntry::maxUses)
             ).apply(instance, TimelessLevelEntry::new)
     );
 
