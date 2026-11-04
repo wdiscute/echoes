@@ -1,6 +1,6 @@
 package com.wdiscute.echoes;
 
-import com.wdiscute.echoes.entity.specter.SpecterEmote;
+import com.wdiscute.echoes.entity.misc.specter.SpecterEmote;
 import com.wdiscute.echoes.network.ECSBSpecterAttemptEmotePayload;
 import com.wdiscute.echoes.registry.ECKeyMappings;
 import com.wdiscute.echoes.timeless.TimelessData;

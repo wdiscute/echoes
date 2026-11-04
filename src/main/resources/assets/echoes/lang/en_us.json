@@ -1,6 +1,10 @@
 {
   "itemGroup.echoes.echoes" : "Timeless Echoes",
 
+  "biome.echoes.timeless" : "Timeless",
+
+
+
   "echoes.timeless" : "<ltcolor>c=FFAA00;c=FF55FF;c=FFFF55;c=FF55FF;c=55cdff;Timeless</ltcolor>",
 
 

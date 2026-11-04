@@ -1,6 +1,6 @@
 package com.wdiscute.echoes.item;
 
-import com.wdiscute.echoes.entity.totem.TotemEntity;
+import com.wdiscute.echoes.entity.misc.totem.TotemEntity;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.timeless.TimelessData;

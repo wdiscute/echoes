@@ -2,16 +2,18 @@ package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
+import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderEntity;
+import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderRenderer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
-import com.wdiscute.echoes.entity.soul.SoulEntity;
-import com.wdiscute.echoes.entity.specter.SpecterEntity;
-import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
+import com.wdiscute.echoes.entity.misc.soul.SoulEntity;
+import com.wdiscute.echoes.entity.misc.specter.SpecterEntity;
+import com.wdiscute.echoes.entity.npc.trader.SoulTraderEntity;
 import com.wdiscute.echoes.network.*;
 import com.wdiscute.echoes.timeless.SoulsApi;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.timeless.TimelessManager;
 import com.wdiscute.echoes.timeless.TimelessInstance;
-import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
+import com.wdiscute.echoes.entity.misc.heart.SculkHeartEntity;
 import com.wdiscute.echoes.upgrades.BlacksmithTrade;
 import com.wdiscute.echoes.perk.Perk;
 import com.wdiscute.echoes.perk.PerkInstance;
@@ -235,8 +237,17 @@ public class ECEvents
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event)
     {
-        event.put(ECEntities.SOUL_TRADER.get(), SoulTraderEntity.createAttributes().build());
+        //misc
         event.put(ECEntities.SCULK_HEART.get(), SculkHeartEntity.createAttributes().build());
+
+        //npc
+        event.put(ECEntities.SOUL_TRADER.get(), SoulTraderEntity.createAttributes().build());
+
+        //bosses
+        event.put(ECEntities.SCULKED_TRADER.get(), SculkedTraderEntity.createAttributes().build());
+
+
+        //enemies
         event.put(ECEntities.SCULKED.get(), SculkedEntity.createAttributes().build());
         event.put(ECEntities.HOLLOWED.get(), AbstractSkeleton.createAttributes().build());
     }
@@ -292,5 +303,6 @@ public class ECEvents
     {
         event.register(Echoes.PERK_REGISTRY);
         event.register(Echoes.ANOMALY_REGISTRY);
+        event.register(Echoes.SWAPPER_REGISTRY);
     }
 }

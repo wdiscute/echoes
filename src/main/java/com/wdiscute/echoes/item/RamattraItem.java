@@ -1,6 +1,6 @@
 package com.wdiscute.echoes.item;
 
-import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
+import com.wdiscute.echoes.entity.misc.unleashedsoul.UnleashedSoulEntity;
 import com.wdiscute.echoes.registry.ECDataComponents;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.registry.ECPerks;

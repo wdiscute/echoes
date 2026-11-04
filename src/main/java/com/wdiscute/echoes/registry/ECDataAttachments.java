@@ -5,13 +5,18 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.timeless.TimelessData;
 import com.wdiscute.echoes.timeless.TimelessHearts;
 import com.wdiscute.echoes.perk.PerkInstance;
+import com.wdiscute.echoes.timeless.TimelessInventory;
+import com.wdiscute.utils.MaybeStack;
+import com.wdiscute.utils.Utils;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public interface ECDataAttachments
@@ -23,6 +28,14 @@ public interface ECDataAttachments
             "timeless_data", () -> AttachmentType.builder(() -> TimelessData.EMPTY)
                     .sync(TimelessData.STREAM_CODEC)
                     .serialize(TimelessData.CODEC)
+                    .copyOnDeath()
+                    .build()
+    );
+
+    Supplier<AttachmentType<TimelessInventory>> TIMELESS_INVENTORY = ATTACHMENT_TYPES.register(
+            "timeless_inventory", () -> AttachmentType.builder(() -> new TimelessInventory(Map.of()))
+                    .sync(TimelessInventory.STREAM_CODEC)
+                    .serialize(TimelessInventory.CODEC)
                     .copyOnDeath()
                     .build()
     );

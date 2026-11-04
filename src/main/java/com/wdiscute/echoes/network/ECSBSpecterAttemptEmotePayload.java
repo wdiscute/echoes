@@ -1,20 +1,15 @@
 package com.wdiscute.echoes.network;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.TimelessGUILayer;
-import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.entity.specter.SpecterEmote;
-import com.wdiscute.echoes.entity.specter.SpecterEntity;
+import com.wdiscute.echoes.entity.misc.specter.SpecterEmote;
+import com.wdiscute.echoes.entity.misc.specter.SpecterEntity;
 import com.wdiscute.echoes.timeless.TimelessInstance;
 import com.wdiscute.echoes.timeless.TimelessManager;
-import com.wdiscute.utils.MaybeStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;

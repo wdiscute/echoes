@@ -8,24 +8,26 @@ import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneRenderer;
 import com.wdiscute.echoes.blocks.upgrader.UpgraderGuiLayer;
 import com.wdiscute.echoes.blocks.upgrader.UpgraderRenderer;
-import com.wdiscute.echoes.entity.corpse.TimelessCorpseModel;
-import com.wdiscute.echoes.entity.corpse.TimelessCorpseModelSlim;
-import com.wdiscute.echoes.entity.corpse.TimelessCorpseRenderer;
+import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderRenderer;
+import com.wdiscute.echoes.entity.misc.aoe.AOEEntityRenderer;
+import com.wdiscute.echoes.entity.misc.corpse.TimelessCorpseModel;
+import com.wdiscute.echoes.entity.misc.corpse.TimelessCorpseModelSlim;
+import com.wdiscute.echoes.entity.misc.corpse.TimelessCorpseRenderer;
 import com.wdiscute.echoes.entity.enemy.hollowed.HollowedRenderer;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedRenderer;
-import com.wdiscute.echoes.entity.heart.HeartModel;
-import com.wdiscute.echoes.entity.heart.SculkHeartRenderer;
-import com.wdiscute.echoes.entity.lantern.LanternModel;
-import com.wdiscute.echoes.entity.lantern.LanternRenderer;
+import com.wdiscute.echoes.entity.misc.heart.HeartModel;
+import com.wdiscute.echoes.entity.misc.heart.SculkHeartRenderer;
+import com.wdiscute.echoes.entity.misc.lantern.LanternModel;
+import com.wdiscute.echoes.entity.misc.lantern.LanternRenderer;
 import com.wdiscute.echoes.ECPostProcessing;
-import com.wdiscute.echoes.entity.soul.SoulModel;
-import com.wdiscute.echoes.entity.soul.SoulRenderer;
-import com.wdiscute.echoes.entity.specter.SpecterModel;
-import com.wdiscute.echoes.entity.specter.SpecterRenderer;
-import com.wdiscute.echoes.entity.trader.SoulTraderModel;
-import com.wdiscute.echoes.entity.trader.SoulTraderRenderer;
-import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulModel;
-import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulRenderer;
+import com.wdiscute.echoes.entity.misc.soul.SoulModel;
+import com.wdiscute.echoes.entity.misc.soul.SoulRenderer;
+import com.wdiscute.echoes.entity.misc.specter.SpecterModel;
+import com.wdiscute.echoes.entity.misc.specter.SpecterRenderer;
+import com.wdiscute.echoes.entity.npc.trader.SoulTraderModel;
+import com.wdiscute.echoes.entity.npc.trader.SoulTraderRenderer;
+import com.wdiscute.echoes.entity.misc.unleashedsoul.UnleashedSoulModel;
+import com.wdiscute.echoes.entity.misc.unleashedsoul.UnleashedSoulRenderer;
 import com.wdiscute.echoes.particles.SculkParticle;
 import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.libtooltips.Tooltips;
@@ -100,15 +102,29 @@ public class ECClientEvents
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event)
     {
-        EntityRenderers.register(ECEntities.SOUL_TRADER.get(), SoulTraderRenderer::new);
-        EntityRenderers.register(ECEntities.LANTERN.get(), LanternRenderer::new);
+        //misc
         EntityRenderers.register(ECEntities.SCULK_HEART.get(), SculkHeartRenderer::new);
+        EntityRenderers.register(ECEntities.LANTERN.get(), LanternRenderer::new);
         EntityRenderers.register(ECEntities.TIMELESS_CORPSE.get(), TimelessCorpseRenderer::new);
         EntityRenderers.register(ECEntities.SOUL.get(), SoulRenderer::new);
         EntityRenderers.register(ECEntities.SPECTER.get(), SpecterRenderer::new);
         EntityRenderers.register(ECEntities.UNLEASHED_SOUL.get(), UnleashedSoulRenderer::new);
-        EntityRenderers.register(ECEntities.SCULKED.get(), SculkedRenderer::new);
+        EntityRenderers.register(ECEntities.AOE.get(), AOEEntityRenderer::new);
+
+        //npc
+        EntityRenderers.register(ECEntities.SOUL_TRADER.get(), SoulTraderRenderer::new);
+
+
+        //bosses
+        EntityRenderers.register(ECEntities.SCULKED_TRADER.get(), SculkedTraderRenderer::new);
+
+
+        //enemies
         EntityRenderers.register(ECEntities.HOLLOWED.get(), HollowedRenderer::new);
+        EntityRenderers.register(ECEntities.SCULKED.get(), SculkedRenderer::new);
+
+
+
 
         ECItemProperties.addCustomItemProperties();
     }

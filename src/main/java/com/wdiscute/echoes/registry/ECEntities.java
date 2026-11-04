@@ -1,19 +1,19 @@
 package com.wdiscute.echoes.registry;
 
 import com.wdiscute.echoes.Echoes;
-import com.wdiscute.echoes.entity.corpse.TimelessCorpseEntity;
+import com.wdiscute.echoes.entity.misc.aoe.AOEEntity;
+import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderEntity;
+import com.wdiscute.echoes.entity.misc.corpse.TimelessCorpseEntity;
 import com.wdiscute.echoes.entity.enemy.hollowed.HollowedEntity;
 import com.wdiscute.echoes.entity.enemy.sculked.SculkedEntity;
-import com.wdiscute.echoes.entity.heart.SculkHeartEntity;
-import com.wdiscute.echoes.entity.lantern.LanternEntity;
-import com.wdiscute.echoes.entity.soul.SoulEntity;
-import com.wdiscute.echoes.entity.specter.SpecterEntity;
-import com.wdiscute.echoes.entity.totem.TotemEntity;
-import com.wdiscute.echoes.entity.trader.SoulTraderEntity;
-import com.wdiscute.echoes.entity.unleashedsoul.UnleashedSoulEntity;
+import com.wdiscute.echoes.entity.misc.heart.SculkHeartEntity;
+import com.wdiscute.echoes.entity.misc.lantern.LanternEntity;
+import com.wdiscute.echoes.entity.misc.soul.SoulEntity;
+import com.wdiscute.echoes.entity.misc.specter.SpecterEntity;
+import com.wdiscute.echoes.entity.misc.totem.TotemEntity;
+import com.wdiscute.echoes.entity.npc.trader.SoulTraderEntity;
+import com.wdiscute.echoes.entity.misc.unleashedsoul.UnleashedSoulEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -56,10 +56,32 @@ public interface ECEntities
             register("unleashed_soul", UnleashedSoulEntity::new, MobCategory.MISC,
                     b -> b.sized(0.5f, 0.5f).noSave().noSummon());
 
+    DeferredHolder<EntityType<?>, EntityType<AOEEntity>> AOE =
+            register("aoe", AOEEntity::new, MobCategory.MISC,
+                    b -> b.sized(0.1f, 0.1f).noSave());
+
     DeferredHolder<EntityType<?>, EntityType<TotemEntity>> TOTEM =
             register("totem", TotemEntity::new, MobCategory.MISC,
                     b -> b.sized(0.5f, 0.5f).noSummon());
 
+
+    //
+    //,--.
+    //|  |-.   ,---.   ,---.   ,---.   ,---.   ,---.
+    //| .-. ' | .-. | (  .-'  (  .-'  | .-. : (  .-'
+    //| `-' | ' '-' ' .-'  `) .-'  `) \   --. .-'  `)
+    // `---'   `---'  `----'  `----'   `----' `----'
+    //
+
+    DeferredHolder<EntityType<?>, EntityType<SculkedTraderEntity>> SCULKED_TRADER =
+            register("sculked_trader", SculkedTraderEntity::new, MobCategory.MONSTER,
+                    b -> b
+                            .sized(0.6F, 1.95F)
+                            .eyeHeight(1.74F)
+                            .passengerAttachments(2.0125F)
+                            .ridingOffset(-0.7F)
+                            .clientTrackingRange(8)
+            );
 
     //
     //                                    ,--.

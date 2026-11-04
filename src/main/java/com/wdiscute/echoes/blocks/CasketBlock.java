@@ -1,7 +1,7 @@
 package com.wdiscute.echoes.blocks;
 
 import com.wdiscute.echoes.ECConfig;
-import com.wdiscute.echoes.entity.soul.SoulEntity;
+import com.wdiscute.echoes.entity.misc.soul.SoulEntity;
 import com.wdiscute.echoes.registry.ECEntities;
 import com.wdiscute.echoes.registry.ECItems;
 import com.wdiscute.echoes.timeless.SoulsApi;
