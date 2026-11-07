@@ -3,6 +3,7 @@ package com.wdiscute.echoes.registry;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.blocks.*;
 import com.wdiscute.echoes.blocks.display.DisplayBlock;
+import com.wdiscute.echoes.blocks.floater.FloaterBlock;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.portal.PortalBlock;
 import com.wdiscute.echoes.blocks.upgrader.UpgraderBlock;
@@ -20,6 +21,7 @@ public interface ECBlocks
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Echoes.MOD_ID);
 
     //timeless
+    DeferredBlock<FloaterBlock> FLOATER = register("floater", FloaterBlock::new);
     DeferredBlock<PortalBlock> PORTAL = register("portal", PortalBlock::new);
     DeferredBlock<TimelessMarkerBlock> TIMELESS_MARKER = register("timeless_marker", TimelessMarkerBlock::new);
     DeferredBlock<DisplayBlock> DISPLAY = register("display", DisplayBlock::new);

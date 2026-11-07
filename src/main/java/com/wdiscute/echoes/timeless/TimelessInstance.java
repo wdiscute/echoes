@@ -545,7 +545,7 @@ public class TimelessInstance
         level.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(portalPos), 6, portalPos);
 
         //swap inventory on exit
-        TimelessInventory.swap(player);
+        player.getData(ECDataAttachments.TIMELESS_INVENTORY).swap(player);
 
         //set time to exit so it doesn't render on gui
         TimelessData.setTimeToExit(player, Long.MAX_VALUE);
@@ -574,7 +574,7 @@ public class TimelessInstance
 
         //if player is not on timeless (hub/previous level), swap inventory
         if (!player.level().dimension().equals(Echoes.TIMELESS))
-            TimelessInventory.swap(player);
+            player.getData(ECDataAttachments.TIMELESS_INVENTORY).swap(player);
 
         //trigger perks
         for (PerkInstance activePerk : Perk.getActivePerks(player, ItemStack.EMPTY))

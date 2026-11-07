@@ -1,5 +1,7 @@
 package com.wdiscute.echoes.entity.boss.sculkedtrader;
 
+import com.wdiscute.echoes.aoe.donut.DonutAOE;
+import com.wdiscute.echoes.aoe.growingcircle.GrowingCircleAOE;
 import com.wdiscute.echoes.entity.misc.aoe.AOEEntity;
 import com.wdiscute.echoes.registry.ECEntities;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,12 +20,13 @@ public class SculkedTraderEntity extends Mob implements Enemy
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    protected void actuallyHurt(DamageSource damageSource, float damageAmount)
     {
+        super.actuallyHurt(damageSource, damageAmount);
         AOEEntity aoe = ECEntities.AOE.get().create(level());
         aoe.moveTo(position());
+        aoe.aoe = new GrowingCircleAOE(-1, 0xffcc4444, 8, 4, 50);
         level().addFreshEntity(aoe);
-        return super.hurt(source, amount);
     }
 
     @Override

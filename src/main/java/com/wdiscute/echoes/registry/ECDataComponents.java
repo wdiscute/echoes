@@ -5,6 +5,7 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.Rarity;
 import com.wdiscute.echoes.perk.PerkInstance;
 import com.wdiscute.utils.Utils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -30,6 +31,9 @@ public interface ECDataComponents
 
     DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RAMATTRA_CAN_USE = register(
             "ramattra_can_use", builder -> builder.persistent(Codec.BOOL));
+
+    DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> LINKED_BLOCK = register(
+            "linked_block", builder -> builder.persistent(BlockPos.CODEC));
 
     DeferredHolder<DataComponentType<?>, DataComponentType<Rarity>> RARITY = register(
             "rarity", builder -> builder.persistent(Rarity.CODEC));

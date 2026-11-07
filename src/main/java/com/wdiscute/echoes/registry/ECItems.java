@@ -19,6 +19,8 @@ public interface ECItems
     DeferredItem<Item> SOUL_HEART_CONTAINER = ITEMS.registerItem("soul_heart_container", SoulHeartContainer::new);
     DeferredItem<Item> SOUL = ITEMS.registerItem("soul", BasicItem::new);
 
+    DeferredItem<Item> MAGICAL_STICK_OF_GOODNESS = ITEMS.registerItem("magical_stick_of_goodness", MagicalStick::new);
+
 
     //
     //,--.   ,--.  ,---.   ,--,--.  ,---.   ,---.  ,--,--,   ,---.

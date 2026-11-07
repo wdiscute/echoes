@@ -3,6 +3,7 @@ package com.wdiscute.echoes.registry;
 import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.blocks.PrismaPaneBlock;
 import com.wdiscute.echoes.blocks.display.DisplayBlockEntity;
+import com.wdiscute.echoes.blocks.floater.FloaterBlockEntity;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlock;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerBlockEntity;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneBlockEntity;
@@ -25,6 +26,9 @@ public interface ECBlockEntities
 
     Supplier<BlockEntityType<TimelessMarkerBlockEntity>> TIMELESS_MARKER = BLOCK_ENTITIES.register("timeless_marker",
             () -> BlockEntityType.Builder.of(TimelessMarkerBlockEntity::new, ECBlocks.TIMELESS_MARKER.get()).build(null));
+
+    Supplier<BlockEntityType<FloaterBlockEntity>> FLOATER = BLOCK_ENTITIES.register("floater",
+            () -> BlockEntityType.Builder.of(FloaterBlockEntity::new, ECBlocks.FLOATER.get()).build(null));
 
     Supplier<BlockEntityType<PrismaPaneBlockEntity>> PRISMA_PANE = BLOCK_ENTITIES.register("prisma_pane",
             () -> BlockEntityType.Builder.of(PrismaPaneBlockEntity::new, ECBlocks.PRISMA_PANE.get()).build(null));

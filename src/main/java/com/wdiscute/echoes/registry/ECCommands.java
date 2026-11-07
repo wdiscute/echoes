@@ -53,25 +53,11 @@ public interface ECCommands
                         )
                 )
 
-                .then(Commands.literal("add_time")
-                        .then(Commands.argument("ticks", IntegerArgumentType.integer())
-                                .executes(c ->
-                                        addTime(
-                                                c.getSource().getPlayerOrException(),
-                                                IntegerArgumentType.getInteger(c, "ticks")
-                                        )
-                                )
-                        )
-                )
-
-                //timeless advance_time
-                .then(Commands.literal("advance_time")
-                        .then(Commands.argument("ticks", IntegerArgumentType.integer())
-                                .executes(c ->
-                                        advanceTime(
-                                                c.getSource().getPlayerOrException(),
-                                                IntegerArgumentType.getInteger(c, "ticks")
-                                        )
+                //timeless reset_progress
+                .then(Commands.literal("swap_inventory")
+                        .executes(c ->
+                                swap(
+                                        c.getSource().getPlayerOrException()
                                 )
                         )
                 )
@@ -107,6 +93,12 @@ public interface ECCommands
 
         instance.addPlayer(player, player.blockPosition(), player.level().dimension().location());
 
+        return 1;
+    }
+
+    private static int swap(ServerPlayer player) throws CommandSyntaxException
+    {
+        player.getData(ECDataAttachments.TIMELESS_INVENTORY).swap(player);
         return 1;
     }
 

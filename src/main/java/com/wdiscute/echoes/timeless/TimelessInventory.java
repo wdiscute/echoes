@@ -3,6 +3,7 @@ package com.wdiscute.echoes.timeless;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.echoes.Echoes;
+import com.wdiscute.echoes.registry.ECDataAttachments;
 import com.wdiscute.echoes.swappers.Swapper;
 import com.wdiscute.utils.MaybeStack;
 import com.wdiscute.utils.Utils;
@@ -25,12 +26,14 @@ public record TimelessInventory(Map<ResourceLocation, MaybeStack> inventory)
         this(entries.stream().collect(Collectors.toMap(Utils.Duo::first, Utils.Duo::second)));
     }
 
-    public static void swap(Player player)
+    public void swap(Player player)
     {
-        Map<ResourceLocation, MaybeStack> storage = new ConcurrentHashMap<>();
+        Map<ResourceLocation, MaybeStack> inventoryToStore = new ConcurrentHashMap<>();
 
         for (Swapper swapper : Echoes.SWAPPER_REGISTRY.stream().toList())
-            swapper.handle(player, storage);
+            swapper.handle(player, inventoryToStore, Map.copyOf(inventory));
+
+        player.setData(ECDataAttachments.TIMELESS_INVENTORY, new TimelessInventory(Map.copyOf(inventoryToStore)));
     }
 
     public List<Utils.Duo<ResourceLocation, MaybeStack>> asDuo()

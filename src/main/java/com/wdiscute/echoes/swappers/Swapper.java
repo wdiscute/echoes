@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Swapper
 {
-    public void handle(Player player, Map<ResourceLocation, MaybeStack> storage)
+    public void handle(Player player, Map<ResourceLocation, MaybeStack> inventoryToStore, Map<ResourceLocation, MaybeStack> storedInventory)
     {
 
     }

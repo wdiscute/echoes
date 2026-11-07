@@ -4,6 +4,7 @@ import com.wdiscute.echoes.Echoes;
 import com.wdiscute.echoes.TimelessGUILayer;
 import com.wdiscute.echoes.blocks.display.DisplayGuiLayer;
 import com.wdiscute.echoes.blocks.display.DisplayRenderer;
+import com.wdiscute.echoes.blocks.floater.FloaterBlockRenderer;
 import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneRenderer;
 import com.wdiscute.echoes.blocks.upgrader.UpgraderGuiLayer;
@@ -125,7 +126,6 @@ public class ECClientEvents
 
 
 
-
         ECItemProperties.addCustomItemProperties();
     }
 
@@ -145,6 +145,7 @@ public class ECClientEvents
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
+        event.registerBlockEntityRenderer(ECBlockEntities.FLOATER.get(), FloaterBlockRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.TIMELESS_MARKER.get(), TimelessMarkerRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.PRISMA_PANE.get(), PrismaPaneRenderer::new);
         event.registerBlockEntityRenderer(ECBlockEntities.DISPLAY.get(), DisplayRenderer::new);

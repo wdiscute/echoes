@@ -73,6 +73,7 @@ public class Echoes
         ECBlockEntities.register(modEventBus);
         ECEntities.register(modEventBus);
         ECArmorMaterials.register(modEventBus);
+        ECAOEs.register(modEventBus);
         ECDataComponents.register(modEventBus);
         ECDataAttachments.register(modEventBus);
         ECDataEntries.register(modEventBus);
@@ -80,6 +81,7 @@ public class Echoes
         ECPerks.register(modEventBus);
         ECCreativeModeTabs.register(modEventBus);
         ECParticles.register(modEventBus);
+        ECInventorySwappers.register(modEventBus);
 
         TimelessInstance.RingCache.init(128);
         TimelessInstance.SphereCache.init(30);

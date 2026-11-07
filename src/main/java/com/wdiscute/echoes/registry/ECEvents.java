@@ -92,6 +92,7 @@ public class ECEvents
                 TeleportTransition trans = new TeleportTransition(respawnInfo.newLevel(), respawnInfo.pos(), Vec3.ZERO,
                         respawnInfo.xRot(), respawnInfo.yRot(), (d) -> {});
 
+                sp.getData(ECDataAttachments.TIMELESS_INVENTORY).swap(sp);
                 trans.teleport(sp);
             }
             else
