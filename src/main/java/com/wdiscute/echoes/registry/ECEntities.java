@@ -76,10 +76,8 @@ public interface ECEntities
     DeferredHolder<EntityType<?>, EntityType<SculkedTraderEntity>> SCULKED_TRADER =
             register("sculked_trader", SculkedTraderEntity::new, MobCategory.MONSTER,
                     b -> b
-                            .sized(0.6F, 1.95F)
-                            .eyeHeight(1.74F)
-                            .passengerAttachments(2.0125F)
-                            .ridingOffset(-0.7F)
+                            .sized(0.8F, 1.2F)
+                            .eyeHeight(0.75F)
                             .clientTrackingRange(8)
             );
 

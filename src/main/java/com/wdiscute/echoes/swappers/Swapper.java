@@ -6,10 +6,9 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.Map;
 
-public class Swapper
+public abstract class Swapper
 {
-    public void handle(Player player, Map<ResourceLocation, MaybeStack> inventoryToStore, Map<ResourceLocation, MaybeStack> storedInventory)
-    {
-
-    }
+    public abstract void handle(Player player,
+                                Map<ResourceLocation, MaybeStack> inventoryToStore,
+                                Map<ResourceLocation, MaybeStack> storedInventory);
 }

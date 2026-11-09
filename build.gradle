@@ -60,6 +60,12 @@ repositories
                 url = 'https://wdiscute.github.io'
             }
 
+            //Kaupen
+            maven {
+                name = "Kaupenjoe"
+                url = "https://maven.kaupenjoe.net/releases"
+            }
+
             //sable-companion
             maven {
                 name = "RyanHCode Maven"
@@ -87,7 +93,7 @@ dependencies {
     //wdutils
     jarJar(implementation("com.wdiscute:wdUtils:2.2-NEOFORGE-1.21.1"))
 
-    //tiny multiblock lib
+    //tiny multiblock lib`
     //jarJar(implementation("net.nikdo53:tiny-multiblock-lib-neoforge-1.21.1:4.0.1"))
 
     //fancy tab sections

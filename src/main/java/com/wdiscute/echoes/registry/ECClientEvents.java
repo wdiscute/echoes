@@ -9,6 +9,8 @@ import com.wdiscute.echoes.blocks.marker.TimelessMarkerRenderer;
 import com.wdiscute.echoes.blocks.pane.PrismaPaneRenderer;
 import com.wdiscute.echoes.blocks.upgrader.UpgraderGuiLayer;
 import com.wdiscute.echoes.blocks.upgrader.UpgraderRenderer;
+import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderEntity;
+import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderModel;
 import com.wdiscute.echoes.entity.boss.sculkedtrader.SculkedTraderRenderer;
 import com.wdiscute.echoes.entity.misc.aoe.AOEEntityRenderer;
 import com.wdiscute.echoes.entity.misc.corpse.TimelessCorpseModel;
@@ -132,14 +134,22 @@ public class ECClientEvents
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
+        //boss
+        event.registerLayerDefinition(SculkedTraderModel.LAYER_LOCATION, SculkedTraderModel::createBodyLayer);
+
+        //enemy
+
+        //npc
         event.registerLayerDefinition(SoulTraderModel.LAYER_LOCATION, SoulTraderModel::createBodyLayer);
-        event.registerLayerDefinition(HeartModel.LAYER_LOCATION, HeartModel::createBodyLayer);
-        event.registerLayerDefinition(LanternModel.LAYER_LOCATION, LanternModel::createBodyLayer);
-        event.registerLayerDefinition(SoulModel.LAYER_LOCATION, SoulModel::createBodyLayer);
+
+        //misc
         event.registerLayerDefinition(SpecterModel.LAYER_LOCATION, SpecterModel::createBodyLayer);
         event.registerLayerDefinition(UnleashedSoulModel.LAYER_LOCATION, UnleashedSoulModel::createBodyLayer);
         event.registerLayerDefinition(TimelessCorpseModel.LAYER_LOCATION, TimelessCorpseModel::createBodyLayer);
         event.registerLayerDefinition(TimelessCorpseModelSlim.LAYER_LOCATION, TimelessCorpseModelSlim::createBodyLayer);
+        event.registerLayerDefinition(HeartModel.LAYER_LOCATION, HeartModel::createBodyLayer);
+        event.registerLayerDefinition(LanternModel.LAYER_LOCATION, LanternModel::createBodyLayer);
+        event.registerLayerDefinition(SoulModel.LAYER_LOCATION, SoulModel::createBodyLayer);
     }
 
     @SubscribeEvent
